@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=kotlin_spotify_web_api_wrapper
+PRODUCT_BUNDLE_IDENTIFIER=com.nubasu.kotlin_spotify_web_api_wrapper.kotlin_spotify_web_api_wrapper$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
