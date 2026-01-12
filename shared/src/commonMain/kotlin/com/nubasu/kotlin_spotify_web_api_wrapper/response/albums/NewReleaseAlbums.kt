@@ -3,14 +3,13 @@ package com.nubasu.kotlin_spotify_web_api_wrapper.response.albums
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.SimplifiedAlbumObject
 import kotlinx.serialization.Serializable
 
-// same as Tracks
 @Serializable
-data class AlbumTracks(
+data class NewReleaseAlbums(
     val href: String,
     val limit: Int,
     val next: String? = null,
     val offset: Int,
     val previous: String? = null,
     val total: Int,
-    val items: List<SimplifiedTrackObject>,
+    val items: List<SimplifiedAlbumObject>,
 )
