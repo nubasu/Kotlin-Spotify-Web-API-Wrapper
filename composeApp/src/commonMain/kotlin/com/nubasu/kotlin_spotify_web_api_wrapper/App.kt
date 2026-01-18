@@ -50,7 +50,8 @@ fun App() {
 //                    ApiTest.albumApisTest()
 //                    ApiTest.artistApisTest()
 //                    ApiTest.audiobookApisTest()
-                    ApiTest.categoryApisTest()
+//                    ApiTest.categoryApisTest()
+                    ApiTest.chaptersApisTest()
                 }
             }
         }
