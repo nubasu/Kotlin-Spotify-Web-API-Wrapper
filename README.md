@@ -9,6 +9,34 @@ A Kotlin Multiplatform (KMP) wrapper for the [**Spotify Web API**](https://devel
 
 Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, Android, iOS, and other KMP targets.
 
+## Status
+
+- 🚧 **In Progress (WIP)**
+- Basic API
+  - [x] Albums
+  - [x] Artists
+  - [x] Audiobooks
+  - [ ] Categories
+  - [ ] Chapters
+  - [ ] Episodes
+  - [ ] Genres
+  - [ ] Markets
+  - [ ] Player
+  - [ ] Playlists
+  - [ ] Search
+  - [ ] Shows
+  - [ ] Tracks 
+  - [ ] Users
+- Auth API
+  - [ ] PKCE
+  - [ ] Client Credentials
+  - [ ] Authorization Code
+  - [ ] Refresh
+- [ ] Paging helpers / Rate limit handling / Retry policies
+- [ ] Samples + Docs
+- [ ] Publish artifacts
+- [ ] Tests
+
 ## Contributing
 
 PRs/issues are welcome.
