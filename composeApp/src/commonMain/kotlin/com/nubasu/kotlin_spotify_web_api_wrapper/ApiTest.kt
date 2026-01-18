@@ -4,6 +4,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.runBlocking
 
@@ -46,5 +47,11 @@ object ApiTest {
         val api = CategoriesApis()
         println(api.getSeveralBrowseCategories())
         println(api.getSingleBrowseCategory("dinner"))
+    }
+
+    fun chaptersApisTest() = runBlocking {
+        val api = ChaptersApis()
+        println(api.getAChapter("0D5wENdkdwbqlrHoaJ9g29"))
+        println(api.getSeveralChapters(listOf("0IsXVP0JmcB2adSE338GkK","3ZXb8FKZGU0EHALYX6uCzU","0D5wENdkdwbqlrHoaJ9g29")))
     }
 }
