@@ -49,7 +49,8 @@ fun App() {
                     Text("Compose: $greeting")
 //                    ApiTest.albumApisTest()
 //                    ApiTest.artistApisTest()
-                    ApiTest.audiobookApisTest()
+//                    ApiTest.audiobookApisTest()
+                    ApiTest.categoryApisTest()
                 }
             }
         }
