@@ -13,15 +13,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import kotlin_spotify_web_api_wrapper.composeapp.generated.resources.Res
 import kotlin_spotify_web_api_wrapper.composeapp.generated.resources.compose_multiplatform
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 @Composable
 @Preview
 fun App() {
+    val albumApis = AlbumsApis()
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
@@ -42,6 +48,33 @@ fun App() {
                 ) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
                     Text("Compose: $greeting")
+                    runBlocking {
+                        println(albumApis.getAlbum("4aawyAB9vmqN3uQ7FjRGTy"))
+                    }
+                    runBlocking {
+                        println(albumApis.getSeveralAlbums(listOf("4aawyAB9vmqN3uQ7FjRGTy", "4aawyAB9vmqN3uQ7FjRGTy")))
+                    }
+                    runBlocking {
+                        println(albumApis.getAlbumTracks("4aawyAB9vmqN3uQ7FjRGTy",))
+                    }
+                    runBlocking {
+                        println(albumApis.getUsersSavedAlbums())
+                    }
+                    runBlocking {
+                        println(albumApis.saveAlbumsForCurrentUser(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
+                    }
+                    runBlocking {
+                        println(albumApis.checkUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
+                    }
+                    runBlocking {
+                        println(albumApis.removeUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
+                    }
+                    runBlocking {
+                        println(albumApis.checkUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
+                    }
+                    runBlocking {
+                        println(albumApis.getNewReleases())
+                    }
                 }
             }
         }
