@@ -29,4 +29,6 @@ data class SimplifiedAlbumObject(
     val type: String,
     val uri: String,
     val artists: List<SimplifiedArtistObject>,
+    @SerialName("album_group")
+    val albumGroup: String,
 )
