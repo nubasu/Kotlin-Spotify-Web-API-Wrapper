@@ -2,6 +2,7 @@ package com.nubasu.kotlin_spotify_web_api_wrapper
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.runBlocking
 
@@ -26,5 +27,17 @@ object ApiTest {
         println(artistApis.getArtistsAlbums("0TnOYISbd1XYRBk9myaseg"))
         println(artistApis.getArtistsTopTracks("0TnOYISbd1XYRBk9myaseg"))
         println(artistApis.getArtistsRelatedArtists("0TnOYISbd1XYRBk9myaseg"))
+    }
+
+    fun audiobookApisTest() = runBlocking {
+        val api = AudiobooksApis()
+        println(api.getAnAudiobook("7iHfbu1YPACw6oZPAFJtqe"))
+        println(api.getSeveralAudiobooks(listOf("18yVqkdbdRvS24c0Ilj2ci","1HGw3J3NxZO1TP1BTtVhpZ","7iHfbu1YPACw6oZPAFJtqe")))
+        println(api.getAudiobookChapters("7iHfbu1YPACw6oZPAFJtqe"))
+        println(api.getUsersSavedAudiobooks())
+        println(api.saveAudiobooksForCurrentUser(Ids(listOf("7iHfbu1YPACw6oZPAFJtqe"))))
+        println(api.checkUsersSavedAudiobooks(Ids(listOf("18yVqkdbdRvS24c0Ilj2ci","1HGw3J3NxZO1TP1BTtVhpZ","7iHfbu1YPACw6oZPAFJtqe"))))
+        println(api.removeUsersSavedAudiobooks(Ids(listOf("7iHfbu1YPACw6oZPAFJtqe"))))
+        println(api.checkUsersSavedAudiobooks(Ids(listOf("18yVqkdbdRvS24c0Ilj2ci","1HGw3J3NxZO1TP1BTtVhpZ","7iHfbu1YPACw6oZPAFJtqe"))))
     }
 }
