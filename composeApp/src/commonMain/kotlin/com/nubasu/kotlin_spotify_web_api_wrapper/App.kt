@@ -27,7 +27,6 @@ import kotlinx.coroutines.withContext
 @Composable
 @Preview
 fun App() {
-    val albumApis = AlbumsApis()
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
@@ -48,33 +47,8 @@ fun App() {
                 ) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
                     Text("Compose: $greeting")
-                    runBlocking {
-                        println(albumApis.getAlbum("4aawyAB9vmqN3uQ7FjRGTy"))
-                    }
-                    runBlocking {
-                        println(albumApis.getSeveralAlbums(listOf("4aawyAB9vmqN3uQ7FjRGTy", "4aawyAB9vmqN3uQ7FjRGTy")))
-                    }
-                    runBlocking {
-                        println(albumApis.getAlbumTracks("4aawyAB9vmqN3uQ7FjRGTy",))
-                    }
-                    runBlocking {
-                        println(albumApis.getUsersSavedAlbums())
-                    }
-                    runBlocking {
-                        println(albumApis.saveAlbumsForCurrentUser(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
-                    }
-                    runBlocking {
-                        println(albumApis.checkUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
-                    }
-                    runBlocking {
-                        println(albumApis.removeUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
-                    }
-                    runBlocking {
-                        println(albumApis.checkUsersSavedAlbums(Ids(listOf("4aawyAB9vmqN3uQ7FjRGTy"))))
-                    }
-                    runBlocking {
-                        println(albumApis.getNewReleases())
-                    }
+//                    ApiTest.albumApisTest()
+                    ApiTest.artistApisTest()
                 }
             }
         }
