@@ -251,6 +251,13 @@ enum class CountryCode(val code: String, val countryName: String) {
     ZM("ZM", "Zambia"),
     ZW("ZW", "Zimbabwe");
 
+    fun toLocale(language6391: String): String {
+        require(language6391.length == 2) { "ISO 639-1 must be 2 letters: $language6391" }
+        val lang = language6391.lowercase()
+        val region = code.uppercase()
+        return "${lang}_${region}"
+    }
+
     companion object {
         fun fromCode(code: String): CountryCode? =
             entries.firstOrNull { it.code.equals(code, ignoreCase = true) }
