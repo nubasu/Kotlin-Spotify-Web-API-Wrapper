@@ -16,7 +16,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Albums
   - [x] Artists
   - [x] Audiobooks
-  - [ ] Categories
+  - [x] Categories
   - [ ] Chapters
   - [ ] Episodes
   - [ ] Genres
