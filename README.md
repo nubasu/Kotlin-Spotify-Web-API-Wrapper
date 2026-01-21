@@ -18,7 +18,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Audiobooks
   - [x] Categories
   - [x] Chapters
-  - [ ] Episodes
+  - [x] Episodes
   - [ ] Genres
   - [ ] Markets
   - [ ] Player

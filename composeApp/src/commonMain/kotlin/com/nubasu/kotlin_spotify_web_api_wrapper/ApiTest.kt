@@ -5,6 +5,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.runBlocking
 
@@ -53,5 +54,16 @@ object ApiTest {
         val api = ChaptersApis()
         println(api.getAChapter("0D5wENdkdwbqlrHoaJ9g29"))
         println(api.getSeveralChapters(listOf("0IsXVP0JmcB2adSE338GkK","3ZXb8FKZGU0EHALYX6uCzU","0D5wENdkdwbqlrHoaJ9g29")))
+    }
+
+    fun episodeApisTest() = runBlocking {
+        val api = EpisodesApis()
+        println(api.getEpisode("512ojhOuo1ktJprKbVcKyQ"))
+        println(api.getSeveralEpisodes(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf")))
+        println(api.getUsersSavedEpisodes())
+        println(api.saveEpisodesForCurrentUser(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
+        println(api.checkUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH"))))
+        println(api.removeUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
+        println(api.checkUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
     }
 }
