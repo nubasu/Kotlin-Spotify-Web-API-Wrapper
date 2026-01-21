@@ -7,6 +7,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.genres.GenresApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.markets.MarketsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.runBlocking
 
@@ -71,5 +72,10 @@ object ApiTest {
     fun genresApisTest() = runBlocking {
         val api = GenresApis()
         println(api.getAvailableGenreSeeds())
+    }
+
+    fun marketApisTest() = runBlocking {
+        val api = MarketsApis()
+        println(api.getAvailableMarkets())
     }
 }
