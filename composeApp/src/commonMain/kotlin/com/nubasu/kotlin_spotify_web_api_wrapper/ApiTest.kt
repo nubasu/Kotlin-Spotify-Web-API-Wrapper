@@ -6,6 +6,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.genres.GenresApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.runBlocking
 
@@ -65,5 +66,10 @@ object ApiTest {
         println(api.checkUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH"))))
         println(api.removeUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
         println(api.checkUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
+    }
+
+    fun genresApisTest() = runBlocking {
+        val api = GenresApis()
+        println(api.getAvailableGenreSeeds())
     }
 }

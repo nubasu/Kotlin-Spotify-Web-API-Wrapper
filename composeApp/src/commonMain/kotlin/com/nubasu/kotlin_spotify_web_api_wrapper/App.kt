@@ -52,7 +52,8 @@ fun App() {
 //                    ApiTest.audiobookApisTest()
 //                    ApiTest.categoryApisTest()
 //                    ApiTest.chaptersApisTest()
-                    ApiTest.episodeApisTest()
+//                    ApiTest.episodeApisTest()
+                    ApiTest.genresApisTest()
                 }
             }
         }
