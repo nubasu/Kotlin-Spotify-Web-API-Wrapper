@@ -54,7 +54,8 @@ fun App() {
 //                    ApiTest.chaptersApisTest()
 //                    ApiTest.episodeApisTest()
 //                    ApiTest.genresApisTest()
-                    ApiTest.marketApisTest()
+//                    ApiTest.marketApisTest()
+                    ApiTest.playerApisTest()
                 }
             }
         }
