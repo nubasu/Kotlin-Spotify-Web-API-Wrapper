@@ -8,7 +8,11 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.genres.GenresApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.markets.MarketsApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.RepeatMode
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.State
 import kotlinx.coroutines.runBlocking
 
 object ApiTest {
@@ -77,5 +81,41 @@ object ApiTest {
     fun marketApisTest() = runBlocking {
         val api = MarketsApis()
         println(api.getAvailableMarkets())
+    }
+
+    fun playerApisTest() = runBlocking {
+        val api = PlayerApis()
+        val devices = api.getAvailableDevices()
+        println("getAvailableDevices")
+        println(devices)
+        println("getPlaybackState")
+        println(api.getPlaybackState())
+        println("transferPlayback")
+        println(api.transferPlayback(DeviceIds(listOf(devices.devices.first().id.toString()))))
+        println("getCurrentlyPlayingTrack")
+        println(api.getCurrentlyPlayingTrack())
+        println("startResumePlayback")
+        println(api.startResumePlayback())
+        println("pausePlayback")
+        println(api.pausePlayback())
+        println("skipToNext")
+        println(api.skipToNext())
+        println("skipToPrevious")
+        println(api.skipToPrevious())
+        println("seekToPosition")
+        println(api.seekToPosition(positionMs = 25000))
+        println("setRepeatMode")
+        println(api.setRepeatMode(state = State(RepeatMode.OFF)))
+        println("setPlaybackVolume")
+        println(api.setPlaybackVolume(0))
+        println("togglePlaybackShuffle")
+        println(api.togglePlaybackShuffle(false))
+        println("getRecentlyPlayedTracks")
+        println(api.getRecentlyPlayedTracks())
+        println("getTheUsersQueue")
+        println(api.getTheUsersQueue())
+        println("addItemToPlaybackQueue")
+        println(api.addItemToPlaybackQueue("spotify:track:4iV5W9uYEdYUVa79Axb7Rh"))
+        println("")
     }
 }
