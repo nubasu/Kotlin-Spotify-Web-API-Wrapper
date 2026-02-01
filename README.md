@@ -21,7 +21,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Episodes
   - [x] Genres
   - [x] Markets
-  - [ ] Player
+  - [x] Player
   - [ ] Playlists
   - [ ] Search
   - [ ] Shows
