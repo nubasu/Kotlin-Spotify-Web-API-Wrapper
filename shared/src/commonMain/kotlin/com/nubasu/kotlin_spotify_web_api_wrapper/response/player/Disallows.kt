@@ -4,9 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Actions(
-    @SerialName("disallows")
-    val disallows: Disallows? = null,
+data class Disallows(
     @SerialName("interrupting_playback")
     val interruptingPlayback: Boolean? = null,
     val pausing: Boolean? = null,
