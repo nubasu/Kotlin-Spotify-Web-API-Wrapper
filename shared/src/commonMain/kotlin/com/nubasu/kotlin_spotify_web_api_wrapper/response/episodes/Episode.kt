@@ -4,6 +4,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.ResumePoint
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.Restrictions
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.PlaybackItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -41,4 +42,4 @@ data class Episode(
     val uri: String,
     val restrictions: Restrictions? = null,
     val show: Show,
-)
+) : PlaybackItem
