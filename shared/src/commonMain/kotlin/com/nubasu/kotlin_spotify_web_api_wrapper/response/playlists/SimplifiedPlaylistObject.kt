@@ -13,13 +13,17 @@ data class SimplifiedPlaylistObject(
     val externalUrls: ExternalUrls,
     val href: String,
     val id: String,
-    val images: List<ImageObject>,
+    val images: List<ImageObject>?,
     val name: String,
     val owner: Owner,
-    val public: Boolean,
+    @SerialName("primary_color")
+    val primaryColor: String? = null,
+    val public: Boolean?,
     @SerialName("snapshot_id")
     val snapshotId: String,
-    val tracks: Tracks,
+    val tracks: Tracks = Tracks(href = "", total = 0),
+    @SerialName("items")
+    val items: Tracks? = null,
     val type: String,
     val uri: String,
 )

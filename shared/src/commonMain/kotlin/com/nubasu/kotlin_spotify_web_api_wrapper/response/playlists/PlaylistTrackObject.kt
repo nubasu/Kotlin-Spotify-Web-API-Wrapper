@@ -11,6 +11,13 @@ data class PlaylistTrackObject(
     @SerialName("added_by")
     val addedBy: AddedBy? = null,
     @SerialName("is_local")
-    val isLocal: Boolean,
+    val isLocal: Boolean = false,
+    @SerialName("item")
+    val item: PlaybackItem? = null,
+    @Deprecated(
+        "Spotify Playlist Item payload now uses `item`. `track` is kept for backward compatibility.",
+        ReplaceWith("item")
+    )
+    @SerialName("track")
     val track: PlaybackItem? = null,
 )

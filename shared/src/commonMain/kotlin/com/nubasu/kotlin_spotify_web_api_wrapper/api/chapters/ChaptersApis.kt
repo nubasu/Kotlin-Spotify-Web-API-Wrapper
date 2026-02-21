@@ -44,6 +44,9 @@ class ChaptersApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/chapters as deprecated.",
+    )
     suspend fun getSeveralChapters(
         ids: List<String>,
         market: CountryCode? = null,

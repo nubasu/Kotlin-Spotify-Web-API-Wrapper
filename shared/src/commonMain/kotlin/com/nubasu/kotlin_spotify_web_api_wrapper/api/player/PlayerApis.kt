@@ -246,8 +246,8 @@ class PlayerApis(
 
     suspend fun getRecentlyPlayedTracks(
         limit: Int? = null,
-        after: Int? = null,
-        before: Int? = null,
+        after: Long? = null,
+        before: Long? = null,
     ) : SpotifyApiResponse<RecentlyPlayedTracks> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/recently-played"
         val response = client.get {
@@ -261,6 +261,22 @@ class PlayerApis(
             accept(ContentType.Application.Json)
         }
         return response.toSpotifyApiResponse()
+    }
+
+    @Deprecated(
+        "Use Long for `after`/`before` unix timestamp in milliseconds.",
+        ReplaceWith("getRecentlyPlayedTracks(limit = limit, after = after?.toLong(), before = before?.toLong())")
+    )
+    suspend fun getRecentlyPlayedTracks(
+        limit: Int?,
+        after: Int?,
+        before: Int?,
+    ) : SpotifyApiResponse<RecentlyPlayedTracks> {
+        return getRecentlyPlayedTracks(
+            limit = limit,
+            after = after?.toLong(),
+            before = before?.toLong(),
+        )
     }
 
     suspend fun getTheUsersQueue() : SpotifyApiResponse<UsersQueue> {

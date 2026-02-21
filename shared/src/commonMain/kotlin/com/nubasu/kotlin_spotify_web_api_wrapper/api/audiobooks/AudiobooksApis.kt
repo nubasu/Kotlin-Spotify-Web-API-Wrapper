@@ -50,6 +50,9 @@ class AudiobooksApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/audiobooks as deprecated.",
+    )
     suspend fun getSeveralAudiobooks(
         ids: List<String>,
         market: CountryCode? = null,
@@ -107,6 +110,9 @@ class AudiobooksApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/audiobooks as deprecated.",
+    )
     suspend fun saveAudiobooksForCurrentUser(
         ids: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -121,6 +127,9 @@ class AudiobooksApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/audiobooks as deprecated.",
+    )
     suspend fun removeUsersSavedAudiobooks(
         ids: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -135,6 +144,9 @@ class AudiobooksApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/audiobooks/contains as deprecated.",
+    )
     suspend fun checkUsersSavedAudiobooks(
         ids: Ids,
     ) : SpotifyApiResponse<List<Boolean>> {

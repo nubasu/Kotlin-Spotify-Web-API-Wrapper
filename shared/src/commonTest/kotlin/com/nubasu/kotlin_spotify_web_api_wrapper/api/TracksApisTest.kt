@@ -1,13 +1,15 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.tracks.TracksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationSeeds
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationTunableAttributes
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.SaveTracksForCurrentUserRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class TracksApisTest {
     @Test
@@ -150,5 +152,126 @@ class TracksApisTest {
     @Test
     fun checkUsersSavedTracks_nonSuccess_throws_status429_tooManyRequests() = runTest {
         ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> TracksApis(client).checkUsersSavedTracks(Ids(listOf("t1"))) }
+    }
+
+    @Test
+    fun getTracksAudioFeatures_status201_created() = runTest {
+        ApiStatusCaseAsserts.assertStatus201Created(
+            successBody = SpotifyApiFixtures.TRACK_AUDIO_FEATURES_ONE_MIN,
+            assertData = {
+                assertEquals("t1", it.id)
+                assertEquals(200000, it.durationMs)
+            }
+        ) { client ->
+            TracksApis(client).getTracksAudioFeatures("t1")
+        }
+    }
+
+    @Test
+    fun getTracksAudioFeatures_status401_unauthorized() = runTest {
+        ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> TracksApis(client).getTracksAudioFeatures("t1") }
+    }
+
+    @Test
+    fun getTracksAudioFeatures_status403_forbidden() = runTest {
+        ApiStatusCaseAsserts.assertStatus403Forbidden { client -> TracksApis(client).getTracksAudioFeatures("t1") }
+    }
+
+    @Test
+    fun getTracksAudioFeatures_status429_tooManyRequests() = runTest {
+        ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> TracksApis(client).getTracksAudioFeatures("t1") }
+    }
+
+    @Test
+    fun getSeveralTracksAudioFeatures_status201_created() = runTest {
+        ApiStatusCaseAsserts.assertStatus201Created(
+            successBody = SpotifyApiFixtures.TRACK_AUDIO_FEATURES_SEVERAL_MIN,
+            assertData = {
+                assertEquals(1, it.audioFeatures.size)
+                assertEquals("t1", it.audioFeatures.first().id)
+            }
+        ) { client ->
+            TracksApis(client).getSeveralTracksAudioFeatures(listOf("t1"))
+        }
+    }
+
+    @Test
+    fun getSeveralTracksAudioFeatures_status401_unauthorized() = runTest {
+        ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> TracksApis(client).getSeveralTracksAudioFeatures(listOf("t1")) }
+    }
+
+    @Test
+    fun getSeveralTracksAudioFeatures_status403_forbidden() = runTest {
+        ApiStatusCaseAsserts.assertStatus403Forbidden { client -> TracksApis(client).getSeveralTracksAudioFeatures(listOf("t1")) }
+    }
+
+    @Test
+    fun getSeveralTracksAudioFeatures_status429_tooManyRequests() = runTest {
+        ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> TracksApis(client).getSeveralTracksAudioFeatures(listOf("t1")) }
+    }
+
+    @Test
+    fun getTracksAudioAnalysis_status201_created() = runTest {
+        ApiStatusCaseAsserts.assertStatus201Created(
+            successBody = SpotifyApiFixtures.TRACK_AUDIO_ANALYSIS_MIN,
+            assertData = {
+                assertEquals(1, it.bars.size)
+                assertEquals(1, it.tatums.size)
+            }
+        ) { client ->
+            TracksApis(client).getTracksAudioAnalysis("t1")
+        }
+    }
+
+    @Test
+    fun getTracksAudioAnalysis_status401_unauthorized() = runTest {
+        ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> TracksApis(client).getTracksAudioAnalysis("t1") }
+    }
+
+    @Test
+    fun getTracksAudioAnalysis_status403_forbidden() = runTest {
+        ApiStatusCaseAsserts.assertStatus403Forbidden { client -> TracksApis(client).getTracksAudioAnalysis("t1") }
+    }
+
+    @Test
+    fun getTracksAudioAnalysis_status429_tooManyRequests() = runTest {
+        ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> TracksApis(client).getTracksAudioAnalysis("t1") }
+    }
+
+    @Test
+    fun getRecommendations_status201_created() = runTest {
+        ApiStatusCaseAsserts.assertStatus201Created(
+            successBody = SpotifyApiFixtures.RECOMMENDATIONS_MIN,
+            assertData = {
+                assertEquals(1, it.seeds.size)
+                assertEquals(1, it.tracks.size)
+            }
+        ) { client ->
+            TracksApis(client).getRecommendations(
+                seeds = RecommendationSeeds(genres = listOf("pop")),
+                tunable = RecommendationTunableAttributes(targetEnergy = 0.7),
+            )
+        }
+    }
+
+    @Test
+    fun getRecommendations_status401_unauthorized() = runTest {
+        ApiStatusCaseAsserts.assertStatus401Unauthorized { client ->
+            TracksApis(client).getRecommendations(seeds = RecommendationSeeds(genres = listOf("pop")))
+        }
+    }
+
+    @Test
+    fun getRecommendations_status403_forbidden() = runTest {
+        ApiStatusCaseAsserts.assertStatus403Forbidden { client ->
+            TracksApis(client).getRecommendations(seeds = RecommendationSeeds(genres = listOf("pop")))
+        }
+    }
+
+    @Test
+    fun getRecommendations_status429_tooManyRequests() = runTest {
+        ApiStatusCaseAsserts.assertStatus429TooManyRequests { client ->
+            TracksApis(client).getRecommendations(seeds = RecommendationSeeds(genres = listOf("pop")))
+        }
     }
 }
