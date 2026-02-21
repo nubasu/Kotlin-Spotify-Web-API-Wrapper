@@ -22,16 +22,16 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Genres
   - [x] Markets
   - [x] Player
-  - [ ] Playlists
-  - [ ] Search
-  - [ ] Shows
-  - [ ] Tracks 
-  - [ ] Users
+  - [x] Playlists
+  - [x] Search
+  - [x] Shows
+  - [x] Tracks 
+  - [x] Users
 - Auth API
-  - [ ] PKCE
-  - [ ] Client Credentials
-  - [ ] Authorization Code
-  - [ ] Refresh
+  - [x] PKCE
+  - [x] Client Credentials
+  - [x] Authorization Code
+  - [x] Refresh
 - [ ] Paging helpers / Rate limit handling / Retry policies
 - [ ] Samples + Docs
 - [ ] Publish artifacts
@@ -42,3 +42,91 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 PRs/issues are welcome.
  - If you find a bug: open an Issue with steps to reproduce.
  - If you want to add an endpoint: please follow existing conventions and include tests if possible.
+
+## Authentication
+
+### 1) Authorization Code with PKCE (recommended for apps)
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+
+val auth = SpotifyAuthManager(
+    clientId = "YOUR_CLIENT_ID",
+    redirectUri = "your.app://callback"
+)
+
+// Step 1: Start auth and open this URL in browser/webview
+val pkce = auth.startPkceAuthorization(
+    scope = listOf("user-read-email", "user-read-private")
+)
+val authorizationUrl = pkce.authorizationUri
+
+// Step 2-A: If you received full redirect URI
+val token = auth.completePkceAuthorizationFromRedirectUri(redirectedUri)
+
+// Step 2-B: If your framework gives code/state separately
+val token2 = auth.completePkceAuthorization(
+    code = code,
+    returnedState = state
+)
+
+// TokenHolder.token is set automatically
+```
+
+### 2) Authorization Code Flow (server-side)
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+
+val auth = SpotifyAuthManager(
+    clientId = "YOUR_CLIENT_ID",
+    clientSecret = "YOUR_CLIENT_SECRET",
+    redirectUri = "https://your.server/callback"
+)
+
+// Build authorize URL
+val authorizationUrl = auth.buildAuthorizationCodeUri(
+    scope = listOf("user-read-email", "playlist-read-private"),
+    state = "csrf-token"
+)
+
+// Exchange code from callback
+val token = auth.exchangeAuthorizationCode(code)
+```
+
+### 3) Client Credentials Flow (server-to-server)
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+
+val auth = SpotifyAuthManager(
+    clientId = "YOUR_CLIENT_ID",
+    clientSecret = "YOUR_CLIENT_SECRET"
+)
+
+val token = auth.requestClientCredentialsToken()
+```
+
+### 4) Refresh Token
+
+```kotlin
+// Refresh explicitly
+val refreshed = auth.refreshAccessToken()
+
+// Or use auto refresh when token is near expiry
+val accessToken = auth.getValidAccessToken()
+```
+
+### 5) Low-level API (manual control)
+
+If you need custom handling, use `AuthorizationApis` directly:
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
+
+val apis = AuthorizationApis()
+val token = apis.requestClientCredentialsToken(
+    clientId = "YOUR_CLIENT_ID",
+    clientSecret = "YOUR_CLIENT_SECRET"
+)
+```
