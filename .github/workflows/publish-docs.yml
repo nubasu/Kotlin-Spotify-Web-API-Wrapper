@@ -49,7 +49,7 @@ jobs:
       - name: Prepare Pages site
         shell: bash
         run: |
-          mkdir -p public/api
+          mkdir -p public/
           cp -R shared/build/dokka/html/. public/
 
       - name: Configure GitHub Pages
