@@ -1,17 +1,14 @@
-# Spotify Web API Kotlin Multiplatform Wrapper
+﻿# Spotify Web API Kotlin Multiplatform Wrapper
 
-> ⚠️ **In Progress / WIP**
->
-> This library is currently under active development. APIs, package structure, and behavior may change without notice.
-> Contributions and feedback are welcome.
+> In Progress / WIP
 
-A Kotlin Multiplatform (KMP) wrapper for the [**Spotify Web API**](https://developer.spotify.com/documentation/web-api).
+A Kotlin Multiplatform (KMP) wrapper for the Spotify Web API.
 
 Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, Android, iOS, and other KMP targets.
 
 ## Status
 
-- 🚧 **In Progress (WIP)**
+- In Progress (WIP)
 - Basic API
   - [x] Albums
   - [x] Artists
@@ -25,7 +22,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Playlists
   - [x] Search
   - [x] Shows
-  - [x] Tracks 
+  - [x] Tracks
   - [x] Users
 - Auth API
   - [x] PKCE
@@ -33,134 +30,51 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Authorization Code
   - [x] Refresh
 - [x] Paging helpers / Rate limit handling / Retry policies
-- [ ] Samples + Docs
+- [x] Samples + Docs
 - [ ] Publish artifacts
 - [x] Tests
 
-## Contributing
+## Documentation
 
-PRs/issues are welcome.
- - If you find a bug: open an Issue with steps to reproduce.
- - If you want to add an endpoint: please follow existing conventions and include tests if possible.
+- Docs index: [docs/README.md](docs/README.md)
+- API samples by domain: [docs/samples/apis](docs/samples/apis)
+- Flow samples: [docs/samples/flows](docs/samples/flows)
+  - Auth to API: [docs/samples/flows/auth-to-api.md](docs/samples/flows/auth-to-api.md)
+  - Authorization Code to API: [docs/samples/flows/authorization-code-to-api.md](docs/samples/flows/authorization-code-to-api.md)
+  - Client Credentials to API: [docs/samples/flows/client-credentials-to-api.md](docs/samples/flows/client-credentials-to-api.md)
+  - Refresh token: [docs/samples/flows/refresh-token.md](docs/samples/flows/refresh-token.md)
+- Getting started: [docs/guides/getting-started.md](docs/guides/getting-started.md)
+- Response/error handling: [docs/guides/response-and-error-handling.md](docs/guides/response-and-error-handling.md)
+- Paging/RateLimit/Retry guide: [docs/guides/paging-rate-limit-retry.md](docs/guides/paging-rate-limit-retry.md)
+- Token management: [docs/guides/token-management.md](docs/guides/token-management.md)
+- Troubleshooting: [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md)
 
-## Authentication
-
-### 1) Authorization Code with PKCE (recommended for apps)
+## Quick Start
 
 ```kotlin
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
 
 val auth = SpotifyAuthManager(
     clientId = "YOUR_CLIENT_ID",
     redirectUri = "your.app://callback"
 )
 
-// Step 1: Start auth and open this URL in browser/webview
-val pkce = auth.startPkceAuthorization(
-    scope = listOf("user-read-email", "user-read-private")
-)
-val authorizationUrl = pkce.authorizationUri
+val pkce = auth.startPkceAuthorization(scope = listOf("user-read-email"))
+// open pkce.authorizationUri and complete callback handling...
 
-// Step 2-A: If you received full redirect URI
-val token = auth.completePkceAuthorizationFromRedirectUri(redirectedUri)
-
-// Step 2-B: If your framework gives code/state separately
-val token2 = auth.completePkceAuthorization(
-    code = code,
-    returnedState = state
-)
-
-// TokenHolder.token is set automatically
+val albumsApi = AlbumsApis()
+val album = albumsApi.getAlbum("album-id")
 ```
 
-### 2) Authorization Code Flow (server-side)
+## References
 
-```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+- Spotify Web API reference: https://developer.spotify.com/documentation/web-api/reference
+- Spotify Authorization concepts: https://developer.spotify.com/documentation/web-api/concepts/authorization
 
-val auth = SpotifyAuthManager(
-    clientId = "YOUR_CLIENT_ID",
-    clientSecret = "YOUR_CLIENT_SECRET",
-    redirectUri = "https://your.server/callback"
-)
+## Contributing
 
-// Build authorize URL
-val authorizationUrl = auth.buildAuthorizationCodeUri(
-    scope = listOf("user-read-email", "playlist-read-private"),
-    state = "csrf-token"
-)
+PRs/issues are welcome.
 
-// Exchange code from callback
-val token = auth.exchangeAuthorizationCode(code)
-```
-
-### 3) Client Credentials Flow (server-to-server)
-
-```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-
-val auth = SpotifyAuthManager(
-    clientId = "YOUR_CLIENT_ID",
-    clientSecret = "YOUR_CLIENT_SECRET"
-)
-
-val token = auth.requestClientCredentialsToken()
-```
-
-### 4) Refresh Token
-
-```kotlin
-// Refresh explicitly
-val refreshed = auth.refreshAccessToken()
-
-// Or use auto refresh when token is near expiry
-val accessToken = auth.getValidAccessToken()
-```
-
-### 5) Low-level API (manual control)
-
-If you need custom handling, use `AuthorizationApis` directly:
-
-```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
-
-val apis = AuthorizationApis()
-val token = apis.requestClientCredentialsToken(
-    clientId = "YOUR_CLIENT_ID",
-    clientSecret = "YOUR_CLIENT_SECRET"
-)
-```
-
-## Paging Helpers
-
-```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.PagingHelpers
-
-val first = albumsApis.getUsersSavedAlbums()
-val allItemsResponse = PagingHelpers.collectAllItems(
-    firstPageResponse = first,
-    nextUrlSelector = { it.next },
-    itemsSelector = { it.items },
-    fetchNextPage = { paging -> albumsApis.getUsersSavedAlbums(pagingOptions = paging) }
-)
-```
-
-## Rate Limit Handling / Retry Policies
-
-```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.RetryPolicy
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.SpotifyRetryExecutor
-
-val executor = SpotifyRetryExecutor(
-    retryPolicy = RetryPolicy(
-        maxRetries = 3,
-        baseDelayMillis = 500,
-        retryStatusCodes = setOf(429, 500, 502, 503, 504),
-        respectRetryAfterHeader = true
-    )
-)
-
-val response = executor.execute {
-    playlistsApis.getPlaylist("playlist-id")
-}
-```
+- If you find a bug: open an issue with steps to reproduce.
+- If you want to add an endpoint: follow existing conventions and include tests.

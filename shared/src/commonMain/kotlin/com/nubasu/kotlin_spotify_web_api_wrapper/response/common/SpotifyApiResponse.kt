@@ -25,4 +25,11 @@ sealed class SpotifyResponseData<out T> {
 data class SpotifyApiResponse<T>(
     val statusCode: Int,
     val data: SpotifyResponseData<T>,
+    val headers: Map<String, String> = emptyMap(),
 )
+
+fun SpotifyApiResponse<*>.header(name: String): String? {
+    return headers.entries.firstOrNull { (key, _) ->
+        key.equals(name, ignoreCase = true)
+    }?.value
+}
