@@ -3,9 +3,9 @@
 このサンプルは、Authorization Code Flow（client secret あり）でトークン取得後に API を呼ぶ流れです。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.users.UsersApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.users.UsersApis
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import io.ktor.http.Url
 
 suspend fun authorizationCodeFlow(redirectedUri: String) {

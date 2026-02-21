@@ -1,7 +1,7 @@
-﻿# Chapters API Samples
+# Chapters API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
+import com.nubasu.spotify.webapi.wrapper.api.chapters.ChaptersApis
 
 val api = ChaptersApis()
 

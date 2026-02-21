@@ -1,9 +1,9 @@
-﻿# Authorization API Samples
+# Authorization API Samples
 
 ## SpotifyAuthManager
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
 
 val auth = SpotifyAuthManager(
     clientId = "YOUR_CLIENT_ID",
@@ -32,7 +32,7 @@ val accessToken = auth.getValidAccessToken()
 ## AuthorizationApis (low-level)
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
+import com.nubasu.spotify.webapi.wrapper.api.authorization.AuthorizationApis
 
 val apis = AuthorizationApis()
 

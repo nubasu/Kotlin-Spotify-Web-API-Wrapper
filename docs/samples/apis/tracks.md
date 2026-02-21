@@ -1,11 +1,11 @@
-﻿# Tracks API Samples
+# Tracks API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.tracks.TracksApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationSeeds
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationTunableAttributes
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.SaveTracksForCurrentUserRequest
+import com.nubasu.spotify.webapi.wrapper.api.tracks.TracksApis
+import com.nubasu.spotify.webapi.wrapper.request.common.Ids
+import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationSeeds
+import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationTunableAttributes
+import com.nubasu.spotify.webapi.wrapper.request.tracks.SaveTracksForCurrentUserRequest
 
 val api = TracksApis()
 

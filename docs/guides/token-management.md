@@ -7,8 +7,8 @@
 `SpotifyAuthManager` はトークン取得時に `TokenHolder.token` を内部更新します。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.users.UsersApis
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.users.UsersApis
 
 suspend fun callWithAuthManager(code: String) {
     val auth = SpotifyAuthManager(
@@ -26,7 +26,7 @@ suspend fun callWithAuthManager(code: String) {
 ## 明示的にトークンを設定
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 
 TokenHolder.token = "YOUR_ACCESS_TOKEN"
 ```
@@ -36,7 +36,7 @@ TokenHolder.token = "YOUR_ACCESS_TOKEN"
 `TokenHolder.token` が空の場合のみ `tokenProvider` が呼ばれます。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 
 TokenHolder.tokenProvider = {
     secureStore.loadAccessToken()

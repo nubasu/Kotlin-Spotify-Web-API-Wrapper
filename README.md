@@ -1,4 +1,4 @@
-﻿# Spotify Web API Kotlin Multiplatform Wrapper
+# Spotify Web API Kotlin Multiplatform Wrapper
 
 > In Progress / WIP
 
@@ -60,8 +60,8 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 ## Quick Start
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
 
 val auth = SpotifyAuthManager(
     clientId = "YOUR_CLIENT_ID",

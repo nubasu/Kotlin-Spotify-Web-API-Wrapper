@@ -1,0 +1,11 @@
+package com.nubasu.spotify.webapi.wrapper.response.tracks
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SavedTrackObject(
+    @SerialName("added_at")
+    val addedAt: String,
+    val track: Track,
+)

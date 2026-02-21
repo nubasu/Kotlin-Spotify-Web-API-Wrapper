@@ -1,9 +1,9 @@
-﻿# Users API Samples
+# Users API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.users.UsersApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowType
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.TopItemType
+import com.nubasu.spotify.webapi.wrapper.api.users.UsersApis
+import com.nubasu.spotify.webapi.wrapper.request.users.FollowType
+import com.nubasu.spotify.webapi.wrapper.request.users.TopItemType
 
 val api = UsersApis()
 

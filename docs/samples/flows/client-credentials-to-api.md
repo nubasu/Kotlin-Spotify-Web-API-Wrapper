@@ -3,10 +3,10 @@
 このサンプルは、Client Credentials Flow でアプリトークンを取得し、検索 API を呼ぶ流れです。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.search.SearchApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.search.SearchType
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.search.SearchApis
+import com.nubasu.spotify.webapi.wrapper.request.search.SearchType
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 
 suspend fun clientCredentialsFlow() {
     val auth = SpotifyAuthManager(

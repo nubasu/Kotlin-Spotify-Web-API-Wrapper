@@ -1,7 +1,7 @@
 # Library API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.library.LibraryApis
+import com.nubasu.spotify.webapi.wrapper.api.library.LibraryApis
 
 val api = LibraryApis()
 

@@ -1,13 +1,13 @@
-﻿# Player API Samples
+# Player API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.Offset
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.RepeatMode
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.StartResumePlaybackRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.State
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.TransferPlaybackRequest
+import com.nubasu.spotify.webapi.wrapper.api.player.PlayerApis
+import com.nubasu.spotify.webapi.wrapper.request.player.DeviceIds
+import com.nubasu.spotify.webapi.wrapper.request.player.Offset
+import com.nubasu.spotify.webapi.wrapper.request.player.RepeatMode
+import com.nubasu.spotify.webapi.wrapper.request.player.StartResumePlaybackRequest
+import com.nubasu.spotify.webapi.wrapper.request.player.State
+import com.nubasu.spotify.webapi.wrapper.request.player.TransferPlaybackRequest
 
 val api = PlayerApis()
 
