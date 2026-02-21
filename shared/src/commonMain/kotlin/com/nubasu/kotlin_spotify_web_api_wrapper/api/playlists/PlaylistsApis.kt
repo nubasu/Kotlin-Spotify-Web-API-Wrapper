@@ -197,9 +197,13 @@ class PlaylistsApis {
         return response.body()
     }
 
-    suspend fun createPlaylist(body: CreatePlaylistRequest): SimplifiedPlaylistObject {
-        val endpoint = "https://api.spotify.com/v1/me/playlists"
-        val response = client.post(endpoint) {
+    suspend fun createPlaylist(userId: String, body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+        val endpoint = "https://api.spotify.com/v1/users"
+        val response = client.post {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(userId, "playlists")
+            }
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
