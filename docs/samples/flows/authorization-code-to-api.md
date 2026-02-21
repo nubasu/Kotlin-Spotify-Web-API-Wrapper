@@ -16,11 +16,11 @@ suspend fun authorizationCodeFlow(redirectedUri: String) {
     )
 
     val state = "server-side-state"
-    val authorizationUri = auth.buildAuthorizationCodeUri(
+    val authorizationUri = auth.buildAuthorizationCodeUriAndLaunch(
         scope = listOf("user-read-email", "user-read-private"),
         state = state
     )
-    println("Open: $authorizationUri")
+    println("Opened: $authorizationUri")
 
     val callback = Url(redirectedUri)
     val code = callback.parameters["code"] ?: error("Authorization code is missing.")

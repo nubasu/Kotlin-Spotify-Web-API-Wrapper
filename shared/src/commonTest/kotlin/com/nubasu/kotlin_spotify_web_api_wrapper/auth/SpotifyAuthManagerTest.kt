@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -68,6 +69,118 @@ class SpotifyAuthManagerTest {
         assertEquals("code", url.parameters["response_type"])
         assertNotNull(url.parameters["code_challenge"])
         assertEquals("S256", url.parameters["code_challenge_method"])
+    }
+
+    @Test
+    fun startPkceAuthorizationAndLaunch_callsLauncher() {
+        var launchedUri: String? = null
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = {
+                launchedUri = it
+                true
+            },
+        )
+
+        val req = manager.startPkceAuthorizationAndLaunch(scope = listOf("user-read-email"))
+
+        assertEquals(req.authorizationUri, launchedUri)
+    }
+
+    @Test
+    fun startPkceAuthorizationAsyncAndLaunch_callsLauncher() = runTest {
+        var launchedUri: String? = null
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = {
+                launchedUri = it
+                true
+            },
+        )
+
+        val req = manager.startPkceAuthorizationAsyncAndLaunch(scope = listOf("user-read-email"))
+
+        assertEquals(req.authorizationUri, launchedUri)
+    }
+
+    @Test
+    fun buildAuthorizationCodeUriAndLaunch_callsLauncher() {
+        var launchedUri: String? = null
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = {
+                launchedUri = it
+                true
+            },
+        )
+
+        val uri = manager.buildAuthorizationCodeUriAndLaunch(scope = listOf("user-read-email"))
+
+        assertEquals(uri, launchedUri)
+    }
+
+    @Test
+    fun buildAuthorizationCodeWithPkceUriAndLaunch_callsLauncher() {
+        var launchedUri: String? = null
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = {
+                launchedUri = it
+                true
+            },
+        )
+
+        val uri = manager.buildAuthorizationCodeWithPkceUriAndLaunch(codeChallenge = "challenge")
+
+        assertEquals(uri, launchedUri)
+    }
+
+    @Test
+    fun launchAuthorizationInAppOrBrowser_returnsFalseOnLauncherFailure() {
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = { throw IllegalStateException("boom") },
+        )
+
+        val launched = manager.launchAuthorizationInAppOrBrowser("https://accounts.spotify.com/authorize")
+
+        assertFalse(launched)
+    }
+
+    @Test
+    fun launchAuthorizationInAppOrBrowser_returnsLauncherResult() {
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+            authorizationUriLauncher = { true },
+        )
+
+        val launched = manager.launchAuthorizationInAppOrBrowser("https://accounts.spotify.com/authorize")
+
+        assertTrue(launched)
     }
 
     @Test

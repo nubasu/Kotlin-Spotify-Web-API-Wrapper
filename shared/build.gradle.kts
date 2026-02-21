@@ -36,6 +36,9 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.browser)
+        }
         commonMain.dependencies {
             // put your Multiplatform dependencies here
             implementation(libs.ktor.client.core)

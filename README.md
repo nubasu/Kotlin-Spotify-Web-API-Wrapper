@@ -49,6 +49,13 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 - Token management: [docs/guides/token-management.md](docs/guides/token-management.md)
 - Troubleshooting: [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md)
 
+## Sample App (composeApp)
+
+- A sample app is included in `composeApp/`.
+- It supports: `PKCE auth -> load current user's playlists -> start/pause playback`.
+- Android callback deep link: `spotifyauth://callback` (configure this in Spotify Dashboard redirect URIs).
+- Desktop/JVM: run `./gradlew :composeApp:run`.
+
 ## Quick Start
 
 ```kotlin
@@ -60,8 +67,8 @@ val auth = SpotifyAuthManager(
     redirectUri = "your.app://callback"
 )
 
-val pkce = auth.startPkceAuthorization(scope = listOf("user-read-email"))
-// open pkce.authorizationUri and complete callback handling...
+val pkce = auth.startPkceAuthorizationAndLaunch(scope = listOf("user-read-email"))
+// Android/iOS: app内認証画面を優先, その他: ブラウザ起動
 
 val albumsApi = AlbumsApis()
 val album = albumsApi.getAlbum("album-id")

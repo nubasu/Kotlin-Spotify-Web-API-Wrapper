@@ -12,8 +12,11 @@ val auth = SpotifyAuthManager(
 )
 
 val pkce = auth.startPkceAuthorization(scope = listOf("user-read-email"))
+val pkceAuto = auth.startPkceAuthorizationAndLaunch(scope = listOf("user-read-email"))
 val token = auth.completePkceAuthorizationFromRedirectUri("your.app://callback?code=...&state=...")
 
+val authCodeUri = auth.buildAuthorizationCodeUriAndLaunch(scope = listOf("user-read-email"))
+val launched = auth.launchAuthorizationInAppOrBrowser(authCodeUri)
 val byCode = auth.exchangeAuthorizationCode("authorization-code")
 val byPkceCode = auth.exchangeAuthorizationCodeWithPkce("authorization-code", "code-verifier")
 
@@ -21,6 +24,10 @@ val clientCredentials = auth.requestClientCredentialsToken()
 val refreshed = auth.refreshAccessToken()
 val accessToken = auth.getValidAccessToken()
 ```
+
+`startPkceAuthorizationAndLaunch()` / `buildAuthorizationCodeUriAndLaunch()` の起動先:
+- Android/iOS: アプリ内認証画面を優先
+- JVM/JS: ブラウザを自動起動
 
 ## AuthorizationApis (low-level)
 
