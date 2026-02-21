@@ -103,6 +103,7 @@ dependencies {
 
 ## Documentation
 
+- API reference (GitHub Pages): [https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/](https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/)
 - Docs index: [docs/README.md](docs/README.md)
 - API samples by domain: [docs/samples/apis](docs/samples/apis)
 - Flow samples: [docs/samples/flows](docs/samples/flows)
