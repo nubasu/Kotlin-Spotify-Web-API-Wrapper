@@ -5,10 +5,15 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.vanniktechMavenPublish)
 }
+
+group = providers.gradleProperty("GROUP").get()
+version = providers.gradleProperty("VERSION_NAME").get()
 
 kotlin {
     androidTarget {
+        publishLibraryVariants("release")
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -53,6 +58,38 @@ kotlin {
             implementation(libs.ktor.client.mock)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.coroutines.test)
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
+
+    pom {
+        name.set(providers.gradleProperty("POM_NAME"))
+        description.set(providers.gradleProperty("POM_DESCRIPTION"))
+        inceptionYear.set(providers.gradleProperty("POM_INCEPTION_YEAR"))
+        url.set(providers.gradleProperty("POM_URL"))
+
+        licenses {
+            license {
+                name.set(providers.gradleProperty("POM_LICENCE_NAME"))
+                url.set(providers.gradleProperty("POM_LICENCE_URL"))
+                distribution.set(providers.gradleProperty("POM_LICENCE_DIST"))
+            }
+        }
+        developers {
+            developer {
+                id.set(providers.gradleProperty("POM_DEVELOPER_ID"))
+                name.set(providers.gradleProperty("POM_DEVELOPER_NAME"))
+                url.set(providers.gradleProperty("POM_DEVELOPER_URL"))
+            }
+        }
+        scm {
+            url.set(providers.gradleProperty("POM_SCM_URL"))
+            connection.set(providers.gradleProperty("POM_SCM_CONNECTION"))
+            developerConnection.set(providers.gradleProperty("POM_SCM_DEV_CONNECTION"))
         }
     }
 }

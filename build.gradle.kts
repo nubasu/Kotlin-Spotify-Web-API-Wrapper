@@ -9,9 +9,20 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.ktor) apply false
+    alias(libs.plugins.vanniktechMavenPublish) apply false
 }
 
 repositories {
     // Required to download KtLint
     mavenCentral()
+}
+
+subprojects {
+    if (path != ":shared") {
+        tasks.configureEach {
+            if (name.startsWith("publish") || name.startsWith("sign")) {
+                enabled = false
+            }
+        }
+    }
 }

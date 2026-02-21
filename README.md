@@ -8,7 +8,6 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 
 ## Status
 
-- In Progress (WIP)
 - Basic API
   - [x] Albums
   - [x] Artists
@@ -31,7 +30,6 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Refresh
 - [x] Paging helpers / Rate limit handling / Retry policies
 - [x] Samples + Docs
-- [ ] Publish artifacts
 - [x] Tests
 
 ## Documentation
@@ -56,6 +54,32 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 - Android callback deep link: `spotifyauth://callback` (configure this in Spotify Dashboard redirect URIs).
 - JVM/Desktop auto callback: `http://127.0.0.1:8888/callback` (configure this in Spotify Dashboard redirect URIs).
 - Desktop/JVM: run `./gradlew :composeApp:run`.
+
+## Use From Maven Central
+
+### `build.gradle.kts` (Kotlin DSL)
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0")
+}
+```
+
+### `build.gradle` (Groovy DSL)
+
+```groovy
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0'
+}
+```
 
 ## Quick Start
 
@@ -86,3 +110,4 @@ PRs/issues are welcome.
 
 - If you find a bug: open an issue with steps to reproduce.
 - If you want to add an endpoint: follow existing conventions and include tests.
+
