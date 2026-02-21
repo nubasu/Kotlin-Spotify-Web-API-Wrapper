@@ -35,7 +35,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 - [ ] Paging helpers / Rate limit handling / Retry policies
 - [ ] Samples + Docs
 - [ ] Publish artifacts
-- [ ] Tests
+- [x] Tests
 
 ## Contributing
 

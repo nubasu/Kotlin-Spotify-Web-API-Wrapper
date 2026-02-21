@@ -1,33 +1,32 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.authorization.TokenResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
-import io.ktor.http.isSuccess
 import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class AuthorizationApis {
-    private val client = HttpClient(CIO) {
+class AuthorizationApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
-    }
-
-    private val authorizeEndpoint = "https://accounts.spotify.com/authorize"
-    private val tokenEndpoint = "https://accounts.spotify.com/api/token"
+    },
+    private val authorizeEndpoint: String = "https://accounts.spotify.com/authorize",
+    private val tokenEndpoint: String = "https://accounts.spotify.com/api/token",
+) {
 
     fun buildAuthorizationCodeWithPkceUri(
         clientId: String,
@@ -76,7 +75,7 @@ class AuthorizationApis {
         code: String,
         redirectUri: String,
         codeVerifier: String,
-    ): TokenResponse {
+    ): SpotifyApiResponse<TokenResponse> {
         val response = client.post(tokenEndpoint) {
             accept(ContentType.Application.Json)
             setBody(
@@ -91,10 +90,7 @@ class AuthorizationApis {
                 )
             )
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify auth error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun requestAuthorizationCodeToken(
@@ -102,7 +98,7 @@ class AuthorizationApis {
         clientSecret: String,
         code: String,
         redirectUri: String,
-    ): TokenResponse {
+    ): SpotifyApiResponse<TokenResponse> {
         val response = client.post(tokenEndpoint) {
             accept(ContentType.Application.Json)
             header(HttpHeaders.Authorization, basicAuthorization(clientId, clientSecret))
@@ -116,16 +112,13 @@ class AuthorizationApis {
                 )
             )
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify auth error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun requestClientCredentialsToken(
         clientId: String,
         clientSecret: String,
-    ): TokenResponse {
+    ): SpotifyApiResponse<TokenResponse> {
         val response = client.post(tokenEndpoint) {
             accept(ContentType.Application.Json)
             header(HttpHeaders.Authorization, basicAuthorization(clientId, clientSecret))
@@ -137,16 +130,13 @@ class AuthorizationApis {
                 )
             )
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify auth error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun refreshTokenWithPkce(
         clientId: String,
         refreshToken: String,
-    ): TokenResponse {
+    ): SpotifyApiResponse<TokenResponse> {
         val response = client.post(tokenEndpoint) {
             accept(ContentType.Application.Json)
             setBody(
@@ -159,17 +149,14 @@ class AuthorizationApis {
                 )
             )
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify auth error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun refreshToken(
         clientId: String,
         clientSecret: String,
         refreshToken: String,
-    ): TokenResponse {
+    ): SpotifyApiResponse<TokenResponse> {
         val response = client.post(tokenEndpoint) {
             accept(ContentType.Application.Json)
             header(HttpHeaders.Authorization, basicAuthorization(clientId, clientSecret))
@@ -182,10 +169,7 @@ class AuthorizationApis {
                 )
             )
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify auth error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     @OptIn(ExperimentalEncodingApi::class)

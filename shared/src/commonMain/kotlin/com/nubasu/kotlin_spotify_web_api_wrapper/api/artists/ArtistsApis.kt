@@ -1,5 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.artists
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.IncludeGroup
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.Artist
@@ -10,29 +14,27 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistsRelated
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class ArtistsApis {
-    private val client = HttpClient(CIO) {
+class ArtistsApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getArtist(
         id: String,
-    ) : Artist {
+    ) : SpotifyApiResponse<Artist> {
         val ENDPOINT = "https://api.spotify.com/v1/artists/"
         val response = client.get {
             url {
@@ -42,15 +44,12 @@ class ArtistsApis {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getSeveralArtists(
         ids: List<String>,
-    ) : Artists {
+    ) : SpotifyApiResponse<Artists> {
         val ENDPOINT = "https://api.spotify.com/v1/artists"
         val response = client.get {
             url {
@@ -60,10 +59,7 @@ class ArtistsApis {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getArtistsAlbums(
@@ -71,7 +67,7 @@ class ArtistsApis {
         includeGroups: List<IncludeGroup> = emptyList(),
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : ArtistsAlbums {
+    ) : SpotifyApiResponse<ArtistsAlbums> {
         val ENDPOINT = "https://api.spotify.com/v1/artists"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -88,16 +84,13 @@ class ArtistsApis {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getArtistsTopTracks(
         id: String,
         market: CountryCode? = null,
-    ) : ArtistsTopTracks {
+    ) : SpotifyApiResponse<ArtistsTopTracks> {
         val ENDPOINT = "https://api.spotify.com/v1/artists"
         val response = client.get {
             url {
@@ -108,16 +101,13 @@ class ArtistsApis {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 
     @Deprecated("")
     suspend fun getArtistsRelatedArtists(
         id: String,
-    ) : ArtistsRelatedArtists {
+    ) : SpotifyApiResponse<ArtistsRelatedArtists> {
         val ENDPOINT = "https://api.spotify.com/v1/artists"
         val response = client.get {
             url {
@@ -127,9 +117,6 @@ class ArtistsApis {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return response.body()
+        return response.toSpotifyApiResponse()
     }
 }
