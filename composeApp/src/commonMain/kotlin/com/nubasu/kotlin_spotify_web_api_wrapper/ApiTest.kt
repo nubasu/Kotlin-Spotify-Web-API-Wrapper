@@ -13,6 +13,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.RepeatMode
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.State
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import kotlinx.coroutines.runBlocking
 
 object ApiTest {
@@ -85,13 +86,17 @@ object ApiTest {
 
     fun playerApisTest() = runBlocking {
         val api = PlayerApis()
-        val devices = api.getAvailableDevices()
+        val devicesResponse = api.getAvailableDevices()
+        val firstDeviceId = when (val data = devicesResponse.data) {
+            is SpotifyResponseData.Success -> data.value.devices.firstOrNull()?.id
+            is SpotifyResponseData.Error -> null
+        }
         println("getAvailableDevices")
-        println(devices)
+        println(devicesResponse)
         println("getPlaybackState")
         println(api.getPlaybackState())
         println("transferPlayback")
-        println(api.transferPlayback(DeviceIds(listOf(devices.devices.first().id.toString()))))
+        firstDeviceId?.let { println(api.transferPlayback(DeviceIds(listOf(it)))) }
         println("getCurrentlyPlayingTrack")
         println(api.getCurrentlyPlayingTrack())
         println("startResumePlayback")
