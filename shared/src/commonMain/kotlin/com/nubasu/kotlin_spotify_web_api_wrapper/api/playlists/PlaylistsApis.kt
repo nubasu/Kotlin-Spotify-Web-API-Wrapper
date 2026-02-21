@@ -92,7 +92,7 @@ class PlaylistsApis {
         val response = client.get {
             url {
                 takeFrom(endpoint)
-                appendPathSegments(playlistId, "tracks")
+                appendPathSegments(playlistId, "items")
                 market?.let { parameters.append("market", it.code) }
                 pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
                 pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
@@ -115,7 +115,7 @@ class PlaylistsApis {
         val response = client.put {
             url {
                 takeFrom(endpoint)
-                appendPathSegments(playlistId, "tracks")
+                appendPathSegments(playlistId, "items")
                 uris?.let { parameters.append("uris", it.joinToString(",")) }
             }
             bearerAuth(TokenHolder.token)
@@ -137,7 +137,7 @@ class PlaylistsApis {
         val response = client.post {
             url {
                 takeFrom(endpoint)
-                appendPathSegments(playlistId, "tracks")
+                appendPathSegments(playlistId, "items")
                 uris?.let { parameters.append("uris", it.joinToString(",")) }
                 position?.let { parameters.append("position", it.toString()) }
             }
@@ -155,7 +155,7 @@ class PlaylistsApis {
         val response = client.delete {
             url {
                 takeFrom(endpoint)
-                appendPathSegments(playlistId, "tracks")
+                appendPathSegments(playlistId, "items")
             }
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
@@ -197,13 +197,10 @@ class PlaylistsApis {
         return response.body()
     }
 
-    suspend fun createPlaylist(userId: String, body: CreatePlaylistRequest): SimplifiedPlaylistObject {
-        val endpoint = "https://api.spotify.com/v1/users"
+    suspend fun createPlaylist(body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+        val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response = client.post {
-            url {
-                takeFrom(endpoint)
-                appendPathSegments(userId, "playlists")
-            }
+            url { takeFrom(endpoint) }
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
@@ -211,6 +208,14 @@ class PlaylistsApis {
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         return response.body()
+    }
+
+    @Deprecated(
+        "Spotify recommends POST /v1/me/playlists. Use createPlaylist(body).",
+        ReplaceWith("createPlaylist(body)")
+    )
+    suspend fun createPlaylist(userId: String, body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+        return createPlaylist(body)
     }
 
     suspend fun getFeaturedPlaylists(

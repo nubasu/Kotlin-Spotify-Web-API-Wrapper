@@ -49,7 +49,7 @@ class ChaptersApis {
         ids: List<String>,
         market: CountryCode? = null,
     ) : Chapters {
-        val ENDPOINT = "https://api.spotify.com/v1/albums"
+        val ENDPOINT = "https://api.spotify.com/v1/chapters"
         val response = client.get {
             url {
                 takeFrom(ENDPOINT)

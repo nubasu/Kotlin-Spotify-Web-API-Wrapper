@@ -212,8 +212,6 @@ class PlayerApis {
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
-            contentType(ContentType.Application.Json)
-            setBody(positionMs)
             url {
                 parameters.append("position_ms", positionMs.toString())
                 deviceId?.let { parameters.append("device_id", it) }

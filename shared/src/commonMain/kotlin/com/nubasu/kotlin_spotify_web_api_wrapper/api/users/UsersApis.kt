@@ -95,6 +95,9 @@ class UsersApis {
     }
 
     suspend fun getFollowedArtists(type: FollowType = FollowType.ARTIST, limit: Int? = null, after: String? = null): FollowedArtists {
+        require(type == FollowType.ARTIST) {
+            "Spotify Get Followed Artists supports only type=artist."
+        }
         val endpoint = "https://api.spotify.com/v1/me/following"
         val response = client.get {
             url {

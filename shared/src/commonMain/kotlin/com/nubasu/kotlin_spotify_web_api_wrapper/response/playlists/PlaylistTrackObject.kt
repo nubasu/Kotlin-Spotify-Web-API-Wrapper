@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PlaylistTrackObject(
     @SerialName("added_at")
-    val addedAt: String,
+    val addedAt: String? = null,
     @SerialName("added_by")
-    val addedBy: AddedBy,
+    val addedBy: AddedBy? = null,
     @SerialName("is_local")
     val isLocal: Boolean,
-    val track: PlaybackItem,
+    val track: PlaybackItem? = null,
 )
