@@ -11,5 +11,5 @@ data class Episodes(
     val offset: Int,
     val previous: String?,
     val total: Int,
-    val items: List<SimplifiedEpisodeObject>
+    val items: List<SimplifiedEpisodeObject>,
 )

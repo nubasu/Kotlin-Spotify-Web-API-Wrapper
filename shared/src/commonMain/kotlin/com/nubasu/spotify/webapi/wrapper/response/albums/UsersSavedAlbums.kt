@@ -11,5 +11,5 @@ data class UsersSavedAlbums(
     val offset: Int,
     val previous: String? = null,
     val total: Int,
-    @Contextual val items: List<SavedAlbumObject>
+    @Contextual val items: List<SavedAlbumObject>,
 )

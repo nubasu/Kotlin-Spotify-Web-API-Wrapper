@@ -16,19 +16,19 @@ internal actual fun launchAuthorizationUriOnPlatform(authorizationUri: String): 
         true
     }.getOrElse {
         runCatching {
-            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
+            val intent =
+                Intent(Intent.ACTION_VIEW, uri).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
             context.startActivity(intent)
             true
         }.getOrElse { false }
     }
 }
 
-private fun resolveApplication(): Application? {
-    return runCatching {
+private fun resolveApplication(): Application? =
+    runCatching {
         val activityThreadClass = Class.forName("android.app.ActivityThread")
         val currentApplication = activityThreadClass.getMethod("currentApplication")
         currentApplication.invoke(null) as? Application
     }.getOrNull()
-}

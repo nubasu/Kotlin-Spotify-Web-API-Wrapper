@@ -18,8 +18,13 @@ data class SpotifyError(
 )
 
 sealed class SpotifyResponseData<out T> {
-    data class Success<T>(val value: T) : SpotifyResponseData<T>()
-    data class Error(val value: SpotifyErrorResponse) : SpotifyResponseData<Nothing>()
+    data class Success<T>(
+        val value: T,
+    ) : SpotifyResponseData<T>()
+
+    data class Error(
+        val value: SpotifyErrorResponse,
+    ) : SpotifyResponseData<Nothing>()
 }
 
 data class SpotifyApiResponse<T>(
@@ -28,8 +33,8 @@ data class SpotifyApiResponse<T>(
     val headers: Map<String, String> = emptyMap(),
 )
 
-fun SpotifyApiResponse<*>.header(name: String): String? {
-    return headers.entries.firstOrNull { (key, _) ->
-        key.equals(name, ignoreCase = true)
-    }?.value
-}
+fun SpotifyApiResponse<*>.header(name: String): String? =
+    headers.entries
+        .firstOrNull { (key, _) ->
+            key.equals(name, ignoreCase = true)
+        }?.value

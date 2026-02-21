@@ -16,7 +16,7 @@ data class PlaylistTrackObject(
     val item: PlaybackItem? = null,
     @Deprecated(
         "Spotify Playlist Item payload now uses `item`. `track` is kept for backward compatibility.",
-        ReplaceWith("item")
+        ReplaceWith("item"),
     )
     @SerialName("track")
     val track: PlaybackItem? = null,

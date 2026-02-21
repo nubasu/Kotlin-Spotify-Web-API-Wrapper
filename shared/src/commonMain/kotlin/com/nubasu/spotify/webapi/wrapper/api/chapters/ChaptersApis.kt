@@ -1,11 +1,9 @@
 package com.nubasu.spotify.webapi.wrapper.api.chapters
 
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
-
-import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
-import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.response.chapters.Chapter
 import com.nubasu.spotify.webapi.wrapper.response.chapters.Chapters
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
@@ -20,27 +18,28 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
 class ChaptersApis(
-    private val client: HttpClient = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
+    private val client: HttpClient =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json()
+            }
+        },
 ) {
-
     suspend fun getAChapter(
         id: String,
         market: CountryCode? = null,
-    ) : SpotifyApiResponse<Chapter> {
-        val ENDPOINT = "https://api.spotify.com/v1/chapters/"
-        val response = client.get {
-            url {
-                takeFrom(ENDPOINT)
-                appendPathSegments(id)
-                market?.let { parameters.append("market", it.code) }
+    ): SpotifyApiResponse<Chapter> {
+        val endpoint = "https://api.spotify.com/v1/chapters/"
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    appendPathSegments(id)
+                    market?.let { parameters.append("market", it.code) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 
@@ -50,17 +49,18 @@ class ChaptersApis(
     suspend fun getSeveralChapters(
         ids: List<String>,
         market: CountryCode? = null,
-    ) : SpotifyApiResponse<Chapters> {
-        val ENDPOINT = "https://api.spotify.com/v1/chapters"
-        val response = client.get {
-            url {
-                takeFrom(ENDPOINT)
-                parameters.append("ids", ids.joinToString(","))
-                market?.let { parameters.append("market", market.code) }
+    ): SpotifyApiResponse<Chapters> {
+        val endpoint = "https://api.spotify.com/v1/chapters"
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("ids", ids.joinToString(","))
+                    market?.let { parameters.append("market", market.code) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 }

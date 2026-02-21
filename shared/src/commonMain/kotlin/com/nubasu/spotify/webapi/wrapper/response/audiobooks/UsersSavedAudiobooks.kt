@@ -10,5 +10,5 @@ data class UsersSavedAudiobooks(
     val offset: Int,
     val previous: String? = null,
     val total: Int,
-    val items: List<SimplifiedAudiobookObject>
+    val items: List<SimplifiedAudiobookObject>,
 )

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NewRelease(
-    val albums: NewReleaseAlbums
+    val albums: NewReleaseAlbums,
 )

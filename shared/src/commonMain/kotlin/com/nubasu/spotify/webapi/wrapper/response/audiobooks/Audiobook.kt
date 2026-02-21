@@ -1,7 +1,5 @@
 package com.nubasu.spotify.webapi.wrapper.response.audiobooks
 
-import com.nubasu.spotify.webapi.wrapper.response.artists.Artist
-import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistObject
 import com.nubasu.spotify.webapi.wrapper.response.common.CopyrightObject
 import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
 import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject

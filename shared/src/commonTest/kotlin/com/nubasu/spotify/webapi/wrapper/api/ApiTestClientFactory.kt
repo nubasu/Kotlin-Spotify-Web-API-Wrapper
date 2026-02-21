@@ -12,13 +12,14 @@ import io.ktor.serialization.kotlinx.json.json
 
 internal object ApiTestClientFactory {
     fun errorClient(status: HttpStatusCode = HttpStatusCode.InternalServerError): HttpClient {
-        val engine = MockEngine {
-            respond(
-                content = """{"error":{"status":${status.value},"message":"test-error"}}""",
-                status = status,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-            )
-        }
+        val engine =
+            MockEngine {
+                respond(
+                    content = """{"error":{"status":${status.value},"message":"test-error"}}""",
+                    status = status,
+                    headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+            }
         return client(engine)
     }
 
@@ -26,21 +27,21 @@ internal object ApiTestClientFactory {
         status: HttpStatusCode = HttpStatusCode.Created,
         body: String = "{}",
     ): HttpClient {
-        val engine = MockEngine {
-            respond(
-                content = body,
-                status = status,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-            )
-        }
+        val engine =
+            MockEngine {
+                respond(
+                    content = body,
+                    status = status,
+                    headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                )
+            }
         return client(engine)
     }
 
-    private fun client(engine: MockEngine): HttpClient {
-        return HttpClient(engine) {
+    private fun client(engine: MockEngine): HttpClient =
+        HttpClient(engine) {
             install(ContentNegotiation) {
                 json()
             }
         }
-    }
 }

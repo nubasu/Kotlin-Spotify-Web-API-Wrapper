@@ -1,7 +1,7 @@
 package com.nubasu.spotify.webapi.wrapper.utils
 
-import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.posix.arc4random_buf
 

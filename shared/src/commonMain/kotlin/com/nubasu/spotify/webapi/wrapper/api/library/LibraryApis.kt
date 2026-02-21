@@ -20,71 +20,69 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
 class LibraryApis(
-    private val client: HttpClient = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
-    }
+    private val client: HttpClient =
+        HttpClient(CIO) {
+            install(ContentNegotiation) { json() }
+        },
 ) {
-
     suspend fun getUsersSavedLibrary(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
     ): SpotifyApiResponse<UsersSavedLibrary> {
         val endpoint = "https://api.spotify.com/v1/me/library"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                market?.let { parameters.append("market", it.code) }
-                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    market?.let { parameters.append("market", it.code) }
+                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 
-    suspend fun saveItemsForCurrentUser(
-        uris: List<String>,
-    ): SpotifyApiResponse<Boolean> {
+    suspend fun saveItemsForCurrentUser(uris: List<String>): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/library"
-        val response = client.put {
-            url {
-                takeFrom(endpoint)
-                parameters.append("uris", uris.joinToString(","))
+        val response =
+            client.put {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("uris", uris.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyBooleanApiResponse()
     }
 
-    suspend fun removeUsersSavedItems(
-        uris: List<String>,
-    ): SpotifyApiResponse<Boolean> {
+    suspend fun removeUsersSavedItems(uris: List<String>): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/library"
-        val response = client.delete {
-            url {
-                takeFrom(endpoint)
-                parameters.append("uris", uris.joinToString(","))
+        val response =
+            client.delete {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("uris", uris.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyBooleanApiResponse()
     }
 
-    suspend fun checkUsersSavedItems(
-        uris: List<String>,
-    ): SpotifyApiResponse<List<Boolean>> {
+    suspend fun checkUsersSavedItems(uris: List<String>): SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/library/contains"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                parameters.append("uris", uris.joinToString(","))
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("uris", uris.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 }

@@ -20,4 +20,3 @@ data class Segments(
     val pitches: List<Double> = emptyList(),
     val timbre: List<Double> = emptyList(),
 )
-

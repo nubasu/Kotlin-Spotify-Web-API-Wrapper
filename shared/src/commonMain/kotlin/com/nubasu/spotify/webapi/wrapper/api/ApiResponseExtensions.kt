@@ -33,22 +33,21 @@ internal suspend fun HttpResponse.toSpotifyBooleanApiResponse(): SpotifyApiRespo
     }
 }
 
-internal fun String.toSpotifyErrorResponse(statusCode: Int): SpotifyErrorResponse {
-    return runCatching {
+internal fun String.toSpotifyErrorResponse(statusCode: Int): SpotifyErrorResponse =
+    runCatching {
         spotifyResponseJson.decodeFromString<SpotifyErrorResponse>(this)
     }.getOrElse {
         val fallback = this.ifBlank { "Unknown error" }
         SpotifyErrorResponse(
-            error = SpotifyError(
-                status = statusCode,
-                message = fallback,
-            )
+            error =
+                SpotifyError(
+                    status = statusCode,
+                    message = fallback,
+                ),
         )
     }
-}
 
-private fun HttpResponse.headersMap(): Map<String, String> {
-    return headers.names().associateWith { key ->
+private fun HttpResponse.headersMap(): Map<String, String> =
+    headers.names().associateWith { key ->
         headers[key].orEmpty()
     }
-}
