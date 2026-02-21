@@ -13,12 +13,14 @@ suspend fun authThenCallApi(redirectedUri: String) {
         redirectUri = "your.app://callback"
     )
 
-    // 1) 認証開始 URL を発行（ブラウザ/WebViewで開く）
-    val request = auth.startPkceAuthorization(
+    // 1) 認証開始 URL を発行して自動起動
+    //    Android/iOS: アプリ内認証画面を優先
+    //    それ以外: ブラウザを起動
+    val request = auth.startPkceAuthorizationAndLaunch(
         scope = listOf("user-read-email", "user-read-private")
     )
     val authorizationUri = request.authorizationUri
-    println("Open: $authorizationUri")
+    println("Opened: $authorizationUri")
 
     // 2) コールバック URI からトークン取得
     val token = auth.completePkceAuthorizationFromRedirectUri(redirectedUri)
@@ -39,4 +41,5 @@ suspend fun authThenCallApi(redirectedUri: String) {
 
 - `completePkceAuthorization...` 成功時に `TokenHolder.token` は自動設定されます。
 - API クラス（`AlbumsApis` など）は `TokenHolder` を使って Bearer Token を送信します。
+- 明示的に制御したい場合は `startPkceAuthorization()` + `launchAuthorizationInAppOrBrowser(uri)` も使えます。
 

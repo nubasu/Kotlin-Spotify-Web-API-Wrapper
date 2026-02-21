@@ -28,6 +28,7 @@ class SpotifyAuthManager(
     private val clientSecret: String? = null,
     private val redirectUri: String? = null,
     private val authorizationApis: AuthorizationApis = AuthorizationApis(),
+    private val authorizationUriLauncher: (String) -> Boolean = ::launchAuthorizationUriOnPlatform,
 ) {
     private val mutex = Mutex()
     private var tokenResponse: TokenResponse? = null
@@ -50,6 +51,19 @@ class SpotifyAuthManager(
     }
 
     @OptIn(ExperimentalEncodingApi::class)
+    fun startPkceAuthorizationAndLaunch(
+        scope: List<String> = emptyList(),
+        showDialog: Boolean? = null,
+    ): PkceAuthorizationRequest {
+        val request = startPkceAuthorization(
+            scope = scope,
+            showDialog = showDialog,
+        )
+        launchAuthorizationInAppOrBrowser(request.authorizationUri)
+        return request
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
     suspend fun startPkceAuthorizationAsync(
         scope: List<String> = emptyList(),
         showDialog: Boolean? = null,
@@ -62,6 +76,19 @@ class SpotifyAuthManager(
             scope = scope,
             showDialog = showDialog,
         )
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun startPkceAuthorizationAsyncAndLaunch(
+        scope: List<String> = emptyList(),
+        showDialog: Boolean? = null,
+    ): PkceAuthorizationRequest {
+        val request = startPkceAuthorizationAsync(
+            scope = scope,
+            showDialog = showDialog,
+        )
+        launchAuthorizationInAppOrBrowser(request.authorizationUri)
+        return request
     }
 
     private fun buildPkceAuthorizationRequest(
@@ -158,6 +185,24 @@ class SpotifyAuthManager(
         )
     }
 
+    fun buildAuthorizationCodeWithPkceUriAndLaunch(
+        codeChallenge: String,
+        codeChallengeMethod: String = "S256",
+        scope: List<String> = emptyList(),
+        state: String? = null,
+        showDialog: Boolean? = null,
+    ): String {
+        val authorizationUri = buildAuthorizationCodeWithPkceUri(
+            codeChallenge = codeChallenge,
+            codeChallengeMethod = codeChallengeMethod,
+            scope = scope,
+            state = state,
+            showDialog = showDialog,
+        )
+        launchAuthorizationInAppOrBrowser(authorizationUri)
+        return authorizationUri
+    }
+
     fun buildAuthorizationCodeUri(
         scope: List<String> = emptyList(),
         state: String? = null,
@@ -170,6 +215,25 @@ class SpotifyAuthManager(
             state = state,
             showDialog = showDialog,
         )
+    }
+
+    fun buildAuthorizationCodeUriAndLaunch(
+        scope: List<String> = emptyList(),
+        state: String? = null,
+        showDialog: Boolean? = null,
+    ): String {
+        val authorizationUri = buildAuthorizationCodeUri(
+            scope = scope,
+            state = state,
+            showDialog = showDialog,
+        )
+        launchAuthorizationInAppOrBrowser(authorizationUri)
+        return authorizationUri
+    }
+
+    fun launchAuthorizationInAppOrBrowser(authorizationUri: String): Boolean {
+        return runCatching { authorizationUriLauncher(authorizationUri) }
+            .getOrElse { false }
     }
 
     suspend fun exchangeAuthorizationCodeWithPkce(
