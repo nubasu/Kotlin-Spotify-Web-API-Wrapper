@@ -1,10 +1,18 @@
-# Spotify Web API Kotlin Multiplatform Wrapper
+# Kotlin Spotify Web API Wrapper (KMP)
 Spotify Web API wrapper for Kotlin Multiplatform.
 
-Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, Android, iOS, and other KMP targets.
+This repository provides a type-safe, coroutine-friendly Spotify API client for Kotlin, Android, iOS, JVM, and JS.
+
+## Why This Library
+
+- Kotlin-first Spotify Web API wrapper for KMP projects
+- Type-safe request/response models with kotlinx.serialization
+- Coroutine-based API calls with Ktor client
+- Shared business logic across Android, iOS, JVM, and JS
 
 ## Status
 
+- Supported platforms: Android, iOS(not test yet), JVM, JS (Kotlin Multiplatform)
 - Basic API
   - [x] Albums
   - [x] Artists
@@ -30,30 +38,12 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 - [x] Samples + Docs
 - [x] Tests
 
-## Documentation
+## Installation (Maven Central)
 
-- Docs index: [docs/README.md](docs/README.md)
-- API samples by domain: [docs/samples/apis](docs/samples/apis)
-- Flow samples: [docs/samples/flows](docs/samples/flows)
-  - Auth to API: [docs/samples/flows/auth-to-api.md](docs/samples/flows/auth-to-api.md)
-  - Authorization Code to API: [docs/samples/flows/authorization-code-to-api.md](docs/samples/flows/authorization-code-to-api.md)
-  - Client Credentials to API: [docs/samples/flows/client-credentials-to-api.md](docs/samples/flows/client-credentials-to-api.md)
-  - Refresh token: [docs/samples/flows/refresh-token.md](docs/samples/flows/refresh-token.md)
-- Getting started: [docs/guides/getting-started.md](docs/guides/getting-started.md)
-- Response/error handling: [docs/guides/response-and-error-handling.md](docs/guides/response-and-error-handling.md)
-- Paging/RateLimit/Retry guide: [docs/guides/paging-rate-limit-retry.md](docs/guides/paging-rate-limit-retry.md)
-- Token management: [docs/guides/token-management.md](docs/guides/token-management.md)
-- Troubleshooting: [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md)
+Dependency coordinates:
 
-## Sample App (composeApp)
-
-- A sample app is included in `composeApp/`.
-- It supports: `PKCE auth -> load current user's playlists -> start/pause playback`.
-- Android callback deep link: `spotifyauth://callback` (configure this in Spotify Dashboard redirect URIs).
-- JVM/Desktop auto callback: `http://127.0.0.1:8888/callback` (configure this in Spotify Dashboard redirect URIs).
-- Desktop/JVM: run `./gradlew :composeApp:run`.
-
-## Use From Maven Central
+- Group: `io.github.nubasu`
+- Artifact: `kotlin-spotify-web-api-wrapper`
 
 ### `build.gradle.kts` (Kotlin DSL)
 
@@ -78,6 +68,37 @@ dependencies {
     implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0'
 }
 ```
+
+## Features
+
+- Spotify Web API coverage for albums, artists, playlists, player, tracks, users, and more
+- Authorization flows: Authorization Code with PKCE, Authorization Code, Client Credentials, Refresh Token
+- Pagination helpers, rate-limit handling, and retry support
+- Unit-tested non-private functions
+- Sample app and docs for end-to-end auth-to-API usage
+
+## Documentation
+
+- Docs index: [docs/README.md](docs/README.md)
+- API samples by domain: [docs/samples/apis](docs/samples/apis)
+- Flow samples: [docs/samples/flows](docs/samples/flows)
+  - Auth to API: [docs/samples/flows/auth-to-api.md](docs/samples/flows/auth-to-api.md)
+  - Authorization Code to API: [docs/samples/flows/authorization-code-to-api.md](docs/samples/flows/authorization-code-to-api.md)
+  - Client Credentials to API: [docs/samples/flows/client-credentials-to-api.md](docs/samples/flows/client-credentials-to-api.md)
+  - Refresh token: [docs/samples/flows/refresh-token.md](docs/samples/flows/refresh-token.md)
+- Getting started: [docs/guides/getting-started.md](docs/guides/getting-started.md)
+- Response/error handling: [docs/guides/response-and-error-handling.md](docs/guides/response-and-error-handling.md)
+- Paging/RateLimit/Retry guide: [docs/guides/paging-rate-limit-retry.md](docs/guides/paging-rate-limit-retry.md)
+- Token management: [docs/guides/token-management.md](docs/guides/token-management.md)
+- Troubleshooting: [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md)
+
+## Sample App (composeApp)
+
+- A sample app is included in `composeApp/`.
+- It supports: `PKCE auth -> load current user's playlists -> start/pause playback`.
+- Android callback deep link: `spotifyauth://callback` (configure this in Spotify Dashboard redirect URIs).
+- JVM/Desktop auto callback: `http://127.0.0.1:8888/callback` (configure this in Spotify Dashboard redirect URIs).
+- Desktop/JVM: run `./gradlew :composeApp:run`.
 
 ## Quick Start
 
@@ -108,4 +129,4 @@ PRs/issues are welcome.
 
 - If you find a bug: open an issue with steps to reproduce.
 - If you want to add an endpoint: follow existing conventions and include tests.
-
+- If you add any features: open an issue or open PR!
