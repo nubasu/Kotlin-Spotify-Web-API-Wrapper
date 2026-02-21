@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.nubasu.kotlin_spotify_web_api_wrapper.auth
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
@@ -39,6 +41,26 @@ class SpotifyAuthManagerTest {
         )
 
         val req = manager.startPkceAuthorization(scope = listOf("user-read-email"))
+        val url = Url(req.authorizationUri)
+
+        assertTrue(req.state.isNotBlank())
+        assertEquals(req.state, url.parameters["state"])
+        assertEquals("code", url.parameters["response_type"])
+        assertNotNull(url.parameters["code_challenge"])
+        assertEquals("S256", url.parameters["code_challenge_method"])
+    }
+
+    @Test
+    fun startPkceAuthorizationAsync_generatesStateAndChallenge() = runTest {
+        val manager = SpotifyAuthManager(
+            clientId = "client-id",
+            redirectUri = "app://callback",
+            authorizationApis = AuthorizationApis(
+                client = testHttpClient(MockEngine { error("No network expected") })
+            ),
+        )
+
+        val req = manager.startPkceAuthorizationAsync(scope = listOf("user-read-email"))
         val url = Url(req.authorizationUri)
 
         assertTrue(req.state.isNotBlank())
