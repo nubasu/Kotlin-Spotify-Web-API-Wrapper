@@ -42,6 +42,9 @@ class UsersApis(
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/top/{type} as deprecated.",
+    )
     suspend fun getUsersTopItems(
         type: TopItemType,
         timeRange: TimeRange? = null,
@@ -71,6 +74,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/playlists/{playlist_id}/followers as deprecated.",
+    )
     suspend fun followPlaylist(playlistId: String, public: Boolean = true) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response = client.put(endpoint) {
@@ -82,6 +88,9 @@ return response.toSpotifyApiResponse()
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/playlists/{playlist_id}/followers as deprecated.",
+    )
     suspend fun unfollowPlaylist(playlistId: String) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response = client.delete(endpoint) {
@@ -91,6 +100,9 @@ return response.toSpotifyApiResponse()
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/following as deprecated.",
+    )
     suspend fun getFollowedArtists(type: FollowType = FollowType.ARTIST, limit: Int? = null, after: String? = null) : SpotifyApiResponse<FollowedArtists> {
         require(type == FollowType.ARTIST) {
             "Spotify Get Followed Artists supports only type=artist."
@@ -109,6 +121,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/following as deprecated.",
+    )
     suspend fun followArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/following"
         val response = client.put {
@@ -123,6 +138,9 @@ return response.toSpotifyApiResponse()
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/following as deprecated.",
+    )
     suspend fun unfollowArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/following"
         val response = client.delete {
@@ -137,6 +155,9 @@ return response.toSpotifyApiResponse()
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/following/contains as deprecated.",
+    )
     suspend fun checkIfUserFollowsArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/following/contains"
         val response = client.get {
@@ -151,6 +172,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/playlists/{playlist_id}/followers/contains as deprecated.",
+    )
     suspend fun checkIfCurrentUserFollowsPlaylist(playlistId: String, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers/contains"
         val response = client.get {

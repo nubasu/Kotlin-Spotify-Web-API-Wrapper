@@ -222,11 +222,13 @@ return response.toSpotifyApiResponse()
         locale: String? = null,
         timestamp: String? = null,
         pagingOptions: PagingOptions = PagingOptions(),
+        country: CountryCode? = null,
     ) : SpotifyApiResponse<FeaturedPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/featured-playlists"
         val response = client.get {
             url {
                 takeFrom(endpoint)
+                country?.let { parameters.append("country", it.code) }
                 locale?.let { parameters.append("locale", it) }
                 timestamp?.let { parameters.append("timestamp", it) }
                 pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
@@ -241,12 +243,17 @@ return response.toSpotifyApiResponse()
     @Deprecated(
         "Spotify marks GET /v1/browse/categories/{category_id}/playlists as deprecated.",
     )
-    suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CategorysPlaylists> {
+    suspend fun getCategorysPlaylists(
+        categoryId: String,
+        pagingOptions: PagingOptions = PagingOptions(),
+        country: CountryCode? = null,
+    ) : SpotifyApiResponse<CategorysPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/categories"
         val response = client.get {
             url {
                 takeFrom(endpoint)
                 appendPathSegments(categoryId, "playlists")
+                country?.let { parameters.append("country", it.code) }
                 pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
                 pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
             }

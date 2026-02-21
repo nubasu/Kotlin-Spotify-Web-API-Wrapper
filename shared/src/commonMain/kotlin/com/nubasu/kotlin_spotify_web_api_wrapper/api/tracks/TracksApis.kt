@@ -47,6 +47,9 @@ class TracksApis(
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/tracks as deprecated.",
+    )
     suspend fun getSeveralTracks(ids: List<String>, market: CountryCode? = null) : SpotifyApiResponse<Tracks> {
         val endpoint = "https://api.spotify.com/v1/tracks"
         val response = client.get {
@@ -76,6 +79,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/tracks as deprecated.",
+    )
     suspend fun saveTracksForCurrentUser(body: SaveTracksForCurrentUserRequest) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/tracks"
         val response = client.put(endpoint) {
@@ -87,6 +93,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/tracks as deprecated.",
+    )
     suspend fun removeUsersSavedTracks(ids: Ids) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/tracks"
         val response = client.delete {

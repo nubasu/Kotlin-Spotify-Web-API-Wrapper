@@ -45,6 +45,9 @@ class ShowsApis(
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/shows as deprecated.",
+    )
     suspend fun getSeveralShows(ids: List<String>, market: CountryCode? = null) : SpotifyApiResponse<Shows> {
         val endpoint = "https://api.spotify.com/v1/shows"
         val response = client.get {
@@ -89,6 +92,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/shows as deprecated.",
+    )
     suspend fun saveShowsForCurrentUser(ids: Ids) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/shows"
         val response = client.put {
@@ -102,6 +108,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/shows as deprecated.",
+    )
     suspend fun removeUsersSavedShows(ids: Ids, market: CountryCode? = null) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/shows"
         val response = client.delete {
@@ -116,6 +125,9 @@ return response.toSpotifyBooleanApiResponse()
 return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/shows/contains as deprecated.",
+    )
     suspend fun checkUsersSavedShows(ids: Ids) : SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/shows/contains"
         val response = client.get {

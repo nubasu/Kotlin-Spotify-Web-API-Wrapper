@@ -49,6 +49,9 @@ class EpisodesApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/episodes as deprecated.",
+    )
     suspend fun getSeveralEpisodes(
         ids: List<String>,
         market: CountryCode? = null,
@@ -86,6 +89,9 @@ class EpisodesApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/episodes as deprecated.",
+    )
     suspend fun saveEpisodesForCurrentUser(
         ids: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -100,6 +106,9 @@ class EpisodesApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/episodes as deprecated.",
+    )
     suspend fun removeUsersSavedEpisodes(
         ids: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -114,6 +123,9 @@ class EpisodesApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/me/episodes/contains as deprecated.",
+    )
     suspend fun checkUsersSavedEpisodes(
         ids: Ids,
     ) : SpotifyApiResponse<List<Boolean>> {

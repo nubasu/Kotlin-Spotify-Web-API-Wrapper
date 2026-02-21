@@ -27,6 +27,9 @@ class CategoriesApis(
     }
 ) {
 
+    @Deprecated(
+        "Spotify marks GET /v1/browse/categories as deprecated.",
+    )
     suspend fun getSeveralBrowseCategories(
         locale: String? = null,
         pagingOptions: PagingOptions = PagingOptions(),
@@ -47,6 +50,9 @@ class CategoriesApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/browse/categories/{category_id} as deprecated.",
+    )
     suspend fun getSingleBrowseCategory(
         categoryId: String,
         locale: String? = null,

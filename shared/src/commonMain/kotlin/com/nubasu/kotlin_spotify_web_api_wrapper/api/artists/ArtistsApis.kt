@@ -47,6 +47,9 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/artists as deprecated.",
+    )
     suspend fun getSeveralArtists(
         ids: List<String>,
     ) : SpotifyApiResponse<Artists> {
@@ -87,6 +90,9 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/artists/{id}/top-tracks as deprecated.",
+    )
     suspend fun getArtistsTopTracks(
         id: String,
         market: CountryCode? = null,
@@ -104,7 +110,9 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
-    @Deprecated("")
+    @Deprecated(
+        "Spotify marks GET /v1/artists/{id}/related-artists as deprecated.",
+    )
     suspend fun getArtistsRelatedArtists(
         id: String,
     ) : SpotifyApiResponse<ArtistsRelatedArtists> {

@@ -51,6 +51,9 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/albums as deprecated.",
+    )
     suspend fun getSeveralAlbums(
         ids: List<String>,
         market: CountryCode? = null,
@@ -110,6 +113,9 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks PUT /v1/me/albums as deprecated.",
+    )
     suspend fun saveAlbumsForCurrentUser(
         body: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -124,6 +130,9 @@ class AlbumsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks DELETE /v1/me/albums as deprecated.",
+    )
     suspend fun removeUsersSavedAlbums(
         body: Ids,
     ) : SpotifyApiResponse<Boolean> {
@@ -156,6 +165,7 @@ class AlbumsApis(
 
     suspend fun getNewReleases(
         pagingOptions: PagingOptions = PagingOptions(),
+        country: CountryCode? = null,
     ) : SpotifyApiResponse<NewRelease> {
         val ENDPOINT = "https://api.spotify.com/v1/browse/new-releases"
         val limit = pagingOptions.limit
@@ -163,6 +173,7 @@ class AlbumsApis(
         val response = client.get {
             url {
                 takeFrom(ENDPOINT)
+                country?.let { parameters.append("country", it.code) }
                 limit?.let { parameters.append("limit", it.toString()) }
                 offset?.let { parameters.append("offset", it.toString()) }
             }

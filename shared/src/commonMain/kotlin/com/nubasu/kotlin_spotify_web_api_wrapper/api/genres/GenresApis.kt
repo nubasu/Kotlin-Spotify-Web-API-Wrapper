@@ -24,7 +24,9 @@ class GenresApis(
     }
 ) {
 
-    @Deprecated("")
+    @Deprecated(
+        "Spotify marks GET /v1/recommendations/available-genre-seeds as deprecated.",
+    )
     suspend fun getAvailableGenreSeeds() : SpotifyApiResponse<AvailableGenreSeeds> {
         val ENDPOINT = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
         val response = client.get {
