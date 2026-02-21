@@ -1,7 +1,4 @@
 # Spotify Web API Kotlin Multiplatform Wrapper
-
-> In Progress / WIP
-
 A Kotlin Multiplatform (KMP) wrapper for the Spotify Web API.
 
 Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, Android, iOS, and other KMP targets.
@@ -16,6 +13,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Chapters
   - [x] Episodes
   - [x] Genres
+  - [x] Libraries 
   - [x] Markets
   - [x] Player
   - [x] Playlists
