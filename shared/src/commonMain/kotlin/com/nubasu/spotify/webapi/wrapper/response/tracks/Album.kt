@@ -20,8 +20,8 @@ data class Album(
     val href: String,
     val id: String,
     val images: List<ImageObject>,
-    @SerialName("is_playable")
     // not exists on api document, but response has this parameter (why?)
+    @SerialName("is_playable")
     val isPlayable: Boolean = false,
     val name: String,
     @SerialName("release_date")

@@ -25,19 +25,21 @@ class RateLimitHandlingTest {
 
     @Test
     fun retryAfterDelayMillis_readsHeader_caseInsensitive() {
-        val millis = RateLimitHandling.retryAfterDelayMillis(
-            mapOf("retry-after" to "5")
-        )
+        val millis =
+            RateLimitHandling.retryAfterDelayMillis(
+                mapOf("retry-after" to "5"),
+            )
         assertEquals(5000L, millis)
     }
 
     @Test
     fun retryAfterDelayMillis_readsFromSpotifyApiResponse() {
-        val response = SpotifyApiResponse(
-            statusCode = 429,
-            data = SpotifyResponseData.Success(true),
-            headers = mapOf("Retry-After" to "2"),
-        )
+        val response =
+            SpotifyApiResponse(
+                statusCode = 429,
+                data = SpotifyResponseData.Success(true),
+                headers = mapOf("Retry-After" to "2"),
+            )
 
         assertEquals(2000L, RateLimitHandling.retryAfterDelayMillis(response))
     }

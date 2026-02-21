@@ -10,5 +10,5 @@ data class Playlists(
     val offset: Int,
     val previous: String?,
     val total: Int,
-    val items: List<SimplifiedPlaylistObject>
+    val items: List<SimplifiedPlaylistObject>,
 )

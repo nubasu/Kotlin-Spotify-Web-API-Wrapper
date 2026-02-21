@@ -22,9 +22,7 @@ data class RetryPolicy(
         require(jitterMillis >= 0) { "jitterMillis must be >= 0" }
     }
 
-    fun shouldRetry(statusCode: Int): Boolean {
-        return statusCode in retryStatusCodes
-    }
+    fun shouldRetry(statusCode: Int): Boolean = statusCode in retryStatusCodes
 
     fun backoffDelayMillis(retryAttempt: Int): Long {
         require(retryAttempt >= 1) { "retryAttempt must be >= 1" }
@@ -39,18 +37,17 @@ class SpotifyRetryExecutor(
     private val delayFn: suspend (Long) -> Unit = { delay(it) },
     private val jitterFn: (Long) -> Long = { max -> if (max <= 0L) 0L else Random.nextLong(0L, max + 1) },
 ) {
-    suspend fun <T> execute(
-        request: suspend () -> SpotifyApiResponse<T>,
-    ): SpotifyApiResponse<T> {
+    suspend fun <T> execute(request: suspend () -> SpotifyApiResponse<T>): SpotifyApiResponse<T> {
         var retries = 0
         var response = request()
         while (retryPolicy.shouldRetry(response.statusCode) && retries < retryPolicy.maxRetries) {
             retries += 1
-            val baseDelay = if (retryPolicy.respectRetryAfterHeader) {
-                RateLimitHandling.retryAfterDelayMillis(response)
-            } else {
-                null
-            } ?: retryPolicy.backoffDelayMillis(retries)
+            val baseDelay =
+                if (retryPolicy.respectRetryAfterHeader) {
+                    RateLimitHandling.retryAfterDelayMillis(response)
+                } else {
+                    null
+                } ?: retryPolicy.backoffDelayMillis(retries)
 
             val jitter = jitterFn(retryPolicy.jitterMillis).coerceAtLeast(0L)
             val delayMillis = (baseDelay + jitter).coerceAtMost(retryPolicy.maxDelayMillis)

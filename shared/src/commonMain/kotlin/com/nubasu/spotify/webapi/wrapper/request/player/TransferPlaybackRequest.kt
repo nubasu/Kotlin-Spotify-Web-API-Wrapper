@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class TransferPlaybackRequest(
     @SerialName("device_ids")
     val deviceIds: List<String>,
-    val play: Boolean? = null
+    val play: Boolean? = null,
 )

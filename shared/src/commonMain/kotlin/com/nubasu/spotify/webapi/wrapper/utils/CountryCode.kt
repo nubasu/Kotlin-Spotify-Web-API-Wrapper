@@ -1,6 +1,9 @@
 package com.nubasu.spotify.webapi.wrapper.utils
 
-enum class CountryCode(val code: String, val countryName: String) {
+enum class CountryCode(
+    val code: String,
+    val countryName: String,
+) {
     AD("AD", "Andorra"),
     AE("AE", "United Arab Emirates"),
     AF("AF", "Afghanistan"),
@@ -249,17 +252,17 @@ enum class CountryCode(val code: String, val countryName: String) {
     YT("YT", "Mayotte"),
     ZA("ZA", "South Africa"),
     ZM("ZM", "Zambia"),
-    ZW("ZW", "Zimbabwe");
+    ZW("ZW", "Zimbabwe"),
+    ;
 
     fun toLocale(language6391: String): String {
         require(language6391.length == 2) { "ISO 639-1 must be 2 letters: $language6391" }
         val lang = language6391.lowercase()
         val region = code.uppercase()
-        return "${lang}_${region}"
+        return "${lang}_$region"
     }
 
     companion object {
-        fun fromCode(code: String): CountryCode? =
-            entries.firstOrNull { it.code.equals(code, ignoreCase = true) }
+        fun fromCode(code: String): CountryCode? = entries.firstOrNull { it.code.equals(code, ignoreCase = true) }
     }
 }

@@ -1,20 +1,19 @@
 package com.nubasu.spotify.webapi.wrapper.api.tracks
 
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
-
-import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.Ids
 import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
 import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationSeeds
 import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationTunableAttributes
 import com.nubasu.spotify.webapi.wrapper.request.tracks.SaveTracksForCurrentUserRequest
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.response.tracks.OneTrackAudioFeatures
 import com.nubasu.spotify.webapi.wrapper.response.tracks.Recommendations
 import com.nubasu.spotify.webapi.wrapper.response.tracks.Track
+import com.nubasu.spotify.webapi.wrapper.response.tracks.Tracks
 import com.nubasu.spotify.webapi.wrapper.response.tracks.TracksAudioAnalysis
 import com.nubasu.spotify.webapi.wrapper.response.tracks.TracksAudioFeatures
-import com.nubasu.spotify.webapi.wrapper.response.tracks.Tracks
 import com.nubasu.spotify.webapi.wrapper.response.tracks.UsersSavedTrack
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
@@ -34,98 +33,113 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
 class TracksApis(
-    private val client: HttpClient = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
-    }
+    private val client: HttpClient =
+        HttpClient(CIO) {
+            install(ContentNegotiation) { json() }
+        },
 ) {
-
-    suspend fun getTrack(id: String, market: CountryCode? = null) : SpotifyApiResponse<Track> {
+    suspend fun getTrack(
+        id: String,
+        market: CountryCode? = null,
+    ): SpotifyApiResponse<Track> {
         val endpoint = "https://api.spotify.com/v1/tracks"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                appendPathSegments(id)
-                market?.let { parameters.append("market", it.code) }
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    appendPathSegments(id)
+                    market?.let { parameters.append("market", it.code) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
-return response.toSpotifyApiResponse()
+        return response.toSpotifyApiResponse()
     }
 
     @Deprecated(
         "Spotify marks GET /v1/tracks as deprecated.",
     )
-    suspend fun getSeveralTracks(ids: List<String>, market: CountryCode? = null) : SpotifyApiResponse<Tracks> {
+    suspend fun getSeveralTracks(
+        ids: List<String>,
+        market: CountryCode? = null,
+    ): SpotifyApiResponse<Tracks> {
         val endpoint = "https://api.spotify.com/v1/tracks"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                parameters.append("ids", ids.joinToString(","))
-                market?.let { parameters.append("market", it.code) }
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("ids", ids.joinToString(","))
+                    market?.let { parameters.append("market", it.code) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
-return response.toSpotifyApiResponse()
+        return response.toSpotifyApiResponse()
     }
 
-    suspend fun getUsersSavedTracks(market: CountryCode? = null, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<UsersSavedTrack> {
+    suspend fun getUsersSavedTracks(
+        market: CountryCode? = null,
+        pagingOptions: PagingOptions = PagingOptions(),
+    ): SpotifyApiResponse<UsersSavedTrack> {
         val endpoint = "https://api.spotify.com/v1/me/tracks"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                market?.let { parameters.append("market", it.code) }
-                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    market?.let { parameters.append("market", it.code) }
+                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
-return response.toSpotifyApiResponse()
+        return response.toSpotifyApiResponse()
     }
 
     @Deprecated(
         "Spotify marks PUT /v1/me/tracks as deprecated.",
     )
-    suspend fun saveTracksForCurrentUser(body: SaveTracksForCurrentUserRequest) : SpotifyApiResponse<Boolean> {
+    suspend fun saveTracksForCurrentUser(body: SaveTracksForCurrentUserRequest): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/tracks"
-        val response = client.put(endpoint) {
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-            contentType(ContentType.Application.Json)
-            setBody(body)
-        }
-return response.toSpotifyBooleanApiResponse()
+        val response =
+            client.put(endpoint) {
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
+                contentType(ContentType.Application.Json)
+                setBody(body)
+            }
+        return response.toSpotifyBooleanApiResponse()
     }
 
     @Deprecated(
         "Spotify marks DELETE /v1/me/tracks as deprecated.",
     )
-    suspend fun removeUsersSavedTracks(ids: Ids) : SpotifyApiResponse<Boolean> {
+    suspend fun removeUsersSavedTracks(ids: Ids): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/tracks"
-        val response = client.delete {
-            url {
-                takeFrom(endpoint)
-                parameters.append("ids", ids.ids.joinToString(","))
+        val response =
+            client.delete {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("ids", ids.ids.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
-return response.toSpotifyBooleanApiResponse()
+        return response.toSpotifyBooleanApiResponse()
     }
 
-    suspend fun checkUsersSavedTracks(ids: Ids) : SpotifyApiResponse<List<Boolean>> {
+    suspend fun checkUsersSavedTracks(ids: Ids): SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/tracks/contains"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                parameters.append("ids", ids.ids.joinToString(","))
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("ids", ids.ids.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
-return response.toSpotifyApiResponse()
+        return response.toSpotifyApiResponse()
     }
 
     @Deprecated(
@@ -133,14 +147,15 @@ return response.toSpotifyApiResponse()
     )
     suspend fun getTracksAudioFeatures(id: String): SpotifyApiResponse<OneTrackAudioFeatures> {
         val endpoint = "https://api.spotify.com/v1/audio-features"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                appendPathSegments(id)
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    appendPathSegments(id)
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 
@@ -149,14 +164,15 @@ return response.toSpotifyApiResponse()
     )
     suspend fun getSeveralTracksAudioFeatures(ids: List<String>): SpotifyApiResponse<TracksAudioFeatures> {
         val endpoint = "https://api.spotify.com/v1/audio-features"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                parameters.append("ids", ids.joinToString(","))
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    parameters.append("ids", ids.joinToString(","))
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 
@@ -165,14 +181,15 @@ return response.toSpotifyApiResponse()
     )
     suspend fun getTracksAudioAnalysis(id: String): SpotifyApiResponse<TracksAudioAnalysis> {
         val endpoint = "https://api.spotify.com/v1/audio-analysis"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                appendPathSegments(id)
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    appendPathSegments(id)
+                }
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 
@@ -183,25 +200,26 @@ return response.toSpotifyApiResponse()
         tunable: RecommendationTunableAttributes = RecommendationTunableAttributes(),
     ): SpotifyApiResponse<Recommendations> {
         val endpoint = "https://api.spotify.com/v1/recommendations"
-        val response = client.get {
-            url {
-                takeFrom(endpoint)
-                market?.let { parameters.append("market", it.code) }
-                limit?.let { parameters.append("limit", it.toString()) }
-                if (seeds.artists.isNotEmpty()) {
-                    parameters.append("seed_artists", seeds.artists.joinToString(","))
+        val response =
+            client.get {
+                url {
+                    takeFrom(endpoint)
+                    market?.let { parameters.append("market", it.code) }
+                    limit?.let { parameters.append("limit", it.toString()) }
+                    if (seeds.artists.isNotEmpty()) {
+                        parameters.append("seed_artists", seeds.artists.joinToString(","))
+                    }
+                    if (seeds.genres.isNotEmpty()) {
+                        parameters.append("seed_genres", seeds.genres.joinToString(","))
+                    }
+                    if (seeds.tracks.isNotEmpty()) {
+                        parameters.append("seed_tracks", seeds.tracks.joinToString(","))
+                    }
+                    tunable.appendToQuery(parameters::append)
                 }
-                if (seeds.genres.isNotEmpty()) {
-                    parameters.append("seed_genres", seeds.genres.joinToString(","))
-                }
-                if (seeds.tracks.isNotEmpty()) {
-                    parameters.append("seed_tracks", seeds.tracks.joinToString(","))
-                }
-                tunable.appendToQuery(parameters::append)
+                bearerAuth(TokenHolder.token)
+                accept(ContentType.Application.Json)
             }
-            bearerAuth(TokenHolder.token)
-            accept(ContentType.Application.Json)
-        }
         return response.toSpotifyApiResponse()
     }
 

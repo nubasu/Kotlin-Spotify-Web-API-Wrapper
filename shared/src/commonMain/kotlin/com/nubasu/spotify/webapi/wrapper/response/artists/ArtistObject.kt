@@ -20,4 +20,3 @@ data class ArtistObject(
     val type: String? = null,
     val uri: String? = null,
 )
-

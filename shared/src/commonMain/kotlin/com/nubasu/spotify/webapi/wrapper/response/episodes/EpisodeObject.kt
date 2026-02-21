@@ -1,10 +1,10 @@
 package com.nubasu.spotify.webapi.wrapper.response.episodes
 
-import com.nubasu.spotify.webapi.wrapper.response.player.PlaybackItem
 import com.nubasu.spotify.webapi.wrapper.response.audiobooks.ResumePoint
 import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
 import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
 import com.nubasu.spotify.webapi.wrapper.response.common.Restrictions
+import com.nubasu.spotify.webapi.wrapper.response.player.PlaybackItem
 
 data class EpisodeObject(
     val audioPreviewUrl: String,

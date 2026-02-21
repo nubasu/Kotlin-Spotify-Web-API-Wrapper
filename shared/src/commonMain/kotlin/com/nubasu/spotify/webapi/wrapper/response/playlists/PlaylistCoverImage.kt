@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlaylistCoverImage(
-    val images: List<ImageObject>
+    val images: List<ImageObject>,
 )

@@ -25,11 +25,12 @@ object PagingHelpers {
     ): SpotifyApiResponse<List<TItem>> {
         require(maxPages >= 1) { "maxPages must be >= 1" }
         return when (val firstData = firstPageResponse.data) {
-            is SpotifyResponseData.Error -> SpotifyApiResponse(
-                statusCode = firstPageResponse.statusCode,
-                data = firstData,
-                headers = firstPageResponse.headers,
-            )
+            is SpotifyResponseData.Error ->
+                SpotifyApiResponse(
+                    statusCode = firstPageResponse.statusCode,
+                    data = firstData,
+                    headers = firstPageResponse.headers,
+                )
             is SpotifyResponseData.Success -> {
                 val collected = mutableListOf<TItem>()
                 var currentData = firstData.value

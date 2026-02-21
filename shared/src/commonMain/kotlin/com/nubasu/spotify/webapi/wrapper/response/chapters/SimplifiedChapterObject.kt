@@ -13,7 +13,7 @@ data class SimplifiedChapterObject(
     @SerialName("audio_preview_url")
     val audioPreviewUrl: String? = null,
     @SerialName("available_markets")
-    val availableMarkets: List<String> ?= null,
+    val availableMarkets: List<String>? = null,
     @SerialName("chapter_number")
     val chapterNumber: Int,
     val description: String,

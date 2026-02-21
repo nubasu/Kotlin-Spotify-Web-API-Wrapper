@@ -1,6 +1,6 @@
 package com.nubasu.spotify.webapi.wrapper.response.player
 
-data class DeviceObject (
+data class DeviceObject(
     val id: String?,
     val isActive: Boolean,
     val isPrivateSession: Boolean,

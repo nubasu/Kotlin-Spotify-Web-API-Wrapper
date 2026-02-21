@@ -41,10 +41,11 @@ internal object ApiStatusCaseAsserts {
         if (actual is Boolean) {
             assertEquals(true, actual)
         } else {
-            val expected = runCatching { json.decodeFromString<T>(body) }
-                .getOrElse { error ->
-                    fail("Cannot decode expected success body for 201 assertion: ${error.message}")
-                }
+            val expected =
+                runCatching { json.decodeFromString<T>(body) }
+                    .getOrElse { error ->
+                        fail("Cannot decode expected success body for 201 assertion: ${error.message}")
+                    }
             assertEquals(expected, actual)
             assertNotNull(actual)
         }
@@ -82,11 +83,14 @@ internal object ApiStatusCaseAsserts {
                 PrimitiveKind.BYTE,
                 PrimitiveKind.SHORT,
                 PrimitiveKind.INT,
-                PrimitiveKind.LONG -> JsonPrimitive(0)
+                PrimitiveKind.LONG,
+                -> JsonPrimitive(0)
                 PrimitiveKind.FLOAT,
-                PrimitiveKind.DOUBLE -> JsonPrimitive(0.0)
+                PrimitiveKind.DOUBLE,
+                -> JsonPrimitive(0.0)
                 PrimitiveKind.CHAR,
-                PrimitiveKind.STRING -> JsonPrimitive("x")
+                PrimitiveKind.STRING,
+                -> JsonPrimitive("x")
             }
         }
 
@@ -101,23 +105,23 @@ internal object ApiStatusCaseAsserts {
             StructureKind.LIST -> JsonArray(emptyList())
             StructureKind.MAP -> JsonObject(emptyMap())
             StructureKind.CLASS,
-            StructureKind.OBJECT -> {
-                val content = buildMap {
-                    for (i in 0 until descriptor.elementsCount) {
-                        val child = descriptor.getElementDescriptor(i)
-                        val value = if (child.isNullable) JsonNull else defaultJsonElement(child, depth + 1)
-                        put(descriptor.getElementName(i), value)
+            StructureKind.OBJECT,
+            -> {
+                val content =
+                    buildMap {
+                        for (i in 0 until descriptor.elementsCount) {
+                            val child = descriptor.getElementDescriptor(i)
+                            val value = if (child.isNullable) JsonNull else defaultJsonElement(child, depth + 1)
+                            put(descriptor.getElementName(i), value)
+                        }
                     }
-                }
                 JsonObject(content)
             }
             else -> JsonObject(emptyMap())
         }
     }
 
-    suspend fun <T> assertStatus401Unauthorized(
-        invoke: suspend (HttpClient) -> SpotifyApiResponse<T>,
-    ) {
+    suspend fun <T> assertStatus401Unauthorized(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
         val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Unauthorized))
         assertEquals(401, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
@@ -125,9 +129,7 @@ internal object ApiStatusCaseAsserts {
         assertEquals("test-error", error.value.error.message)
     }
 
-    suspend fun <T> assertStatus403Forbidden(
-        invoke: suspend (HttpClient) -> SpotifyApiResponse<T>,
-    ) {
+    suspend fun <T> assertStatus403Forbidden(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
         val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Forbidden))
         assertEquals(403, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
@@ -135,9 +137,7 @@ internal object ApiStatusCaseAsserts {
         assertEquals("test-error", error.value.error.message)
     }
 
-    suspend fun <T> assertStatus429TooManyRequests(
-        invoke: suspend (HttpClient) -> SpotifyApiResponse<T>,
-    ) {
+    suspend fun <T> assertStatus429TooManyRequests(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
         val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.TooManyRequests))
         assertEquals(429, response.statusCode)
         val error = response.data as SpotifyResponseData.Error

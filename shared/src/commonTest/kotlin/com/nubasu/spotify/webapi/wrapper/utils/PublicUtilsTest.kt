@@ -4,9 +4,9 @@ import com.nubasu.spotify.webapi.wrapper.getPlatform
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import kotlin.test.assertFailsWith
 
 class PublicUtilsTest {
     @AfterTest
