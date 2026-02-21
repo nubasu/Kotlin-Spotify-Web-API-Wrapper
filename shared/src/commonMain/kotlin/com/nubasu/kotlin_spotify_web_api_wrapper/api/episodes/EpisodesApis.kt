@@ -16,11 +16,9 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
-import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
-import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
@@ -102,8 +100,9 @@ class EpisodesApis {
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
-            contentType(ContentType.Application.Json)
-            setBody(ids)
+            url {
+                parameters.append("ids", ids.ids.joinToString(","))
+            }
         }
 
         if (!response.status.isSuccess()) {
@@ -119,8 +118,9 @@ class EpisodesApis {
         val response = client.delete (ENDPOINT) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
-            contentType(ContentType.Application.Json)
-            setBody(ids)
+            url {
+                parameters.append("ids", ids.ids.joinToString(","))
+            }
         }
 
         if (!response.status.isSuccess()) {
@@ -131,7 +131,7 @@ class EpisodesApis {
 
     suspend fun checkUsersSavedEpisodes(
         ids: Ids,
-    ) {
+    ) : List<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/episodes/contains"
         val response = client.get {
             url {

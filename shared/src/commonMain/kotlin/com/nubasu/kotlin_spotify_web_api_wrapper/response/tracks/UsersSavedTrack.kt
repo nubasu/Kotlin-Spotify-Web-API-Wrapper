@@ -1,5 +1,8 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UsersSavedTrack(
     val href: String,
     val limit: Int,

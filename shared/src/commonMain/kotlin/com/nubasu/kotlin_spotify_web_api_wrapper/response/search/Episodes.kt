@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.response.search
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes.SimplifiedEpisodeObject
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Episodes(
     val href: String,
     val limit: Int,

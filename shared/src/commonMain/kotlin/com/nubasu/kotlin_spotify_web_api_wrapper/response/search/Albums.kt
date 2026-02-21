@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.response.search
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.SimplifiedAlbumObject
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Albums(
     val href: String,
     val limit: Int,

@@ -1,13 +1,14 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.PlaylistTrackObject
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Tracks(
     val href: String,
-    val limit: Int,
-    val next: String?,
-    val offset: Int,
-    val previous: String?,
     val total: Int,
-    val items: List<PlaylistTrackObject>,
+    val limit: Int? = null,
+    val next: String? = null,
+    val offset: Int? = null,
+    val previous: String? = null,
+    val items: List<PlaylistTrackObject> = emptyList(),
 )
