@@ -69,6 +69,30 @@ dependencies {
 }
 ```
 
+### `libs.versions.toml` (Version Catalog)
+
+`gradle/libs.versions.toml`:
+
+```toml
+[versions]
+kotlinSpotifyWebApiWrapper = "0.1.0"
+
+[libraries]
+kotlin-spotify-web-api-wrapper = { module = "io.github.nubasu:kotlin-spotify-web-api-wrapper", version.ref = "kotlinSpotifyWebApiWrapper" }
+```
+
+`build.gradle.kts`:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(libs.kotlin.spotify.web.api.wrapper)
+}
+```
+
 ## Features
 
 - Spotify Web API coverage for albums, artists, playlists, player, tracks, users, and more
