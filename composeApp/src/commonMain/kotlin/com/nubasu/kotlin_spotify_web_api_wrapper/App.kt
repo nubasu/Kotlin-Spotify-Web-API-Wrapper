@@ -32,20 +32,28 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiRespo
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.Device
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.SimplifiedPlaylistObject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun App(callbackUriFromIntent: String? = null) {
+fun App(
+    callbackUriFromIntent: String? = null,
+    desktopCallbackCoordinator: DesktopCallbackCoordinator? = null,
+) {
     MaterialTheme {
-        SpotifyPlayerScreen(callbackUriFromIntent = callbackUriFromIntent)
+        SpotifyPlayerScreen(
+            callbackUriFromIntent = callbackUriFromIntent,
+            desktopCallbackCoordinator = desktopCallbackCoordinator,
+        )
     }
 }
 
 @Composable
 private fun SpotifyPlayerScreen(
     callbackUriFromIntent: String?,
+    desktopCallbackCoordinator: DesktopCallbackCoordinator?,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val playlistsApis = remember { PlaylistsApis() }
@@ -75,10 +83,22 @@ private fun SpotifyPlayerScreen(
         }
     }
 
-    LaunchedEffect(callbackUriFromIntent, authManager) {
+    LaunchedEffect(desktopCallbackCoordinator) {
+        while (true) {
+            val value = desktopCallbackCoordinator?.consumeCallbackUri()?.trim().orEmpty()
+            if (value.isNotEmpty()) {
+                callbackUri = value
+                statusMessage = "Callback URI received from desktop listener"
+            }
+            delay(300L)
+        }
+    }
+
+    LaunchedEffect(callbackUri, authManager) {
         val manager = authManager ?: return@LaunchedEffect
-        val value = callbackUriFromIntent?.trim().orEmpty()
+        val value = callbackUri.trim()
         if (value.isEmpty() || value == lastHandledCallbackUri) return@LaunchedEffect
+        if (!value.contains("code=") || !value.contains("state=")) return@LaunchedEffect
 
         isLoading = true
         runCatching {
@@ -134,10 +154,17 @@ private fun SpotifyPlayerScreen(
             Button(
                 onClick = {
                     val normalizedClientId = clientId.trim()
-                    val normalizedRedirectUri = redirectUri.trim()
+                    var normalizedRedirectUri = redirectUri.trim()
                     if (normalizedClientId.isBlank() || normalizedRedirectUri.isBlank()) {
                         statusMessage = "Client ID and Redirect URI are required"
                         return@Button
+                    }
+
+                    val desktopRedirectUri = desktopCallbackCoordinator?.beginSession()
+                    if (!desktopRedirectUri.isNullOrBlank()) {
+                        normalizedRedirectUri = desktopRedirectUri
+                        redirectUri = desktopRedirectUri
+                        statusMessage = "Desktop callback listener started: $desktopRedirectUri"
                     }
 
                     val manager = SpotifyAuthManager(
@@ -342,7 +369,7 @@ private fun PlaylistRow(
         Column(modifier = Modifier.padding(12.dp)) {
             Text(playlist.name, style = MaterialTheme.typography.titleMedium)
             Text("owner=${playlist.owner.displayName ?: playlist.owner.id}")
-            Text("tracks=${playlist.tracks.total}")
+            Text("tracks=${playlist.items?.total ?: playlist.tracks.total}")
             Button(
                 onClick = onPlay,
                 modifier = Modifier.fillMaxWidth(),
