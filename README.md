@@ -32,7 +32,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
   - [x] Client Credentials
   - [x] Authorization Code
   - [x] Refresh
-- [ ] Paging helpers / Rate limit handling / Retry policies
+- [x] Paging helpers / Rate limit handling / Retry policies
 - [ ] Samples + Docs
 - [ ] Publish artifacts
 - [x] Tests
@@ -129,4 +129,38 @@ val token = apis.requestClientCredentialsToken(
     clientId = "YOUR_CLIENT_ID",
     clientSecret = "YOUR_CLIENT_SECRET"
 )
+```
+
+## Paging Helpers
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.utils.PagingHelpers
+
+val first = albumsApis.getUsersSavedAlbums()
+val allItemsResponse = PagingHelpers.collectAllItems(
+    firstPageResponse = first,
+    nextUrlSelector = { it.next },
+    itemsSelector = { it.items },
+    fetchNextPage = { paging -> albumsApis.getUsersSavedAlbums(pagingOptions = paging) }
+)
+```
+
+## Rate Limit Handling / Retry Policies
+
+```kotlin
+import com.nubasu.kotlin_spotify_web_api_wrapper.utils.RetryPolicy
+import com.nubasu.kotlin_spotify_web_api_wrapper.utils.SpotifyRetryExecutor
+
+val executor = SpotifyRetryExecutor(
+    retryPolicy = RetryPolicy(
+        maxRetries = 3,
+        baseDelayMillis = 500,
+        retryStatusCodes = setOf(429, 500, 502, 503, 504),
+        respectRetryAfterHeader = true
+    )
+)
+
+val response = executor.execute {
+    playlistsApis.getPlaylist("playlist-id")
+}
 ```
