@@ -32,3 +32,9 @@ run
 ./gradlew :shared:jvmTest
 ./gradlew :shared:jsBrowserTest
 ```
+
+### Run Linter
+run
+```
+./gradlew ktlintFormat
+```
