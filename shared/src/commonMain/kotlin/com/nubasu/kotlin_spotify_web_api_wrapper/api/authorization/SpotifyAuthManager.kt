@@ -41,6 +41,35 @@ class SpotifyAuthManager(
     ): PkceAuthorizationRequest {
         val verifier = generateCodeVerifier()
         val challenge = toBase64Url(Sha256.digest(verifier.encodeToByteArray()))
+        return buildPkceAuthorizationRequest(
+            verifier = verifier,
+            challenge = challenge,
+            scope = scope,
+            showDialog = showDialog,
+        )
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    suspend fun startPkceAuthorizationAsync(
+        scope: List<String> = emptyList(),
+        showDialog: Boolean? = null,
+    ): PkceAuthorizationRequest {
+        val verifier = generateCodeVerifier()
+        val challenge = toBase64Url(Sha256.digest(verifier.encodeToByteArray()))
+        return buildPkceAuthorizationRequest(
+            verifier = verifier,
+            challenge = challenge,
+            scope = scope,
+            showDialog = showDialog,
+        )
+    }
+
+    private fun buildPkceAuthorizationRequest(
+        verifier: String,
+        challenge: String,
+        scope: List<String>,
+        showDialog: Boolean?,
+    ): PkceAuthorizationRequest {
         val state = generateState()
 
         pendingPkce = PendingPkce(
