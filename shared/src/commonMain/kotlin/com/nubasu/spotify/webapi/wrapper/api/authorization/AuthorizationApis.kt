@@ -18,6 +18,11 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+/**
+ * Spotify Accounts authorization API.
+ *
+ * Provides Authorization Code, PKCE, Client Credentials, and Refresh Token requests.
+ */
 class AuthorizationApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -28,6 +33,18 @@ class AuthorizationApis(
     private val authorizeEndpoint: String = "https://accounts.spotify.com/authorize",
     private val tokenEndpoint: String = "https://accounts.spotify.com/api/token",
 ) {
+    /**
+     * Builds the Spotify Accounts authorization URL for Authorization Code with PKCE flow.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param redirectUri Redirect URI registered in Spotify Dashboard.
+     * @param codeChallenge PKCE code challenge derived from the code verifier.
+     * @param codeChallengeMethod PKCE challenge method, typically `S256`.
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeWithPkceUri(
         clientId: String,
         redirectUri: String,
@@ -51,6 +68,16 @@ class AuthorizationApis(
                 showDialog?.let { parameters.append("show_dialog", it.toString()) }
             }.buildString()
 
+    /**
+     * Builds the Spotify Accounts authorization URL for Authorization Code flow.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param redirectUri Redirect URI registered in Spotify Dashboard.
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeUri(
         clientId: String,
         redirectUri: String,
@@ -70,6 +97,15 @@ class AuthorizationApis(
                 showDialog?.let { parameters.append("show_dialog", it.toString()) }
             }.buildString()
 
+    /**
+     * Exchanges an authorization code for access and refresh tokens using PKCE.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param code Authorization code issued by Spotify Accounts service.
+     * @param redirectUri Redirect URI registered in Spotify Dashboard.
+     * @param codeVerifier PKCE code verifier used when exchanging authorization code.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun requestAuthorizationCodeWithPkceToken(
         clientId: String,
         code: String,
@@ -94,6 +130,15 @@ class AuthorizationApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Exchanges an authorization code for access and refresh tokens.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param clientSecret Spotify application Client Secret.
+     * @param code Authorization code issued by Spotify Accounts service.
+     * @param redirectUri Redirect URI registered in Spotify Dashboard.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun requestAuthorizationCodeToken(
         clientId: String,
         clientSecret: String,
@@ -117,6 +162,13 @@ class AuthorizationApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Requests an app-only access token using Client Credentials flow.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param clientSecret Spotify application Client Secret.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun requestClientCredentialsToken(
         clientId: String,
         clientSecret: String,
@@ -136,6 +188,13 @@ class AuthorizationApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Refreshes an access token for Authorization Code with PKCE flow.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param refreshToken Refresh token used to issue a new access token.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun refreshTokenWithPkce(
         clientId: String,
         refreshToken: String,
@@ -156,6 +215,14 @@ class AuthorizationApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Refreshes an access token for Authorization Code flow.
+     *
+     * @param clientId Spotify application Client ID.
+     * @param clientSecret Spotify application Client Secret.
+     * @param refreshToken Refresh token used to issue a new access token.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun refreshToken(
         clientId: String,
         clientSecret: String,

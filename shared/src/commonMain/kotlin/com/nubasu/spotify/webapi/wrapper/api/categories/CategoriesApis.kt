@@ -17,6 +17,11 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Browse category domain API for Spotify Web API.
+ *
+ * Covers category listing and individual category metadata from the Browse endpoints.
+ */
 class CategoriesApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -25,6 +30,13 @@ class CategoriesApis(
             }
         },
 ) {
+    /**
+     * Gets Spotify browse categories.
+     *
+     * @param locale Locale used for localized strings (for example `en_US`).
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/browse/categories as deprecated.",
     )
@@ -49,6 +61,13 @@ class CategoriesApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets a Spotify browse category by category ID.
+     *
+     * @param categoryId Spotify category ID from the Browse API (for example `party` or `workout`).
+     * @param locale Locale used for localized strings (for example `en_US`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/browse/categories/{category_id} as deprecated.",
     )

@@ -5,6 +5,9 @@ import androidx.compose.ui.window.application
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 
+/**
+ * Executes main.
+ */
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,

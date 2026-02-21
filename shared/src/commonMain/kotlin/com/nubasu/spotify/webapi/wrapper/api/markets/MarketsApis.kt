@@ -14,6 +14,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Market domain API for Spotify Web API.
+ *
+ * Provides the list of ISO country codes where Spotify content is available.
+ */
 class MarketsApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -22,6 +27,11 @@ class MarketsApis(
             }
         },
 ) {
+    /**
+     * Gets markets where Spotify content is available.
+     *
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/markets as deprecated.",
     )

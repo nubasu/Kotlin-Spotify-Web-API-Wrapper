@@ -30,6 +30,11 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Player domain API for Spotify Web API.
+ *
+ * Covers playback state, queue, device transfer, and playback control commands.
+ */
 class PlayerApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -38,6 +43,13 @@ class PlayerApis(
             }
         },
 ) {
+    /**
+     * Gets the current playback state for the current user.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param additionalTypes Additional playable item types (for example `episode`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getPlaybackState(
         market: CountryCode? = null,
         additionalTypes: String? = null,
@@ -56,6 +68,13 @@ class PlayerApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Transfers playback to one of the user's Spotify Connect devices.
+     *
+     * @param deviceIds Spotify Connect device IDs that can receive transferred playback.
+     * @param play True to start playback immediately after transfer.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun transferPlayback(
         deviceIds: DeviceIds,
         play: Boolean = false,
@@ -76,6 +95,11 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Gets available Spotify Connect devices for the current user.
+     *
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getAvailableDevices(): SpotifyApiResponse<AvailableDevices> {
         val endpoint = "https://api.spotify.com/v1/me/player/devices"
         val response =
@@ -89,6 +113,13 @@ class PlayerApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the currently playing item for the current user.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param additionalTypes Additional playable item types (for example `episode`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getCurrentlyPlayingTrack(
         market: CountryCode? = null,
         additionalTypes: String? = null,
@@ -107,6 +138,16 @@ class PlayerApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Starts or resumes playback on a Spotify Connect device.
+     *
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @param contextUri Context URI to play (album, artist, playlist, or show).
+     * @param uris Spotify URIs of target resources.
+     * @param offset Playback offset object selecting where playback starts in the context.
+     * @param positionMs Playback position in milliseconds.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun startResumePlayback(
         deviceId: String? = null,
         contextUri: String? = null,
@@ -136,6 +177,12 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Pauses playback on a Spotify Connect device.
+     *
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun pausePlayback(deviceId: String? = null): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/player/pause"
         val response =
@@ -150,6 +197,12 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Skips to the next item in the playback queue.
+     *
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun skipToNext(deviceId: String? = null): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/player/next"
         val response =
@@ -164,6 +217,12 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Skips to the previous item in the playback queue.
+     *
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun skipToPrevious(deviceId: String? = null): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/player/previous"
         val response =
@@ -178,6 +237,13 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Seeks playback to a position in milliseconds.
+     *
+     * @param positionMs Playback position in milliseconds.
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun seekToPosition(
         positionMs: Int,
         deviceId: String? = null,
@@ -195,6 +261,13 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Sets playback repeat mode.
+     *
+     * @param state Repeat mode for playback (`track`, `context`, or `off`).
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun setRepeatMode(
         state: State,
         deviceId: String? = null,
@@ -213,6 +286,13 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Sets playback volume percentage.
+     *
+     * @param volumePercent Target playback volume in percent (`0..100`).
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun setPlaybackVolume(
         volumePercent: Int,
         deviceId: String? = null,
@@ -231,6 +311,13 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Enables or disables shuffle for playback.
+     *
+     * @param state True to enable shuffle, false to disable shuffle.
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun togglePlaybackShuffle(
         state: Boolean,
         deviceId: String? = null,
@@ -249,6 +336,14 @@ class PlayerApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Gets the current user's recently played tracks.
+     *
+     * @param limit Maximum number of items to return in one page.
+     * @param after Cursor for fetching items played after a specific timestamp.
+     * @param before Cursor for fetching items played before a specific timestamp.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getRecentlyPlayedTracks(
         limit: Int? = null,
         after: Long? = null,
@@ -269,6 +364,14 @@ class PlayerApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's recently played tracks.
+     *
+     * @param limit Maximum number of items to return in one page.
+     * @param after Cursor for fetching items played after a specific timestamp.
+     * @param before Cursor for fetching items played before a specific timestamp.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Use Long for `after`/`before` unix timestamp in milliseconds.",
         ReplaceWith("getRecentlyPlayedTracks(limit = limit, after = after?.toLong(), before = before?.toLong())"),
@@ -284,6 +387,11 @@ class PlayerApis(
             before = before?.toLong(),
         )
 
+    /**
+     * Gets the current user's playback queue.
+     *
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getTheUsersQueue(): SpotifyApiResponse<UsersQueue> {
         val endpoint = "https://api.spotify.com/v1/me/player/queue"
         val response =
@@ -297,6 +405,13 @@ class PlayerApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Adds an item to the current user's playback queue.
+     *
+     * @param uri Spotify URI of the target resource.
+     * @param deviceId Spotify Connect device ID that should execute the playback action.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun addItemToPlaybackQueue(
         uri: String,
         deviceId: String? = null,

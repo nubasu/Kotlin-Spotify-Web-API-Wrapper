@@ -13,6 +13,11 @@ import kotlinx.serialization.json.Json
 
 private val spotifyResponseJson = Json { ignoreUnknownKeys = true }
 
+/**
+ * Converts a raw HTTP response into a typed Spotify API response.
+ *
+ * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+ */
 internal suspend inline fun <reified T> HttpResponse.toSpotifyApiResponse(): SpotifyApiResponse<T> {
     val responseHeaders = headersMap()
     return if (status.isSuccess()) {
@@ -23,6 +28,11 @@ internal suspend inline fun <reified T> HttpResponse.toSpotifyApiResponse(): Spo
     }
 }
 
+/**
+ * Converts a raw HTTP response into a Spotify API response with boolean payload.
+ *
+ * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+ */
 internal suspend fun HttpResponse.toSpotifyBooleanApiResponse(): SpotifyApiResponse<Boolean> {
     val responseHeaders = headersMap()
     return if (status.isSuccess()) {
@@ -33,6 +43,12 @@ internal suspend fun HttpResponse.toSpotifyBooleanApiResponse(): SpotifyApiRespo
     }
 }
 
+/**
+ * Parses Spotify error JSON into a typed Spotify error response.
+ *
+ * @param statusCode HTTP status code used when constructing an error response.
+ * @return Result value of type $rt.
+ */
 internal fun String.toSpotifyErrorResponse(statusCode: Int): SpotifyErrorResponse =
     runCatching {
         spotifyResponseJson.decodeFromString<SpotifyErrorResponse>(this)

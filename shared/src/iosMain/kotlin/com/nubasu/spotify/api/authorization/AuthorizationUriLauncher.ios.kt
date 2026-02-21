@@ -5,6 +5,12 @@ import platform.SafariServices.SFSafariViewController
 import platform.UIKit.UIApplication
 import platform.UIKit.UIViewController
 
+/**
+ * Launches launchAuthorizationUriOnPlatform.
+ *
+ * @param authorizationUri The authorizationUri parameter.
+ * @return True when the operation succeeds; otherwise false.
+ */
 internal actual fun launchAuthorizationUriOnPlatform(authorizationUri: String): Boolean {
     val url = NSURL.URLWithString(authorizationUri) ?: return false
     val app = UIApplication.sharedApplication

@@ -17,12 +17,27 @@ import io.ktor.http.ContentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Search domain API for Spotify Web API.
+ *
+ * Provides catalog search across albums, artists, tracks, playlists, and other resource types.
+ */
 class SearchApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Searches the Spotify catalog for albums, artists, tracks, playlists, and other item types.
+     *
+     * @param q Search query text sent to Spotify catalog search.
+     * @param types Resource types to include in the Spotify search (`album`, `artist`, `track`, `playlist`, etc.).
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param includeExternalAudio Whether to include externally hosted audio in search results (`include_external=audio`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun searchForItem(
         q: String,
         types: Set<SearchType>,

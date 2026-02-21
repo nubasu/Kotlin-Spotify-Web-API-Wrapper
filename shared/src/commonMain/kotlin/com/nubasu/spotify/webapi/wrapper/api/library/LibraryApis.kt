@@ -19,12 +19,24 @@ import io.ktor.http.ContentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Library domain API for Spotify Web API.
+ *
+ * Covers save/remove/check operations in the current user's Your Library collection.
+ */
 class LibraryApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Gets the current user's saved library entries.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersSavedLibrary(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
@@ -44,6 +56,12 @@ class LibraryApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Saves items to the current user's library by URI.
+     *
+     * @param uris Spotify URIs of target resources.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun saveItemsForCurrentUser(uris: List<String>): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/library"
         val response =
@@ -58,6 +76,12 @@ class LibraryApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Removes items from the current user's library by URI.
+     *
+     * @param uris Spotify URIs of target resources.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun removeUsersSavedItems(uris: List<String>): SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/library"
         val response =
@@ -72,6 +96,12 @@ class LibraryApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether items are saved in the current user's library.
+     *
+     * @param uris Spotify URIs of target resources.
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     suspend fun checkUsersSavedItems(uris: List<String>): SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/library/contains"
         val response =

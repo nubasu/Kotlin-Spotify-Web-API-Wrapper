@@ -17,6 +17,11 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Chapter domain API for Spotify Web API.
+ *
+ * Covers chapter retrieval and chapter batches for audiobook and podcast content.
+ */
 class ChaptersApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -25,6 +30,13 @@ class ChaptersApis(
             }
         },
 ) {
+    /**
+     * Gets a Spotify chapter by chapter ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getAChapter(
         id: String,
         market: CountryCode? = null,
@@ -43,6 +55,13 @@ class ChaptersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify chapters by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/chapters as deprecated.",
     )

@@ -17,6 +17,9 @@ import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import kotlinx.coroutines.runBlocking
 
 object ApiTest {
+    /**
+     * Executes albumApisTest.
+     */
     fun albumApisTest() = runBlocking {
         val albumApis = AlbumsApis()
         println(albumApis.getAlbum("4aawyAB9vmqN3uQ7FjRGTy"))
@@ -30,6 +33,9 @@ object ApiTest {
         println(albumApis.getNewReleases())
     }
 
+    /**
+     * Executes artistApisTest.
+     */
     fun artistApisTest() = runBlocking {
         val artistApis = ArtistsApis()
         println(artistApis.getArtist("0TnOYISbd1XYRBk9myaseg"))
@@ -39,6 +45,9 @@ object ApiTest {
         println(artistApis.getArtistsRelatedArtists("0TnOYISbd1XYRBk9myaseg"))
     }
 
+    /**
+     * Executes audiobookApisTest.
+     */
     fun audiobookApisTest() = runBlocking {
         val api = AudiobooksApis()
         println(api.getAnAudiobook("7iHfbu1YPACw6oZPAFJtqe"))
@@ -51,18 +60,27 @@ object ApiTest {
         println(api.checkUsersSavedAudiobooks(Ids(listOf("18yVqkdbdRvS24c0Ilj2ci","1HGw3J3NxZO1TP1BTtVhpZ","7iHfbu1YPACw6oZPAFJtqe"))))
     }
 
+    /**
+     * Executes categoryApisTest.
+     */
     fun categoryApisTest() = runBlocking {
         val api = CategoriesApis()
         println(api.getSeveralBrowseCategories())
         println(api.getSingleBrowseCategory("dinner"))
     }
 
+    /**
+     * Executes chaptersApisTest.
+     */
     fun chaptersApisTest() = runBlocking {
         val api = ChaptersApis()
         println(api.getAChapter("0D5wENdkdwbqlrHoaJ9g29"))
         println(api.getSeveralChapters(listOf("0IsXVP0JmcB2adSE338GkK","3ZXb8FKZGU0EHALYX6uCzU","0D5wENdkdwbqlrHoaJ9g29")))
     }
 
+    /**
+     * Executes episodeApisTest.
+     */
     fun episodeApisTest() = runBlocking {
         val api = EpisodesApis()
         println(api.getEpisode("512ojhOuo1ktJprKbVcKyQ"))
@@ -74,16 +92,25 @@ object ApiTest {
         println(api.checkUsersSavedEpisodes(Ids(listOf("77o6BIVlYM3msb4MMIL1jH", "0Q86acNRm6V9GYx55SXKwf"))))
     }
 
+    /**
+     * Executes genresApisTest.
+     */
     fun genresApisTest() = runBlocking {
         val api = GenresApis()
         println(api.getAvailableGenreSeeds())
     }
 
+    /**
+     * Executes marketApisTest.
+     */
     fun marketApisTest() = runBlocking {
         val api = MarketsApis()
         println(api.getAvailableMarkets())
     }
 
+    /**
+     * Executes playerApisTest.
+     */
     fun playerApisTest() = runBlocking {
         val api = PlayerApis()
         val devicesResponse = api.getAvailableDevices()

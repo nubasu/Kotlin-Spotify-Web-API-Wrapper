@@ -33,6 +33,9 @@ data class SpotifyApiResponse<T>(
     val headers: Map<String, String> = emptyMap(),
 )
 
+/**
+ * Executes function.
+ */
 fun SpotifyApiResponse<*>.header(name: String): String? =
     headers.entries
         .firstOrNull { (key, _) ->

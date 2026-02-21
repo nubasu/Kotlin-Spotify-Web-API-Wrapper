@@ -5,6 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 
+/**
+ * Launches launchAuthorizationUriOnPlatform.
+ *
+ * @param authorizationUri The authorizationUri parameter.
+ * @return True when the operation succeeds; otherwise false.
+ */
 internal actual fun launchAuthorizationUriOnPlatform(authorizationUri: String): Boolean {
     val context = resolveApplication() ?: return false
     val uri = Uri.parse(authorizationUri)

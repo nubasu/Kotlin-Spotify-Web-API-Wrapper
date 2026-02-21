@@ -12,6 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 class MainActivity : ComponentActivity() {
     private val callbackUriState = mutableStateOf<String?>(null)
 
+    /**
+     * Executes onCreate.
+     *
+     * @param savedInstanceState The savedInstanceState parameter.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -22,12 +27,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Executes onNewIntent.
+     *
+     * @param intent The intent parameter.
+     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         callbackUriState.value = intent.dataString
     }
 }
 
+/**
+ * Executes AppAndroidPreview.
+ */
 @Preview
 @Composable
 fun AppAndroidPreview() {

@@ -16,6 +16,11 @@ class JvmDesktopCallbackCoordinator(
     private var server: HttpServer? = null
     private var executor: ExecutorService? = null
 
+    /**
+     * Executes beginSession.
+     *
+     * @return The resulting String? value.
+     */
     override fun beginSession(): String? {
         if (server == null) {
             val created = runCatching {
@@ -34,10 +39,18 @@ class JvmDesktopCallbackCoordinator(
         return "http://$host:$port$path"
     }
 
+    /**
+     * Executes consumeCallbackUri.
+     *
+     * @return The resulting String? value.
+     */
     override fun consumeCallbackUri(): String? {
         return callbackUris.poll()
     }
 
+    /**
+     * Executes close.
+     */
     override fun close() {
         server?.stop(0)
         server = null

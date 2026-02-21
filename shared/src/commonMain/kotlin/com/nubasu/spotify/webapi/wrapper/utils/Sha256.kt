@@ -1,5 +1,11 @@
 package com.nubasu.spotify.webapi.wrapper.utils
 
+    /**
+     * Executes digest.
+     *
+     * @param input The input parameter.
+     * @return The resulting ByteArray value.
+     */
 @OptIn(ExperimentalUnsignedTypes::class)
 internal object Sha256 {
     private val k =
