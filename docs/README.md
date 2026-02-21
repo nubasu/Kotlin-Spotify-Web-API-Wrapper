@@ -1,8 +1,8 @@
-﻿# Docs Index
+# Docs Index
 
-このディレクトリに本ライブラリのドキュメントとサンプルを配置しています。
+This directory contains the library documentation and samples.
 
-## Samples (API別)
+## Samples (By API)
 
 - [Authorization](samples/apis/authorization.md)
 - [Albums](samples/apis/albums.md)
@@ -39,4 +39,3 @@
 
 - Spotify Web API reference: https://developer.spotify.com/documentation/web-api/reference
 - Spotify Authorization concepts: https://developer.spotify.com/documentation/web-api/concepts/authorization
-

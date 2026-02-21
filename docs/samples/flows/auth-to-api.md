@@ -1,6 +1,6 @@
 # Flow Sample: Auth to API Call
 
-このサンプルは、PKCE 認証を開始してコールバック処理し、任意の API を呼ぶまでの最短フローです。
+This sample shows the shortest flow to start PKCE authorization, process the callback, and call any API.
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
@@ -13,20 +13,20 @@ suspend fun authThenCallApi(redirectedUri: String) {
         redirectUri = "your.app://callback"
     )
 
-    // 1) 認証開始 URL を発行して自動起動
-    //    Android/iOS: アプリ内認証画面を優先
-    //    それ以外: ブラウザを起動
+    // 1) Build authorization URL and launch automatically
+    //    Android/iOS: prefer in-app authentication UI
+    //    Others: open browser
     val request = auth.startPkceAuthorizationAndLaunch(
         scope = listOf("user-read-email", "user-read-private")
     )
     val authorizationUri = request.authorizationUri
     println("Opened: $authorizationUri")
 
-    // 2) コールバック URI からトークン取得
+    // 2) Exchange token from callback URI
     val token = auth.completePkceAuthorizationFromRedirectUri(redirectedUri)
     println("Access token acquired: ${token.accessToken.isNotBlank()}")
 
-    // 3) API 呼び出し
+    // 3) Call API
     val albumsApi = AlbumsApis()
     val response = albumsApi.getAlbum("4aawyAB9vmqN3uQ7FjRGTy")
 
@@ -39,7 +39,6 @@ suspend fun authThenCallApi(redirectedUri: String) {
 
 ## Notes
 
-- `completePkceAuthorization...` 成功時に `TokenHolder.token` は自動設定されます。
-- API クラス（`AlbumsApis` など）は `TokenHolder` を使って Bearer Token を送信します。
-- 明示的に制御したい場合は `startPkceAuthorization()` + `launchAuthorizationInAppOrBrowser(uri)` も使えます。
-
+- `completePkceAuthorization...` automatically sets `TokenHolder.token` on success.
+- API classes (`AlbumsApis`, etc.) send Bearer tokens via `TokenHolder`.
+- For explicit control, use `startPkceAuthorization()` + `launchAuthorizationInAppOrBrowser(uri)`.

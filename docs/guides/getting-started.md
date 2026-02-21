@@ -1,10 +1,10 @@
 # Getting Started
 
-このガイドは、最短で「認証して API を呼ぶ」までの手順です。
+This guide shows the shortest path to "authenticate and call an API".
 
-## 1. 依存関係を追加
+## 1. Add Dependency
 
-同一リポジトリ内で使う場合は `shared` モジュールを依存に追加します。
+If you are using this within the same repository, add the `shared` module as a dependency.
 
 ```kotlin
 dependencies {
@@ -12,18 +12,18 @@ dependencies {
 }
 ```
 
-## 2. 認証フローを選ぶ
+## 2. Choose an Authorization Flow
 
-- ユーザー操作が必要: PKCE / Authorization Code Flow
-- サーバー間連携やアプリ権限のみ: Client Credentials Flow
+- User authorization required: PKCE / Authorization Code Flow
+- Server-to-server or app-only permission: Client Credentials Flow
 
-詳細サンプル:
+Detailed samples:
 
 - [PKCE -> API](../samples/flows/auth-to-api.md)
 - [Authorization Code -> API](../samples/flows/authorization-code-to-api.md)
 - [Client Credentials -> API](../samples/flows/client-credentials-to-api.md)
 
-## 3. API を呼ぶ
+## 3. Call an API
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
@@ -40,7 +40,7 @@ suspend fun fetchAlbum() {
 }
 ```
 
-## 4. ページングとリトライを使う
+## 4. Use Paging and Retry
 
 - [Paging / Rate Limit / Retry](paging-rate-limit-retry.md)
 - [Response / Error Handling](response-and-error-handling.md)

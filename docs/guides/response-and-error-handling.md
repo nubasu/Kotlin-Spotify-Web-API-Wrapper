@@ -1,6 +1,6 @@
 # Response / Error Handling
 
-このライブラリの返り値は `SpotifyApiResponse<T>` です。
+This library returns `SpotifyApiResponse<T>`.
 
 ```kotlin
 data class SpotifyApiResponse<T>(
@@ -10,9 +10,9 @@ data class SpotifyApiResponse<T>(
 )
 ```
 
-`data` は常に non-null で、`Success` か `Error` のどちらかです。
+`data` is always non-null and is either `Success` or `Error`.
 
-## 基本パターン
+## Basic Pattern
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
@@ -34,7 +34,7 @@ suspend fun handleResponse() {
 }
 ```
 
-## 429 (Rate Limit) の待機時間
+## 429 (Rate Limit) Wait Time
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.utils.RateLimitHandling
@@ -45,7 +45,7 @@ if (response.statusCode == 429 && retryAfterMillis != null) {
 }
 ```
 
-## ヘッダー取得
+## Read Headers
 
 ```kotlin
 val retryAfterRaw = response.header("Retry-After")
