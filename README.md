@@ -54,6 +54,7 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 - A sample app is included in `composeApp/`.
 - It supports: `PKCE auth -> load current user's playlists -> start/pause playback`.
 - Android callback deep link: `spotifyauth://callback` (configure this in Spotify Dashboard redirect URIs).
+- JVM/Desktop auto callback: `http://127.0.0.1:8888/callback` (configure this in Spotify Dashboard redirect URIs).
 - Desktop/JVM: run `./gradlew :composeApp:run`.
 
 ## Quick Start

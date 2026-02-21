@@ -10,6 +10,7 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.CreatePlaylis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.RemovePlaylistItemsRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.TrackUri
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.UpdatePlaylistItemsRequest
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -312,5 +313,113 @@ class PlaylistsApisTest {
     @Test
     fun addCustomPlaylistCoverImage_nonSuccess_throws_status429_tooManyRequests() = runTest {
         ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> PlaylistsApis(client).addCustomPlaylistCoverImage("playlist-id", "base64jpeg") }
+    }
+
+    @Test
+    fun getCurrentUsersPlaylists_success_allowsNullImages() = runTest {
+        val body = """
+            {
+              "href":"https://api.spotify.com/v1/me/playlists?offset=0&limit=20",
+              "limit":20,
+              "next":null,
+              "offset":0,
+              "previous":null,
+              "total":1,
+              "items":[
+                {
+                  "collaborative":false,
+                  "description":"sample",
+                  "external_urls":{"spotify":"https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"},
+                  "href":"https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M",
+                  "id":"37i9dQZF1DXcBWIGoYBM5M",
+                  "images":null,
+                  "name":"Today's Top Hits",
+                  "owner":{
+                    "external_urls":{"spotify":"https://open.spotify.com/user/spotify"},
+                    "href":"https://api.spotify.com/v1/users/spotify",
+                    "id":"spotify",
+                    "type":"user",
+                    "uri":"spotify:user:spotify",
+                    "display_name":"Spotify"
+                  },
+                  "primary_color":null,
+                  "public":true,
+                  "snapshot_id":"snapshot-id",
+                  "tracks":{"href":"https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks","total":10},
+                  "items":{"href":"https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks","total":10},
+                  "type":"playlist",
+                  "uri":"spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        val api = PlaylistsApis(
+            ApiTestClientFactory.successClient(
+                status = HttpStatusCode.OK,
+                body = body,
+            )
+        )
+        val response = api.getCurrentUsersPlaylists()
+        val data = response.data as SpotifyResponseData.Success
+
+        assertEquals(HttpStatusCode.OK.value, response.statusCode)
+        assertEquals(1, data.value.items.size)
+        assertEquals(null, data.value.items.first().images)
+        assertEquals(null, data.value.items.first().primaryColor)
+        assertEquals(10, data.value.items.first().items?.total)
+    }
+
+    @Test
+    fun getCurrentUsersPlaylists_success_allowsItemsWithoutTracks() = runTest {
+        val body = """
+            {
+              "href":"https://api.spotify.com/v1/me/playlists?offset=0&limit=20",
+              "limit":20,
+              "next":null,
+              "offset":0,
+              "previous":null,
+              "total":1,
+              "items":[
+                {
+                  "collaborative":false,
+                  "description":"sample",
+                  "external_urls":{"spotify":"https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"},
+                  "href":"https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M",
+                  "id":"37i9dQZF1DXcBWIGoYBM5M",
+                  "images":null,
+                  "name":"Today's Top Hits",
+                  "owner":{
+                    "external_urls":{"spotify":"https://open.spotify.com/user/spotify"},
+                    "href":"https://api.spotify.com/v1/users/spotify",
+                    "id":"spotify",
+                    "type":"user",
+                    "uri":"spotify:user:spotify",
+                    "display_name":"Spotify"
+                  },
+                  "primary_color":null,
+                  "public":true,
+                  "snapshot_id":"snapshot-id",
+                  "items":{"href":"https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks","total":11},
+                  "type":"playlist",
+                  "uri":"spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
+                }
+              ]
+            }
+        """.trimIndent()
+
+        val api = PlaylistsApis(
+            ApiTestClientFactory.successClient(
+                status = HttpStatusCode.OK,
+                body = body,
+            )
+        )
+        val response = api.getCurrentUsersPlaylists()
+        val data = response.data as SpotifyResponseData.Success
+
+        assertEquals(HttpStatusCode.OK.value, response.statusCode)
+        assertEquals(1, data.value.items.size)
+        assertEquals(11, data.value.items.first().items?.total)
+        assertEquals(0, data.value.items.first().tracks.total)
     }
 }
