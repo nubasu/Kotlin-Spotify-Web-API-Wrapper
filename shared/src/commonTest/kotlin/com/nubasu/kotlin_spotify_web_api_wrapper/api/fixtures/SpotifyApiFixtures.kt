@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures
+package com.nubasu.spotify.webapi.wrapper.api.fixtures
 
 internal object SpotifyApiFixtures {
     const val ARTIST_MIN = """{}"""

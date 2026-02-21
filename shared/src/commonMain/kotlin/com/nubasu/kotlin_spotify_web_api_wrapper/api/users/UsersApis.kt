@@ -1,18 +1,18 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.users
+package com.nubasu.spotify.webapi.wrapper.api.users
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowPlaylistRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowType
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.TimeRange
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.TopItemType
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.FollowedArtists
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.User
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.UsersProfile
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.UsersTopItems
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.users.FollowPlaylistRequest
+import com.nubasu.spotify.webapi.wrapper.request.users.FollowType
+import com.nubasu.spotify.webapi.wrapper.request.users.TimeRange
+import com.nubasu.spotify.webapi.wrapper.request.users.TopItemType
+import com.nubasu.spotify.webapi.wrapper.response.users.FollowedArtists
+import com.nubasu.spotify.webapi.wrapper.response.users.User
+import com.nubasu.spotify.webapi.wrapper.response.users.UsersProfile
+import com.nubasu.spotify.webapi.wrapper.response.users.UsersTopItems
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

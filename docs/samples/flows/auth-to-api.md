@@ -1,11 +1,11 @@
-﻿# Flow Sample: Auth to API Call
+# Flow Sample: Auth to API Call
 
 このサンプルは、PKCE 認証を開始してコールバック処理し、任意の API を呼ぶまでの最短フローです。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 
 suspend fun authThenCallApi(redirectedUri: String) {
     val auth = SpotifyAuthManager(

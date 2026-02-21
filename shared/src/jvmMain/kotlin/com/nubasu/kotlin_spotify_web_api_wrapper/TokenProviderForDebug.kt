@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper
+package com.nubasu.spotify.webapi.wrapper
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import java.io.File
 import java.util.Properties
 

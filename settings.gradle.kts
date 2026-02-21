@@ -1,4 +1,4 @@
-rootProject.name = "kotlin_spotify_web_api_wrapper"
+rootProject.name = "kotlin-spotify-web-api-wrapper"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

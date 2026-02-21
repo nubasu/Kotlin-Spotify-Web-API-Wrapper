@@ -15,7 +15,7 @@ data class SpotifyApiResponse<T>(
 ## 基本パターン
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 
 suspend fun handleResponse() {
     val response = albumsApis.getAlbum("4aawyAB9vmqN3uQ7FjRGTy")
@@ -37,7 +37,7 @@ suspend fun handleResponse() {
 ## 429 (Rate Limit) の待機時間
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.RateLimitHandling
+import com.nubasu.spotify.webapi.wrapper.utils.RateLimitHandling
 
 val retryAfterMillis = RateLimitHandling.retryAfterDelayMillis(response)
 if (response.statusCode == 429 && retryAfterMillis != null) {

@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.utils
+package com.nubasu.spotify.webapi.wrapper.utils
 
 import kotlin.concurrent.Volatile
 

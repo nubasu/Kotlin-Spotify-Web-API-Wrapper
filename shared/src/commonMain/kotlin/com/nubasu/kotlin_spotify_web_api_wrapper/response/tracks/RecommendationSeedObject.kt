@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks
+package com.nubasu.spotify.webapi.wrapper.response.tracks
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,11 +1,11 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks
+package com.nubasu.spotify.webapi.wrapper.response.tracks
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.LinkedFrom
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.albums.SimplifiedArtistObject
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalIds
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.Restrictions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.PlaybackItem
+import com.nubasu.spotify.webapi.wrapper.response.LinkedFrom
+import com.nubasu.spotify.webapi.wrapper.response.albums.SimplifiedArtistObject
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalIds
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.Restrictions
+import com.nubasu.spotify.webapi.wrapper.response.player.PlaybackItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

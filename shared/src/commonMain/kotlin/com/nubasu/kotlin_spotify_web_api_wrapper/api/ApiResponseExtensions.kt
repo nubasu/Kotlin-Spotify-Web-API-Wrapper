@@ -1,9 +1,9 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyError
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyErrorResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyError
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyErrorResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText

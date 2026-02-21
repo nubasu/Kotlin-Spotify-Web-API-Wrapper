@@ -1,8 +1,8 @@
-﻿# Search API Samples
+# Search API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.search.SearchApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.search.SearchType
+import com.nubasu.spotify.webapi.wrapper.api.search.SearchApis
+import com.nubasu.spotify.webapi.wrapper.request.search.SearchType
 
 val api = SearchApis()
 api.searchForItem("Muse", setOf(SearchType.ARTIST, SearchType.TRACK))

@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.utils
+package com.nubasu.spotify.webapi.wrapper.utils
 
 enum class CountryCode(val code: String, val countryName: String) {
     AD("AD", "Andorra"),

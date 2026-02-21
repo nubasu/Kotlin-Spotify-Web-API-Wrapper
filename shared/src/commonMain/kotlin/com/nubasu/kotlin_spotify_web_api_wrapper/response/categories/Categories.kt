@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.categories
+package com.nubasu.spotify.webapi.wrapper.response.categories
 
 import kotlinx.serialization.Serializable
 

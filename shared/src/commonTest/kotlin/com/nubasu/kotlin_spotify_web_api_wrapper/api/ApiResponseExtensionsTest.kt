@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

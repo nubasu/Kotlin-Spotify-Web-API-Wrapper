@@ -1,7 +1,7 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.users
+package com.nubasu.spotify.webapi.wrapper.response.users
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.Cursors
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistObject
+import com.nubasu.spotify.webapi.wrapper.response.Cursors
+import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistObject
 import kotlinx.serialization.Serializable
 
 @Serializable

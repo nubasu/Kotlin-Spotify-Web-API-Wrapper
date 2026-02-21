@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.player
+package com.nubasu.spotify.webapi.wrapper.response.player
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.Cursors
+import com.nubasu.spotify.webapi.wrapper.response.Cursors
 import kotlinx.serialization.Serializable
 
 @Serializable

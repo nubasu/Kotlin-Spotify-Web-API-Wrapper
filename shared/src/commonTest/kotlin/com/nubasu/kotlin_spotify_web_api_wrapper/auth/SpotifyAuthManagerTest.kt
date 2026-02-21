@@ -1,10 +1,10 @@
 @file:Suppress("DEPRECATION")
 
-package com.nubasu.kotlin_spotify_web_api_wrapper.auth
+package com.nubasu.spotify.webapi.wrapper.auth
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.api.authorization.AuthorizationApis
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond

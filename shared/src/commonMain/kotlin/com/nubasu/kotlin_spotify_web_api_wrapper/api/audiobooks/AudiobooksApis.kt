@@ -1,17 +1,17 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks
+package com.nubasu.spotify.webapi.wrapper.api.audiobooks
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.Audiobook
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.AudiobookChapters
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.Audiobooks
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.UsersSavedAudiobooks
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.common.Ids
+import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.Audiobook
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.AudiobookChapters
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.Audiobooks
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.UsersSavedAudiobooks
+import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

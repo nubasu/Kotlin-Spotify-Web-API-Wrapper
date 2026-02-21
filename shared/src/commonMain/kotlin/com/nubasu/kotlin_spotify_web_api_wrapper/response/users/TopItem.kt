@@ -1,3 +1,3 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.users
+package com.nubasu.spotify.webapi.wrapper.response.users
 
 interface TopItem

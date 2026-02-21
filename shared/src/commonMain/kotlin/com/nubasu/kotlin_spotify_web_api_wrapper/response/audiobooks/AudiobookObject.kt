@@ -1,8 +1,8 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks
+package com.nubasu.spotify.webapi.wrapper.response.audiobooks
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.CopyrightObject
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
+import com.nubasu.spotify.webapi.wrapper.response.common.CopyrightObject
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
 
 data class AudiobookObject(
     val authors: List<AuthorObject>,

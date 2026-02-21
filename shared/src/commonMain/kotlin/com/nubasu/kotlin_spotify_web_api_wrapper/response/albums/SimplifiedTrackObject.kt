@@ -1,9 +1,9 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.albums
+package com.nubasu.spotify.webapi.wrapper.response.albums
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.LinkedFrom
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.albums.SimplifiedArtistObject
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.Restrictions
+import com.nubasu.spotify.webapi.wrapper.response.LinkedFrom
+import com.nubasu.spotify.webapi.wrapper.response.albums.SimplifiedArtistObject
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.Restrictions
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

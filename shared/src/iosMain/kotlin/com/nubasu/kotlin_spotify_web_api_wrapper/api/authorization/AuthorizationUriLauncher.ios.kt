@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization
+package com.nubasu.spotify.webapi.wrapper.api.authorization
 
 import platform.Foundation.NSURL
 import platform.SafariServices.SFSafariViewController

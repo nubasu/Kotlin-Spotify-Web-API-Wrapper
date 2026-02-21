@@ -1,8 +1,8 @@
-﻿# Audiobooks API Samples
+# Audiobooks API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
+import com.nubasu.spotify.webapi.wrapper.api.audiobooks.AudiobooksApis
+import com.nubasu.spotify.webapi.wrapper.request.common.Ids
 
 val api = AudiobooksApis()
 

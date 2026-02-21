@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper
+package com.nubasu.spotify.webapi.wrapper
 
 import android.os.Build
 

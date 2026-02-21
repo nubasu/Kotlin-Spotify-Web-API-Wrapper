@@ -1,18 +1,18 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.artists
+package com.nubasu.spotify.webapi.wrapper.api.artists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.IncludeGroup
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.Artist
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistsAlbums
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistsTopTracks
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.Artists
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistsRelatedArtists
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.common.IncludeGroup
+import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
+import com.nubasu.spotify.webapi.wrapper.response.artists.Artist
+import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistsAlbums
+import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistsTopTracks
+import com.nubasu.spotify.webapi.wrapper.response.artists.Artists
+import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistsRelatedArtists
+import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

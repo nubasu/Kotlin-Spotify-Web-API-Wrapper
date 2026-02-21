@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.albums
+package com.nubasu.spotify.webapi.wrapper.response.albums
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable

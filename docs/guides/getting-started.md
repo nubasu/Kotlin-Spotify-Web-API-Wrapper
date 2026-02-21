@@ -26,8 +26,8 @@ dependencies {
 ## 3. API を呼ぶ
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 
 suspend fun fetchAlbum() {
     val api = AlbumsApis()

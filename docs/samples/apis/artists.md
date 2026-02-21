@@ -1,8 +1,8 @@
-﻿# Artists API Samples
+# Artists API Samples
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.IncludeGroup
+import com.nubasu.spotify.webapi.wrapper.api.artists.ArtistsApis
+import com.nubasu.spotify.webapi.wrapper.request.common.IncludeGroup
 
 val api = ArtistsApis()
 

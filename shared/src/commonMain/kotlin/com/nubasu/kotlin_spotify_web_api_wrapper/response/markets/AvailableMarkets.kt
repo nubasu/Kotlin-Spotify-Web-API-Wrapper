@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.markets
+package com.nubasu.spotify.webapi.wrapper.response.markets
 
 import kotlinx.serialization.Serializable
 

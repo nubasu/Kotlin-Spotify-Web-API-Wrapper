@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists
+package com.nubasu.spotify.webapi.wrapper.response.playlists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.PlaybackItem
+import com.nubasu.spotify.webapi.wrapper.response.player.PlaybackItem
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

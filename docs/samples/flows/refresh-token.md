@@ -1,9 +1,9 @@
-﻿# Flow Sample: Refresh Token
+# Flow Sample: Refresh Token
 
 このサンプルは、refresh token を使ってアクセストークンを更新する流れです。
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
 
 suspend fun refreshFlow(code: String) {
     val auth = SpotifyAuthManager(

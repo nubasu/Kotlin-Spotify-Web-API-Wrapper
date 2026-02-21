@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.utils
+package com.nubasu.spotify.webapi.wrapper.utils
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import kotlinx.coroutines.delay
 import kotlin.math.pow
 import kotlin.random.Random

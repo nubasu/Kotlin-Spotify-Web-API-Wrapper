@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.request.search
+package com.nubasu.spotify.webapi.wrapper.request.search
 
 enum class SearchType(val value: String) {
     ALBUM("album"),

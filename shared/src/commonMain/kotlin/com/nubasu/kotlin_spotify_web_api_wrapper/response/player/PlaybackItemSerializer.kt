@@ -1,7 +1,7 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.player
+package com.nubasu.spotify.webapi.wrapper.response.player
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes.Episode
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks.TrackObject
+import com.nubasu.spotify.webapi.wrapper.response.episodes.Episode
+import com.nubasu.spotify.webapi.wrapper.response.tracks.TrackObject
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

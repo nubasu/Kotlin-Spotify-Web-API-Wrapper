@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.request.users
+package com.nubasu.spotify.webapi.wrapper.request.users
 
 enum class TopItemType(val value: String) {
     ARTISTS("artists"),

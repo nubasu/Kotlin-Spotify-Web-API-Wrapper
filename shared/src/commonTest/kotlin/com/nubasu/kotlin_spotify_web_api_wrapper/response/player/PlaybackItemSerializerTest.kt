@@ -1,7 +1,7 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.player
+package com.nubasu.spotify.webapi.wrapper.response.player
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes.Episode
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks.TrackObject as PlaybackTrack
+import com.nubasu.spotify.webapi.wrapper.response.episodes.Episode
+import com.nubasu.spotify.webapi.wrapper.response.tracks.TrackObject as PlaybackTrack
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

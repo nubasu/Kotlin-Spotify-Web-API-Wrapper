@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization
+package com.nubasu.spotify.webapi.wrapper.api.authorization
 
 import kotlinx.browser.window
 

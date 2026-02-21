@@ -1,13 +1,13 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.categories
+package com.nubasu.spotify.webapi.wrapper.api.categories
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.categories.BrowseCategories
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.categories.BrowseCategory
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
+import com.nubasu.spotify.webapi.wrapper.response.categories.BrowseCategories
+import com.nubasu.spotify.webapi.wrapper.response.categories.BrowseCategory
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

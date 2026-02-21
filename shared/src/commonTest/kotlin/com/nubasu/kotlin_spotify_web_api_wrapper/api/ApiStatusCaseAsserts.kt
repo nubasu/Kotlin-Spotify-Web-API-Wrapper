@@ -1,7 +1,7 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import io.ktor.client.HttpClient
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.decodeFromString

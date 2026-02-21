@@ -1,4 +1,4 @@
-﻿package com.nubasu.kotlin_spotify_web_api_wrapper
+package com.nubasu.spotify.webapi.wrapper
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,14 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.SpotifyAuthManager
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists.PlaylistsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.Device
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.SimplifiedPlaylistObject
+import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
+import com.nubasu.spotify.webapi.wrapper.api.player.PlayerApis
+import com.nubasu.spotify.webapi.wrapper.api.playlists.PlaylistsApis
+import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.response.player.Device
+import com.nubasu.spotify.webapi.wrapper.response.playlists.SimplifiedPlaylistObject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview

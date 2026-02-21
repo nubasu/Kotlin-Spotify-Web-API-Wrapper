@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.request.player
+package com.nubasu.spotify.webapi.wrapper.request.player
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.search
+package com.nubasu.spotify.webapi.wrapper.response.search
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes.SimplifiedEpisodeObject
+import com.nubasu.spotify.webapi.wrapper.response.episodes.SimplifiedEpisodeObject
 import kotlinx.serialization.Serializable
 
 @Serializable

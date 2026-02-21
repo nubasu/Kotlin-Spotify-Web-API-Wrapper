@@ -1,8 +1,8 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization
+package com.nubasu.spotify.webapi.wrapper.api.authorization
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.authorization.TokenResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.authorization.TokenResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

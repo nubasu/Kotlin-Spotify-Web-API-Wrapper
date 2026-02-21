@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.request.common
+package com.nubasu.spotify.webapi.wrapper.request.common
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
+import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 
 data class MarketOptions(
     val market: CountryCode? = null,

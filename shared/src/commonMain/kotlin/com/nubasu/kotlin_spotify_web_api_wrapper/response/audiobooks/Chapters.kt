@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks
+package com.nubasu.spotify.webapi.wrapper.response.audiobooks
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.chapters.SimplifiedChapterObject
+import com.nubasu.spotify.webapi.wrapper.response.chapters.SimplifiedChapterObject
 import kotlinx.serialization.Serializable
 
 @Serializable

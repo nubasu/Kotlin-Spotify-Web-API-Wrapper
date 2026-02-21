@@ -57,7 +57,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.nubasu.kotlin_spotify_web_api_wrapper.shared"
+    namespace = "com.nubasu.spotify.webapi.wrapper.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

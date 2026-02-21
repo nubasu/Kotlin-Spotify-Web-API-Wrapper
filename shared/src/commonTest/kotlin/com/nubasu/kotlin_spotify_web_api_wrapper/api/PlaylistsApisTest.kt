@@ -1,15 +1,15 @@
 @file:Suppress("DEPRECATION")
 
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists.PlaylistsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.AddItemsToPlaylistRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.ChangePlaylistDetailsRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.CreatePlaylistRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.RemovePlaylistItemsRequest
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.TrackUri
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.UpdatePlaylistItemsRequest
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.playlists.PlaylistsApis
+import com.nubasu.spotify.webapi.wrapper.request.playlists.AddItemsToPlaylistRequest
+import com.nubasu.spotify.webapi.wrapper.request.playlists.ChangePlaylistDetailsRequest
+import com.nubasu.spotify.webapi.wrapper.request.playlists.CreatePlaylistRequest
+import com.nubasu.spotify.webapi.wrapper.request.playlists.RemovePlaylistItemsRequest
+import com.nubasu.spotify.webapi.wrapper.request.playlists.TrackUri
+import com.nubasu.spotify.webapi.wrapper.request.playlists.UpdatePlaylistItemsRequest
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -373,7 +373,7 @@ class PlaylistsApisTest {
         assertEquals(HttpStatusCode.OK.value, response.statusCode)
         assertEquals(123, data.value.followers?.total)
         assertEquals(1, data.value.items?.items?.size)
-        assertEquals("track", data.value.items?.items?.first()?.item?.let { (it as? com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks.TrackObject)?.type })
+        assertEquals("track", data.value.items?.items?.first()?.item?.let { (it as? com.nubasu.spotify.webapi.wrapper.response.tracks.TrackObject)?.type })
     }
 
     @Test

@@ -1,8 +1,8 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.utils
+package com.nubasu.spotify.webapi.wrapper.utils
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import io.ktor.http.Url
 
 object PagingHelpers {

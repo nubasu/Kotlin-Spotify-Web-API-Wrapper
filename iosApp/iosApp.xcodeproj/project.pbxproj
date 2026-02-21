@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		BE6789564D7E8629D982A2B0 /* kotlin_spotify_web_api_wrapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kotlin_spotify_web_api_wrapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE6789564D7E8629D982A2B0 /* spotify.webapi.wrapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = spotify.webapi.wrapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,7 +59,7 @@
 		B0E1BE80F141C85EA05F03B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BE6789564D7E8629D982A2B0 /* kotlin_spotify_web_api_wrapper.app */,
+				BE6789564D7E8629D982A2B0 /* spotify.webapi.wrapper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = BE6789564D7E8629D982A2B0 /* kotlin_spotify_web_api_wrapper.app */;
+			productReference = BE6789564D7E8629D982A2B0 /* spotify.webapi.wrapper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

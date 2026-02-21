@@ -1,9 +1,9 @@
-﻿# Paging / Rate Limit / Retry Guide
+# Paging / Rate Limit / Retry Guide
 
 ## Paging
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.PagingHelpers
+import com.nubasu.spotify.webapi.wrapper.utils.PagingHelpers
 
 val first = tracksApis.getUsersSavedTracks()
 val all = PagingHelpers.collectAllItems(
@@ -17,7 +17,7 @@ val all = PagingHelpers.collectAllItems(
 ## Rate Limit
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.RateLimitHandling
+import com.nubasu.spotify.webapi.wrapper.utils.RateLimitHandling
 
 val retryAfterMillis = RateLimitHandling.retryAfterDelayMillis(response)
 ```
@@ -25,8 +25,8 @@ val retryAfterMillis = RateLimitHandling.retryAfterDelayMillis(response)
 ## Retry
 
 ```kotlin
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.RetryPolicy
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.SpotifyRetryExecutor
+import com.nubasu.spotify.webapi.wrapper.utils.RetryPolicy
+import com.nubasu.spotify.webapi.wrapper.utils.SpotifyRetryExecutor
 
 val executor = SpotifyRetryExecutor(
     RetryPolicy(

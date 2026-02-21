@@ -45,11 +45,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.nubasu.kotlin_spotify_web_api_wrapper"
+    namespace = "com.nubasu.spotify.webapi.wrapper"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.nubasu.kotlin_spotify_web_api_wrapper"
+        applicationId = "com.nubasu.spotify.webapi.wrapper"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -77,11 +77,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.nubasu.kotlin_spotify_web_api_wrapper.MainKt"
+        mainClass = "com.nubasu.spotify.webapi.wrapper.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.nubasu.kotlin_spotify_web_api_wrapper"
+            packageName = "com.nubasu.spotify.webapi.wrapper"
             packageVersion = "1.0.0"
         }
     }

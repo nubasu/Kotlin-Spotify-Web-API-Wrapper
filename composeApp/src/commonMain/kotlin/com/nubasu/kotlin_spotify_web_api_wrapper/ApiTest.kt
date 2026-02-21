@@ -1,19 +1,19 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper
+package com.nubasu.spotify.webapi.wrapper
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks.AudiobooksApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.genres.GenresApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.markets.MarketsApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.RepeatMode
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.State
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.albums.AlbumsApis
+import com.nubasu.spotify.webapi.wrapper.api.artists.ArtistsApis
+import com.nubasu.spotify.webapi.wrapper.api.audiobooks.AudiobooksApis
+import com.nubasu.spotify.webapi.wrapper.api.categories.CategoriesApis
+import com.nubasu.spotify.webapi.wrapper.api.chapters.ChaptersApis
+import com.nubasu.spotify.webapi.wrapper.api.episodes.EpisodesApis
+import com.nubasu.spotify.webapi.wrapper.api.genres.GenresApis
+import com.nubasu.spotify.webapi.wrapper.api.markets.MarketsApis
+import com.nubasu.spotify.webapi.wrapper.api.player.PlayerApis
+import com.nubasu.spotify.webapi.wrapper.request.common.Ids
+import com.nubasu.spotify.webapi.wrapper.request.player.DeviceIds
+import com.nubasu.spotify.webapi.wrapper.request.player.RepeatMode
+import com.nubasu.spotify.webapi.wrapper.request.player.State
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import kotlinx.coroutines.runBlocking
 
 object ApiTest {

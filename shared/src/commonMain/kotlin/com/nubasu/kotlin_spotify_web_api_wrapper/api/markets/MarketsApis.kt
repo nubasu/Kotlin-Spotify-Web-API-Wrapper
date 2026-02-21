@@ -1,11 +1,11 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api.markets
+package com.nubasu.spotify.webapi.wrapper.api.markets
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.markets.AvailableMarkets
-import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
+import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.response.markets.AvailableMarkets
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

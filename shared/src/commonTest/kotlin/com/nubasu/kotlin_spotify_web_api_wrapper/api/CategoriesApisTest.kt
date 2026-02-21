@@ -1,8 +1,8 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.categories.CategoriesApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.categories.CategoriesApis
+import com.nubasu.spotify.webapi.wrapper.api.fixtures.SpotifyApiFixtures
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

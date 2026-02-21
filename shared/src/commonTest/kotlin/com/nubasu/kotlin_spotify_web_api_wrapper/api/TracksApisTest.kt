@@ -1,12 +1,12 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.tracks.TracksApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationSeeds
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.RecommendationTunableAttributes
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.SaveTracksForCurrentUserRequest
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.fixtures.SpotifyApiFixtures
+import com.nubasu.spotify.webapi.wrapper.api.tracks.TracksApis
+import com.nubasu.spotify.webapi.wrapper.request.common.Ids
+import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationSeeds
+import com.nubasu.spotify.webapi.wrapper.request.tracks.RecommendationTunableAttributes
+import com.nubasu.spotify.webapi.wrapper.request.tracks.SaveTracksForCurrentUserRequest
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

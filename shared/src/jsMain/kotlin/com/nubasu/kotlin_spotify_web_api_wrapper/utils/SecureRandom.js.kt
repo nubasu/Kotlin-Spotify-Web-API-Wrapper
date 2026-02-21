@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.utils
+package com.nubasu.spotify.webapi.wrapper.utils
 
 internal actual fun secureRandomBytes(length: Int): ByteArray {
     require(length > 0) { "length must be > 0" }

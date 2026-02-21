@@ -1,10 +1,10 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.chapters
+package com.nubasu.spotify.webapi.wrapper.response.chapters
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.Audiobook
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.ResumePoint
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.Restrictions
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.Audiobook
+import com.nubasu.spotify.webapi.wrapper.response.audiobooks.ResumePoint
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
+import com.nubasu.spotify.webapi.wrapper.response.common.Restrictions
 
 data class ChapterObject(
     val audioPreviewUrl: String,

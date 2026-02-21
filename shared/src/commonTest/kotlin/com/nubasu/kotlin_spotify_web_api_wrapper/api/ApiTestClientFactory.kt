@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine

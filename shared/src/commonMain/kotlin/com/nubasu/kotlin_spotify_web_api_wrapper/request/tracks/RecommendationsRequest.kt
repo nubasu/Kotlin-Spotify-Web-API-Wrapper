@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks
+package com.nubasu.spotify.webapi.wrapper.request.tracks
 
 data class RecommendationSeeds(
     val artists: List<String> = emptyList(),

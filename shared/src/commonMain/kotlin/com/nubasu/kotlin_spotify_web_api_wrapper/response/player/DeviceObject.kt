@@ -1,4 +1,4 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.player
+package com.nubasu.spotify.webapi.wrapper.response.player
 
 data class DeviceObject (
     val id: String?,

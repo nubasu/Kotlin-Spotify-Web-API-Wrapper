@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists
+package com.nubasu.spotify.webapi.wrapper.response.playlists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
+import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
 import kotlinx.serialization.Serializable
 
 @Serializable

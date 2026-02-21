@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.albums
+package com.nubasu.spotify.webapi.wrapper.response.albums
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.SimplifiedAlbumObject
+import com.nubasu.spotify.webapi.wrapper.response.artists.SimplifiedAlbumObject
 import kotlinx.serialization.Serializable
 
 // same as Tracks

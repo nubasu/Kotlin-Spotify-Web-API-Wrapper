@@ -1,11 +1,11 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.api
+package com.nubasu.spotify.webapi.wrapper.api
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
-import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Uris
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.RepeatMode
-import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.State
+import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.api.player.PlayerApis
+import com.nubasu.spotify.webapi.wrapper.request.common.Uris
+import com.nubasu.spotify.webapi.wrapper.request.player.DeviceIds
+import com.nubasu.spotify.webapi.wrapper.request.player.RepeatMode
+import com.nubasu.spotify.webapi.wrapper.request.player.State
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

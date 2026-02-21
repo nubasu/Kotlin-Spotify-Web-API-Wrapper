@@ -1,6 +1,6 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.albums
+package com.nubasu.spotify.webapi.wrapper.response.albums
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

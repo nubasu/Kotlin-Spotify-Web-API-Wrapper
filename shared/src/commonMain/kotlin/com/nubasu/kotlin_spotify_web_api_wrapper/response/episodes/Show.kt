@@ -1,8 +1,8 @@
-package com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes
+package com.nubasu.spotify.webapi.wrapper.response.episodes
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.CopyrightObject
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ExternalUrls
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
+import com.nubasu.spotify.webapi.wrapper.response.common.CopyrightObject
+import com.nubasu.spotify.webapi.wrapper.response.common.ExternalUrls
+import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
