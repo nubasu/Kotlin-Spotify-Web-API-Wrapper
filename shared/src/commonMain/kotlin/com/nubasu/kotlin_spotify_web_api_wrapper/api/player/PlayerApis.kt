@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.player
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Uris
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.Offset
@@ -31,17 +33,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class PlayerApis {
-    private val client = HttpClient(CIO) {
+class PlayerApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getPlaybackState(
         market: CountryCode? = null,
         additionalTypes: String? = null,
-    ) : PlaybackState {
+    ) : SpotifyApiResponse<PlaybackState> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player"
         val response = client.get {
             url {
@@ -55,13 +58,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun transferPlayback(
         deviceIds: DeviceIds,
         play: Boolean = false,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -78,10 +81,10 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
-    suspend fun getAvailableDevices() : AvailableDevices {
+    suspend fun getAvailableDevices() : SpotifyApiResponse<AvailableDevices> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/devices"
         val response = client.get {
             url {
@@ -93,13 +96,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getCurrentlyPlayingTrack(
         market: CountryCode? = null,
         additionalTypes: String? = null,
-    ) : CurrentlyPlayingTrack {
+    ) : SpotifyApiResponse<CurrentlyPlayingTrack> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing"
         val response = client.get {
             url {
@@ -113,7 +116,7 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun startResumePlayback(
@@ -122,7 +125,7 @@ class PlayerApis {
         uris: Uris? = null,
         offset: Offset? = null,
         positionMs: Int? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/play"
         val body = StartResumePlaybackRequest(
             contextUri = contextUri,
@@ -144,12 +147,12 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun pausePlayback(
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/pause"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -163,12 +166,12 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun skipToNext(
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/next"
         val response = client.post(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -182,12 +185,12 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun skipToPrevious(
         deviceId: String? = null,
-    ): Boolean  {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/previous"
         val response = client.post(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -201,13 +204,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun seekToPosition(
         positionMs: Int,
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/seek"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -221,13 +224,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun setRepeatMode(
         state: State,
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/repeat"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -242,13 +245,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun setPlaybackVolume(
         volumePercent: Int,
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/volume"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -263,13 +266,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun togglePlaybackShuffle(
         state: Boolean,
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/shuffle"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -284,14 +287,14 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun getRecentlyPlayedTracks(
         limit: Int? = null,
         after: Int? = null,
         before: Int? = null,
-    ): RecentlyPlayedTracks {
+    ) : SpotifyApiResponse<RecentlyPlayedTracks> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/recently-played"
         val response = client.get {
             url {
@@ -306,10 +309,10 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getTheUsersQueue() : UsersQueue {
+    suspend fun getTheUsersQueue() : SpotifyApiResponse<UsersQueue> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/queue"
         val response = client.get {
             url {
@@ -321,13 +324,13 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun addItemToPlaybackQueue(
         uri: String,
         deviceId: String? = null,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/player/queue"
         val response = client.post(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -342,6 +345,6 @@ class PlayerApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 }

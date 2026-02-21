@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.chapters.Chapter
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.chapters.Chapters
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
@@ -18,17 +20,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class ChaptersApis {
-    private val client = HttpClient(CIO) {
+class ChaptersApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getAChapter(
         id: String,
         market: CountryCode? = null,
-    ) : Chapter {
+    ) : SpotifyApiResponse<Chapter> {
         val ENDPOINT = "https://api.spotify.com/v1/chapters/"
         val response = client.get {
             url {
@@ -42,13 +45,13 @@ class ChaptersApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getSeveralChapters(
         ids: List<String>,
         market: CountryCode? = null,
-    ) : Chapters {
+    ) : SpotifyApiResponse<Chapters> {
         val ENDPOINT = "https://api.spotify.com/v1/chapters"
         val response = client.get {
             url {
@@ -62,6 +65,6 @@ class ChaptersApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

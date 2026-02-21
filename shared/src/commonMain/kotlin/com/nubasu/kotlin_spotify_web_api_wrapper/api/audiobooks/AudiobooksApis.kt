@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.audiobooks
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.audiobooks.Audiobook
@@ -24,17 +26,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class AudiobooksApis {
-    private val client = HttpClient(CIO) {
+class AudiobooksApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getAnAudiobook(
         id: String,
         market: CountryCode? = null
-    ) : Audiobook {
+    ) : SpotifyApiResponse<Audiobook> {
         val ENDPOINT = "https://api.spotify.com/v1/audiobooks"
         val response = client.get {
             url {
@@ -48,13 +51,13 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getSeveralAudiobooks(
         ids: List<String>,
         market: CountryCode? = null,
-    ) : Audiobooks {
+    ) : SpotifyApiResponse<Audiobooks> {
         val ENDPOINT = "https://api.spotify.com/v1/audiobooks"
         val response = client.get {
             url {
@@ -68,14 +71,14 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getAudiobookChapters(
         id: String,
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : AudiobookChapters {
+    ) : SpotifyApiResponse<AudiobookChapters> {
         val ENDPOINT = "https://api.spotify.com/v1/audiobooks"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -93,12 +96,12 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getUsersSavedAudiobooks(
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : UsersSavedAudiobooks {
+    ) : SpotifyApiResponse<UsersSavedAudiobooks> {
         val ENDPOINT = "https://api.spotify.com/v1/me/audiobooks"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -114,12 +117,12 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun saveAudiobooksForCurrentUser(
         ids: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/audiobooks"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -132,12 +135,12 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun removeUsersSavedAudiobooks(
         ids: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/audiobooks"
         val response = client.delete (ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -150,12 +153,12 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun checkUsersSavedAudiobooks(
         ids: Ids,
-    ) : List<Boolean> {
+    ) : SpotifyApiResponse<List<Boolean>> {
         val ENDPOINT = "https://api.spotify.com/v1/me/audiobooks/contains"
         val response = client.get {
             url {
@@ -169,6 +172,6 @@ class AudiobooksApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

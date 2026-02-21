@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.categories
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.categories.BrowseCategories
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.categories.BrowseCategory
@@ -18,17 +20,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class CategoriesApis {
-    private val client = HttpClient(CIO) {
+class CategoriesApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getSeveralBrowseCategories(
         locale: String? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : BrowseCategories {
+    ) : SpotifyApiResponse<BrowseCategories> {
         val ENDPOINT = "https://api.spotify.com/v1/browse/categories"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -45,13 +48,13 @@ class CategoriesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getSingleBrowseCategory(
         categoryId: String,
         locale: String? = null,
-    ) : BrowseCategory {
+    ) : SpotifyApiResponse<BrowseCategory> {
         val ENDPOINT = "https://api.spotify.com/v1/browse/categories"
         val response = client.get {
             url {
@@ -65,6 +68,6 @@ class CategoriesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

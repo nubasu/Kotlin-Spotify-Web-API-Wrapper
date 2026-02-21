@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.markets
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.markets.AvailableMarkets
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
@@ -15,14 +17,15 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class MarketsApis {
-    private val client = HttpClient(CIO) {
+class MarketsApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
-    suspend fun getAvailableMarkets() : AvailableMarkets {
+    suspend fun getAvailableMarkets() : SpotifyApiResponse<AvailableMarkets> {
         val ENDPOINT = "https://api.spotify.com/v1/markets"
         val response = client.get {
             url {
@@ -34,6 +37,6 @@ class MarketsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

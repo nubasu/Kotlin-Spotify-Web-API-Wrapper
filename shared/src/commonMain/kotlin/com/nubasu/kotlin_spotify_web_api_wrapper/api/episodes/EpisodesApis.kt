@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.episodes.Episode
@@ -23,17 +25,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class EpisodesApis {
-    private val client = HttpClient(CIO) {
+class EpisodesApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getEpisode(
         id: String,
         market: CountryCode? = null,
-    ) : Episode {
+    ) : SpotifyApiResponse<Episode> {
         val ENDPOINT = "https://api.spotify.com/v1/episodes"
         val response = client.get {
             url {
@@ -47,13 +50,13 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getSeveralEpisodes(
         ids: List<String>,
         market: CountryCode? = null,
-    ) : Episodes {
+    ) : SpotifyApiResponse<Episodes> {
         val ENDPOINT = "https://api.spotify.com/v1/episodes"
         val response = client.get {
             url {
@@ -67,13 +70,13 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getUsersSavedEpisodes(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : UsersSavedEpisodes {
+    ) : SpotifyApiResponse<UsersSavedEpisodes> {
         val ENDPOINT = "https://api.spotify.com/v1/me/episodes"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -90,12 +93,12 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun saveEpisodesForCurrentUser(
         ids: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/episodes"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -108,12 +111,12 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun removeUsersSavedEpisodes(
         ids: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/episodes"
         val response = client.delete (ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -126,12 +129,12 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun checkUsersSavedEpisodes(
         ids: Ids,
-    ) : List<Boolean> {
+    ) : SpotifyApiResponse<List<Boolean>> {
         val ENDPOINT = "https://api.spotify.com/v1/me/episodes/contains"
         val response = client.get {
             url {
@@ -145,6 +148,6 @@ class EpisodesApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

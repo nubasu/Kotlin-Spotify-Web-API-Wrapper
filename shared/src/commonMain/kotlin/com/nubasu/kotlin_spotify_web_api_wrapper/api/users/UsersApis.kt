@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.users
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowPlaylistRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowType
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.TimeRange
@@ -26,19 +28,20 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class UsersApis {
-    private val client = HttpClient(CIO) {
+class UsersApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) { json() }
     }
+) {
 
-    suspend fun getCurrentUsersProfile(): User {
+    suspend fun getCurrentUsersProfile() : SpotifyApiResponse<User> {
         val endpoint = "https://api.spotify.com/v1/me"
         val response = client.get(endpoint) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getUsersTopItems(
@@ -46,7 +49,7 @@ class UsersApis {
         timeRange: TimeRange? = null,
         limit: Int? = null,
         offset: Int? = null,
-    ): UsersTopItems {
+    ) : SpotifyApiResponse<UsersTopItems> {
         val endpoint = "https://api.spotify.com/v1/me/top/${type.value}"
         val response = client.get {
             url {
@@ -59,20 +62,20 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getUsersProfile(userId: String): UsersProfile {
+    suspend fun getUsersProfile(userId: String) : SpotifyApiResponse<UsersProfile> {
         val endpoint = "https://api.spotify.com/v1/users/$userId"
         val response = client.get(endpoint) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun followPlaylist(playlistId: String, public: Boolean = true): Boolean {
+    suspend fun followPlaylist(playlistId: String, public: Boolean = true) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response = client.put(endpoint) {
             bearerAuth(TokenHolder.token)
@@ -81,20 +84,20 @@ class UsersApis {
             setBody(FollowPlaylistRequest(public = public))
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 
-    suspend fun unfollowPlaylist(playlistId: String): Boolean {
+    suspend fun unfollowPlaylist(playlistId: String) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response = client.delete(endpoint) {
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 
-    suspend fun getFollowedArtists(type: FollowType = FollowType.ARTIST, limit: Int? = null, after: String? = null): FollowedArtists {
+    suspend fun getFollowedArtists(type: FollowType = FollowType.ARTIST, limit: Int? = null, after: String? = null) : SpotifyApiResponse<FollowedArtists> {
         require(type == FollowType.ARTIST) {
             "Spotify Get Followed Artists supports only type=artist."
         }
@@ -110,10 +113,10 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun followArtistsOrUsers(type: FollowType, ids: List<String>): Boolean {
+    suspend fun followArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/following"
         val response = client.put {
             url {
@@ -125,10 +128,10 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 
-    suspend fun unfollowArtistsOrUsers(type: FollowType, ids: List<String>): Boolean {
+    suspend fun unfollowArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/me/following"
         val response = client.delete {
             url {
@@ -140,10 +143,10 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 
-    suspend fun checkIfUserFollowsArtistsOrUsers(type: FollowType, ids: List<String>): List<Boolean> {
+    suspend fun checkIfUserFollowsArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/following/contains"
         val response = client.get {
             url {
@@ -155,10 +158,10 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun checkIfCurrentUserFollowsPlaylist(playlistId: String, ids: List<String>): List<Boolean> {
+    suspend fun checkIfCurrentUserFollowsPlaylist(playlistId: String, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers/contains"
         val response = client.get {
             url {
@@ -169,6 +172,6 @@ class UsersApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

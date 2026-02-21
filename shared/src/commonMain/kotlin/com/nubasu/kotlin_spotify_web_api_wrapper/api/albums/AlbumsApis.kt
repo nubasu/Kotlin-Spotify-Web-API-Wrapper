@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.albums
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.albums.Album
@@ -25,17 +27,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class AlbumsApis {
-    private val client = HttpClient(CIO) {
+class AlbumsApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
     }
+) {
 
     suspend fun getAlbum(
         id: String,
         market: CountryCode? = null,
-    ): Album {
+    ) : SpotifyApiResponse<Album> {
         val ENDPOINT = "https://api.spotify.com/v1/albums"
         val response = client.get {
             url {
@@ -49,13 +52,13 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getSeveralAlbums(
         ids: List<String>,
         market: CountryCode? = null,
-    ) : Albums {
+    ) : SpotifyApiResponse<Albums> {
         val ENDPOINT = "https://api.spotify.com/v1/albums"
         val response = client.get {
             url {
@@ -69,14 +72,14 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getAlbumTracks(
         id: String,
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : AlbumTracks {
+    ) : SpotifyApiResponse<AlbumTracks> {
         val ENDPOINT = "https://api.spotify.com/v1/albums"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -94,13 +97,13 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getUsersSavedAlbums(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : UsersSavedAlbums {
+    ) : SpotifyApiResponse<UsersSavedAlbums> {
         val ENDPOINT = "https://api.spotify.com/v1/me/albums"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -117,12 +120,12 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun saveAlbumsForCurrentUser(
         body: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/albums"
         val response = client.put(ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -135,12 +138,12 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun removeUsersSavedAlbums(
         body: Ids,
-    ) : Boolean {
+    ) : SpotifyApiResponse<Boolean> {
         val ENDPOINT = "https://api.spotify.com/v1/me/albums"
         val response = client.delete (ENDPOINT) {
             bearerAuth(TokenHolder.token)
@@ -153,12 +156,12 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.status.isSuccess()
+        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
     }
 
     suspend fun checkUsersSavedAlbums(
         ids: Ids,
-    ) : List<Boolean> {
+    ) : SpotifyApiResponse<List<Boolean>> {
         val ENDPOINT = "https://api.spotify.com/v1/me/albums/contains"
         val response = client.get {
             url {
@@ -172,12 +175,12 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun getNewReleases(
         pagingOptions: PagingOptions = PagingOptions(),
-    ) : NewRelease {
+    ) : SpotifyApiResponse<NewRelease> {
         val ENDPOINT = "https://api.spotify.com/v1/browse/new-releases"
         val limit = pagingOptions.limit
         val offset = pagingOptions.offset
@@ -193,6 +196,6 @@ class AlbumsApis {
         if (!response.status.isSuccess()) {
             throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
         }
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

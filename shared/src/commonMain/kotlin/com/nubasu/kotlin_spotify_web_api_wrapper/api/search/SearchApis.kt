@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.search
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.search.SearchType
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.search.SearchResponse
@@ -18,10 +20,11 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class SearchApis {
-    private val client = HttpClient(CIO) {
+class SearchApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) { json() }
     }
+) {
 
     suspend fun searchForItem(
         q: String,
@@ -29,7 +32,7 @@ class SearchApis {
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
         includeExternalAudio: Boolean = false,
-    ): SearchResponse {
+    ) : SpotifyApiResponse<SearchResponse> {
         require(types.isNotEmpty()) { "types must not be empty" }
         val endpoint = "https://api.spotify.com/v1/search"
         val response = client.get {
@@ -48,6 +51,6 @@ class SearchApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 }

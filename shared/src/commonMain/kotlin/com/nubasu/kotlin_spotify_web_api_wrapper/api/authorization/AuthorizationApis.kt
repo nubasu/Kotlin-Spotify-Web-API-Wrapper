@@ -19,15 +19,15 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class AuthorizationApis {
-    private val client = HttpClient(CIO) {
+class AuthorizationApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
         }
-    }
-
-    private val authorizeEndpoint = "https://accounts.spotify.com/authorize"
-    private val tokenEndpoint = "https://accounts.spotify.com/api/token"
+    },
+    private val authorizeEndpoint: String = "https://accounts.spotify.com/authorize",
+    private val tokenEndpoint: String = "https://accounts.spotify.com/api/token",
+) {
 
     fun buildAuthorizationCodeWithPkceUri(
         clientId: String,

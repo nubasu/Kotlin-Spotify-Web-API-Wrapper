@@ -1,5 +1,7 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.AddItemsToPlaylistRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.ChangePlaylistDetailsRequest
@@ -38,17 +40,18 @@ import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
-class PlaylistsApis {
-    private val client = HttpClient(CIO) {
+class PlaylistsApis(
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) { json() }
     }
+) {
 
     suspend fun getPlaylist(
         playlistId: String,
         market: CountryCode? = null,
         fields: String? = null,
         additionalTypes: List<String> = listOf("track", "episode"),
-    ): Playlist {
+    ) : SpotifyApiResponse<Playlist> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.get {
             url {
@@ -62,10 +65,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun changePlaylistDetails(playlistId: String, body: ChangePlaylistDetailsRequest): Boolean {
+    suspend fun changePlaylistDetails(playlistId: String, body: ChangePlaylistDetailsRequest) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.put {
             url {
@@ -78,7 +81,7 @@ class PlaylistsApis {
             setBody(body)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 
     suspend fun getPlaylistItems(
@@ -87,7 +90,7 @@ class PlaylistsApis {
         pagingOptions: PagingOptions = PagingOptions(),
         fields: String? = null,
         additionalTypes: List<String> = listOf("track", "episode"),
-    ): PlaylistItem {
+    ) : SpotifyApiResponse<PlaylistItem> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.get {
             url {
@@ -103,14 +106,14 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun updatePlaylistItems(
         playlistId: String,
         body: UpdatePlaylistItemsRequest? = null,
         uris: List<String>? = null,
-    ): SnapshotIdResponse {
+    ) : SpotifyApiResponse<SnapshotIdResponse> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.put {
             url {
@@ -124,7 +127,7 @@ class PlaylistsApis {
             body?.let { setBody(it) }
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     suspend fun addItemsToPlaylist(
@@ -132,7 +135,7 @@ class PlaylistsApis {
         body: AddItemsToPlaylistRequest? = null,
         uris: List<String>? = null,
         position: Int? = null,
-    ): SnapshotIdResponse {
+    ) : SpotifyApiResponse<SnapshotIdResponse> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.post {
             url {
@@ -147,10 +150,10 @@ class PlaylistsApis {
             body?.let { setBody(it) }
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun removePlaylistItems(playlistId: String, body: RemovePlaylistItemsRequest): SnapshotIdResponse {
+    suspend fun removePlaylistItems(playlistId: String, body: RemovePlaylistItemsRequest) : SpotifyApiResponse<SnapshotIdResponse> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.delete {
             url {
@@ -163,10 +166,10 @@ class PlaylistsApis {
             setBody(body)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()): CurrentUsersPlaylists {
+    suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CurrentUsersPlaylists> {
         val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response = client.get {
             url {
@@ -178,10 +181,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getUsersPlaylists(userId: String, pagingOptions: PagingOptions = PagingOptions()): UsersPlaylist {
+    suspend fun getUsersPlaylists(userId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<UsersPlaylist> {
         val endpoint = "https://api.spotify.com/v1/users"
         val response = client.get {
             url {
@@ -194,10 +197,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun createPlaylist(body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+    suspend fun createPlaylist(body: CreatePlaylistRequest) : SpotifyApiResponse<SimplifiedPlaylistObject> {
         val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response = client.post {
             url { takeFrom(endpoint) }
@@ -207,21 +210,21 @@ class PlaylistsApis {
             setBody(body)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
     @Deprecated(
         "Spotify recommends POST /v1/me/playlists. Use createPlaylist(body).",
         ReplaceWith("createPlaylist(body)")
     )
-    suspend fun createPlaylist(userId: String, body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+    suspend fun createPlaylist(userId: String, body: CreatePlaylistRequest) : SpotifyApiResponse<SimplifiedPlaylistObject> {
         return createPlaylist(body)
     }
 
     suspend fun getFeaturedPlaylists(
         locale: String? = null,
         pagingOptions: PagingOptions = PagingOptions(),
-    ): FeaturedPlaylists {
+    ) : SpotifyApiResponse<FeaturedPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/featured-playlists"
         val response = client.get {
             url {
@@ -234,10 +237,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()): CategorysPlaylists {
+    suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CategorysPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/categories"
         val response = client.get {
             url {
@@ -250,10 +253,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun getPlaylistCoverImage(playlistId: String): List<ImageObject> {
+    suspend fun getPlaylistCoverImage(playlistId: String) : SpotifyApiResponse<List<ImageObject>> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.get {
             url {
@@ -264,10 +267,10 @@ class PlaylistsApis {
             accept(ContentType.Application.Json)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return response.body()
+        return SpotifyApiResponse(response.status.value, response.body())
     }
 
-    suspend fun addCustomPlaylistCoverImage(playlistId: String, imageBase64Jpeg: String): Boolean {
+    suspend fun addCustomPlaylistCoverImage(playlistId: String, imageBase64Jpeg: String) : SpotifyApiResponse<Boolean> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response = client.put {
             url {
@@ -279,6 +282,6 @@ class PlaylistsApis {
             setBody(imageBase64Jpeg)
         }
         if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return true
+        return SpotifyApiResponse(response.status.value, true)
     }
 }
