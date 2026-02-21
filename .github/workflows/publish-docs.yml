@@ -50,21 +50,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p public/api
-          cp -R shared/build/dokka/html/. public/api/
-          cat > public/index.html <<'HTML'
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1" />
-              <title>Kotlin Spotify Web API Wrapper Docs</title>
-            </head>
-            <body>
-              <h1>Kotlin Spotify Web API Wrapper</h1>
-              <p><a href="./api/">Open API documentation</a></p>
-            </body>
-          </html>
-          HTML
+          cp -R shared/build/dokka/html/. public/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
