@@ -11,6 +11,10 @@ fun main() = application {
         title = "kotlin_spotify_web_api_wrapper",
     ) {
         installDebugTokenFromLocalProperties()
-        App()
+        val desktopCallbackCoordinator = remember { JvmDesktopCallbackCoordinator() }
+        DisposableEffect(Unit) {
+            onDispose { desktopCallbackCoordinator.close() }
+        }
+        App(desktopCallbackCoordinator = desktopCallbackCoordinator)
     }
 }
