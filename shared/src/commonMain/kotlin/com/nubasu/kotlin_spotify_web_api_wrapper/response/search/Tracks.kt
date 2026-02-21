@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.response.search
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks.TrackObject
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Tracks(
     val href: String,
     val limit: Int,

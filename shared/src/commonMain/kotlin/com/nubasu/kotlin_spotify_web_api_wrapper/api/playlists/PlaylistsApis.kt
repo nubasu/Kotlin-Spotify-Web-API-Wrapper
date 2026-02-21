@@ -1,19 +1,275 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.AddItemsToPlaylistRequest
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.ChangePlaylistDetailsRequest
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.CreatePlaylistRequest
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.RemovePlaylistItemsRequest
+import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.UpdatePlaylistItemsRequest
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.ImageObject
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SnapshotIdResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.CategorysPlaylists
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.CurrentUsersPlaylists
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.FeaturedPlaylists
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.Playlist
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.PlaylistItem
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.SimplifiedPlaylistObject
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.UsersPlaylist
+import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
+import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.accept
+import io.ktor.client.request.bearerAuth
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.appendPathSegments
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
+import io.ktor.http.takeFrom
+import io.ktor.serialization.kotlinx.json.json
+
 class PlaylistsApis {
-    fun getPlaylist() {}
-    fun changePlaylistDetails() {}
-    fun getPlaylistItems() {}
-    fun updatePlaylistItems() {}
-    fun addItemsToPlaylist() {}
-    fun removePlaylistItems() {}
-    fun getCurrentUsersPlaylists() {}
-    fun getUsersPlaylists() {}
-    fun createPlaylist() {}
-    @Deprecated("")
-    fun getFeaturedPlaylists() {}
-    @Deprecated("")
-    fun getCategorysPlaylists() {}
-    fun getPlaylistCoverImage() {}
-    fun addCustomPlaylistCoverImage() {}
+    private val client = HttpClient(CIO) {
+        install(ContentNegotiation) { json() }
+    }
+
+    suspend fun getPlaylist(
+        playlistId: String,
+        market: CountryCode? = null,
+        fields: String? = null,
+        additionalTypes: List<String> = listOf("track", "episode"),
+    ): Playlist {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId)
+                market?.let { parameters.append("market", it.code) }
+                fields?.let { parameters.append("fields", it) }
+                parameters.append("additional_types", additionalTypes.joinToString(","))
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun changePlaylistDetails(playlistId: String, body: ChangePlaylistDetailsRequest): Boolean {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.put {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId)
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return true
+    }
+
+    suspend fun getPlaylistItems(
+        playlistId: String,
+        market: CountryCode? = null,
+        pagingOptions: PagingOptions = PagingOptions(),
+        fields: String? = null,
+        additionalTypes: List<String> = listOf("track", "episode"),
+    ): PlaylistItem {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "tracks")
+                market?.let { parameters.append("market", it.code) }
+                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                fields?.let { parameters.append("fields", it) }
+                parameters.append("additional_types", additionalTypes.joinToString(","))
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun updatePlaylistItems(
+        playlistId: String,
+        body: UpdatePlaylistItemsRequest? = null,
+        uris: List<String>? = null,
+    ): SnapshotIdResponse {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.put {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "tracks")
+                uris?.let { parameters.append("uris", it.joinToString(",")) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            body?.let { setBody(it) }
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun addItemsToPlaylist(
+        playlistId: String,
+        body: AddItemsToPlaylistRequest? = null,
+        uris: List<String>? = null,
+        position: Int? = null,
+    ): SnapshotIdResponse {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.post {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "tracks")
+                uris?.let { parameters.append("uris", it.joinToString(",")) }
+                position?.let { parameters.append("position", it.toString()) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            body?.let { setBody(it) }
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun removePlaylistItems(playlistId: String, body: RemovePlaylistItemsRequest): SnapshotIdResponse {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.delete {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "tracks")
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()): CurrentUsersPlaylists {
+        val endpoint = "https://api.spotify.com/v1/me/playlists"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun getUsersPlaylists(userId: String, pagingOptions: PagingOptions = PagingOptions()): UsersPlaylist {
+        val endpoint = "https://api.spotify.com/v1/users"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(userId, "playlists")
+                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun createPlaylist(body: CreatePlaylistRequest): SimplifiedPlaylistObject {
+        val endpoint = "https://api.spotify.com/v1/me/playlists"
+        val response = client.post(endpoint) {
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun getFeaturedPlaylists(
+        locale: String? = null,
+        pagingOptions: PagingOptions = PagingOptions(),
+    ): FeaturedPlaylists {
+        val endpoint = "https://api.spotify.com/v1/browse/featured-playlists"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                locale?.let { parameters.append("locale", it) }
+                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()): CategorysPlaylists {
+        val endpoint = "https://api.spotify.com/v1/browse/categories"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(categoryId, "playlists")
+                pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
+                pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun getPlaylistCoverImage(playlistId: String): List<ImageObject> {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.get {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "images")
+            }
+            bearerAuth(TokenHolder.token)
+            accept(ContentType.Application.Json)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return response.body()
+    }
+
+    suspend fun addCustomPlaylistCoverImage(playlistId: String, imageBase64Jpeg: String): Boolean {
+        val endpoint = "https://api.spotify.com/v1/playlists"
+        val response = client.put {
+            url {
+                takeFrom(endpoint)
+                appendPathSegments(playlistId, "images")
+            }
+            bearerAuth(TokenHolder.token)
+            header(HttpHeaders.ContentType, "image/jpeg")
+            setBody(imageBase64Jpeg)
+        }
+        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
+        return true
+    }
 }
