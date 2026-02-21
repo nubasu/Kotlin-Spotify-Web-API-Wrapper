@@ -1,34 +1,34 @@
 # Troubleshooting
 
-## `Spotify token is missing` が出る
+## `Spotify token is missing`
 
-`TokenHolder.token` または `TokenHolder.tokenProvider` が未設定です。
+`TokenHolder.token` or `TokenHolder.tokenProvider` is not configured.
 
 ```kotlin
 TokenHolder.token = "YOUR_ACCESS_TOKEN"
 ```
 
-または認証フローを実行してトークンを取得してください。
+Or run an authorization flow and acquire a token.
 
 ## `401 Unauthorized`
 
-- アクセストークン期限切れ
-- 必要スコープ不足
-- トークン種別不一致（例: Client Credentials でユーザー API を呼ぶ）
+- Access token has expired
+- Required scope is missing
+- Token type mismatch (for example, calling user APIs with Client Credentials)
 
-`SpotifyAuthManager.getValidAccessToken(autoRefresh = true)` で更新を試してください。
+Try refresh with `SpotifyAuthManager.getValidAccessToken(autoRefresh = true)`.
 
 ## `403 Forbidden`
 
-ユーザー権限/市場制限/アカウント状態により拒否されています。  
-対象 API の必要 scope を確認してください。
+Access is denied due to user permission, market restrictions, or account state.
+Check the required scopes for the target API.
 
 ## `429 Too Many Requests`
 
-`Retry-After` ヘッダーを優先して待機してください。  
-`SpotifyRetryExecutor` の利用を推奨します。
+Respect the `Retry-After` header for backoff timing.
+Use `SpotifyRetryExecutor` when possible.
 
-## PKCE の `State mismatch`
+## PKCE `State mismatch`
 
-`startPkceAuthorization()` で発行した state と、コールバックの state が一致していません。  
-認証開始〜コールバック完了を同一セッションで扱っているか確認してください。
+The `state` issued by `startPkceAuthorization()` does not match the callback `state`.
+Make sure authorization start and callback completion are handled in the same session.

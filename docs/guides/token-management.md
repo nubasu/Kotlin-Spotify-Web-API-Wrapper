@@ -1,10 +1,10 @@
 # Token Management
 
-トークン管理は主に `SpotifyAuthManager` と `TokenHolder` で行います。
+Token management is mainly handled by `SpotifyAuthManager` and `TokenHolder`.
 
-## 推奨: `SpotifyAuthManager` で取得して API 呼び出し
+## Recommended: Use `SpotifyAuthManager` and then call APIs
 
-`SpotifyAuthManager` はトークン取得時に `TokenHolder.token` を内部更新します。
+`SpotifyAuthManager` updates `TokenHolder.token` internally when a token is acquired.
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
@@ -23,7 +23,7 @@ suspend fun callWithAuthManager(code: String) {
 }
 ```
 
-## 明示的にトークンを設定
+## Set a Token Explicitly
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
@@ -31,9 +31,9 @@ import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 TokenHolder.token = "YOUR_ACCESS_TOKEN"
 ```
 
-## `tokenProvider` を使う
+## Use `tokenProvider`
 
-`TokenHolder.token` が空の場合のみ `tokenProvider` が呼ばれます。
+`tokenProvider` is called only when `TokenHolder.token` is empty.
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
@@ -43,7 +43,7 @@ TokenHolder.tokenProvider = {
 }
 ```
 
-## 注意点
+## Notes
 
-- `Client Credentials` は通常 `refresh_token` を返しません。
-- `SpotifyAuthManager.clearToken()` は `TokenHolder.token` も消去します。
+- `Client Credentials` usually does not return `refresh_token`.
+- `SpotifyAuthManager.clearToken()` also clears `TokenHolder.token`.

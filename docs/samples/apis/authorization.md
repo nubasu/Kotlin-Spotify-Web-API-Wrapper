@@ -7,7 +7,7 @@ import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
 
 val auth = SpotifyAuthManager(
     clientId = "YOUR_CLIENT_ID",
-    clientSecret = "YOUR_CLIENT_SECRET", // PKCE onlyなら不要
+    clientSecret = "YOUR_CLIENT_SECRET", // optional when using only PKCE
     redirectUri = "your.app://callback"
 )
 
@@ -25,9 +25,9 @@ val refreshed = auth.refreshAccessToken()
 val accessToken = auth.getValidAccessToken()
 ```
 
-`startPkceAuthorizationAndLaunch()` / `buildAuthorizationCodeUriAndLaunch()` の起動先:
-- Android/iOS: アプリ内認証画面を優先
-- JVM/JS: ブラウザを自動起動
+Launch behavior of `startPkceAuthorizationAndLaunch()` / `buildAuthorizationCodeUriAndLaunch()`:
+- Android/iOS: prefer in-app authentication UI
+- JVM/JS: open browser automatically
 
 ## AuthorizationApis (low-level)
 
@@ -84,4 +84,3 @@ val refresh = apis.refreshToken(
 - [Authorization Code to API](../flows/authorization-code-to-api.md)
 - [Client Credentials to API](../flows/client-credentials-to-api.md)
 - [Refresh Token](../flows/refresh-token.md)
-

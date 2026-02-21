@@ -69,7 +69,7 @@ val auth = SpotifyAuthManager(
 )
 
 val pkce = auth.startPkceAuthorizationAndLaunch(scope = listOf("user-read-email"))
-// Android/iOS: app内認証画面を優先, その他: ブラウザ起動
+// Android/iOS: prefer in-app authentication UI, otherwise open the browser
 
 val albumsApi = AlbumsApis()
 val album = albumsApi.getAlbum("album-id")

@@ -1,6 +1,6 @@
 # Flow Sample: Client Credentials to API Call
 
-このサンプルは、Client Credentials Flow でアプリトークンを取得し、検索 API を呼ぶ流れです。
+This sample shows how to acquire an app token with Client Credentials Flow and call the search API.
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
@@ -35,5 +35,5 @@ suspend fun clientCredentialsFlow() {
 
 ## Notes
 
-- Client Credentials Flow では通常 `refresh_token` は返りません。
-- ユーザー権限が必要な API には利用できません。
+- Client Credentials Flow usually does not return `refresh_token`.
+- It cannot be used for APIs that require user permissions.

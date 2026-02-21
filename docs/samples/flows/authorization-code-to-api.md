@@ -1,6 +1,6 @@
 # Flow Sample: Authorization Code to API Call
 
-このサンプルは、Authorization Code Flow（client secret あり）でトークン取得後に API を呼ぶ流れです。
+This sample shows how to acquire a token with Authorization Code Flow (with client secret) and then call an API.
 
 ```kotlin
 import com.nubasu.spotify.webapi.wrapper.api.authorization.SpotifyAuthManager
