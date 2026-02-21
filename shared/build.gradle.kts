@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.vanniktechMavenPublish)
+    alias(libs.plugins.dokka)
 }
 
 group = providers.gradleProperty("GROUP").get()
@@ -110,4 +111,16 @@ android {
                 .get()
                 .toInt()
     }
+}
+
+tasks.register("generateApiDocs") {
+    group = "documentation"
+    description = "Generates HTML API docs for all shared public APIs."
+    dependsOn("dokkaHtml")
+}
+
+tasks.register("generateJavadoc") {
+    group = "documentation"
+    description = "Generates Javadoc-style API docs for all shared public APIs."
+    dependsOn("dokkaJavadoc")
 }
