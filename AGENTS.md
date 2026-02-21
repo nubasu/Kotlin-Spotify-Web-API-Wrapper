@@ -17,3 +17,6 @@ Designed to be type-safe, coroutine-friendly, and easy to use from Kotlin/JVM, A
 #### Json Parser
 - Serialization
     - https://kotlinlang.org/docs/serialization.html
+
+### Compile Error Check
+run `.\gradlew :shared:compileKotlinJvm`
