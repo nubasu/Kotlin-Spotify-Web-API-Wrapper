@@ -38,22 +38,6 @@ This repository provides a type-safe, coroutine-friendly Spotify API client for 
 - [x] Samples + Docs
 - [x] Tests
 
-## Documentation
-
-- API reference (GitHub Pages): [https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/](https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/)
-- Docs index: [docs/README.md](docs/README.md)
-- API samples by domain: [docs/samples/apis](docs/samples/apis)
-- Flow samples: [docs/samples/flows](docs/samples/flows)
-  - Auth to API: [docs/samples/flows/auth-to-api.md](docs/samples/flows/auth-to-api.md)
-  - Authorization Code to API: [docs/samples/flows/authorization-code-to-api.md](docs/samples/flows/authorization-code-to-api.md)
-  - Client Credentials to API: [docs/samples/flows/client-credentials-to-api.md](docs/samples/flows/client-credentials-to-api.md)
-  - Refresh token: [docs/samples/flows/refresh-token.md](docs/samples/flows/refresh-token.md)
-- Getting started: [docs/guides/getting-started.md](docs/guides/getting-started.md)
-- Response/error handling: [docs/guides/response-and-error-handling.md](docs/guides/response-and-error-handling.md)
-- Paging/RateLimit/Retry guide: [docs/guides/paging-rate-limit-retry.md](docs/guides/paging-rate-limit-retry.md)
-- Token management: [docs/guides/token-management.md](docs/guides/token-management.md)
-- Troubleshooting: [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md)
-
 ## Installation (Maven Central)
 
 Dependency coordinates:
@@ -119,6 +103,7 @@ dependencies {
 
 ## Documentation
 
+- API reference (GitHub Pages): [https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/](https://nubasu.github.io/Kotlin-Spotify-Web-API-Wrapper/api/)
 - Docs index: [docs/README.md](docs/README.md)
 - API samples by domain: [docs/samples/apis](docs/samples/apis)
 - Flow samples: [docs/samples/flows](docs/samples/flows)
