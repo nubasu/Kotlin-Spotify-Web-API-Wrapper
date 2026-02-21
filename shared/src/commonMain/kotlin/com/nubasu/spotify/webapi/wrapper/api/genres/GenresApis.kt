@@ -14,6 +14,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Genre domain API for Spotify Web API.
+ *
+ * Provides recommendation seed genres used by the recommendations endpoint.
+ */
 class GenresApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -22,6 +27,11 @@ class GenresApis(
             }
         },
 ) {
+    /**
+     * Gets available genre seeds from Spotify recommendations API.
+     *
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/recommendations/available-genre-seeds as deprecated.",
     )

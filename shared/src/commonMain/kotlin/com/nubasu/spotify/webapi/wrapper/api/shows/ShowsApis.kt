@@ -24,12 +24,24 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Show domain API for Spotify Web API.
+ *
+ * Covers podcast show metadata, show episodes, and saved shows for the current user.
+ */
 class ShowsApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Gets a Spotify show by show ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getShow(
         id: String,
         market: CountryCode? = null,
@@ -48,6 +60,13 @@ class ShowsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify shows by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/shows as deprecated.",
     )
@@ -69,6 +88,14 @@ class ShowsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets episodes for a Spotify show.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getShowEpisodes(
         id: String,
         market: CountryCode? = null,
@@ -90,6 +117,12 @@ class ShowsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's saved shows from Your Library.
+     *
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersSavedShows(pagingOptions: PagingOptions = PagingOptions()): SpotifyApiResponse<UsersSavedShows> {
         val endpoint = "https://api.spotify.com/v1/me/shows"
         val response =
@@ -105,6 +138,12 @@ class ShowsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Saves shows to the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/me/shows as deprecated.",
     )
@@ -122,6 +161,13 @@ class ShowsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Removes shows from the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/me/shows as deprecated.",
     )
@@ -143,6 +189,12 @@ class ShowsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether shows are saved in the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     @Deprecated(
         "Spotify marks GET /v1/me/shows/contains as deprecated.",
     )

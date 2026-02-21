@@ -5,6 +5,12 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.posix.arc4random_buf
 
+/**
+ * Executes secureRandomBytes.
+ *
+ * @param length The length parameter.
+ * @return The resulting ByteArray value.
+ */
 @OptIn(ExperimentalForeignApi::class)
 internal actual fun secureRandomBytes(length: Int): ByteArray {
     require(length > 0) { "length must be > 0" }

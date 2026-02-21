@@ -4,6 +4,9 @@ import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import java.io.File
 import java.util.Properties
 
+/**
+ * Executes installDebugTokenFromLocalProperties.
+ */
 fun installDebugTokenFromLocalProperties() {
     TokenHolder.tokenProvider = {
         val f = File("../local.properties")

@@ -18,7 +18,7 @@ enum class CountryCode(
     AT("AT", "Austria"),
     AU("AU", "Australia"),
     AW("AW", "Aruba"),
-    AX("AX", "Åland Islands"),
+    AX("AX", "ÁEand Islands"),
     AZ("AZ", "Azerbaijan"),
     BA("BA", "Bosnia and Herzegovina"),
     BB("BB", "Barbados"),
@@ -255,6 +255,12 @@ enum class CountryCode(
     ZW("ZW", "Zimbabwe"),
     ;
 
+    /**
+     * Executes toLocale.
+     *
+     * @param language6391 The language6391 parameter.
+     * @return The resulting string value.
+     */
     fun toLocale(language6391: String): String {
         require(language6391.length == 2) { "ISO 639-1 must be 2 letters: $language6391" }
         val lang = language6391.lowercase()
@@ -263,6 +269,12 @@ enum class CountryCode(
     }
 
     companion object {
+        /**
+         * Executes fromCode.
+         *
+         * @param code The authorization code returned by Spotify.
+         * @return The resulting CountryCode? = entries.firstOrNull value.
+         */
         fun fromCode(code: String): CountryCode? = entries.firstOrNull { it.code.equals(code, ignoreCase = true) }
     }
 }

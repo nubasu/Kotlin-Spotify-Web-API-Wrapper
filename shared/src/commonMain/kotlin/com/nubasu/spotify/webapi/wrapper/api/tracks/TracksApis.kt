@@ -32,12 +32,24 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Track domain API for Spotify Web API.
+ *
+ * Covers track metadata, audio features/analysis, recommendations, and saved tracks.
+ */
 class TracksApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Gets a Spotify track by track ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getTrack(
         id: String,
         market: CountryCode? = null,
@@ -56,6 +68,13 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify tracks by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/tracks as deprecated.",
     )
@@ -77,6 +96,13 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's saved tracks from Your Library.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersSavedTracks(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
@@ -96,6 +122,12 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Saves tracks to the current user's Your Library.
+     *
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/me/tracks as deprecated.",
     )
@@ -111,6 +143,12 @@ class TracksApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Removes tracks from the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/me/tracks as deprecated.",
     )
@@ -128,6 +166,12 @@ class TracksApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether tracks are saved in the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     suspend fun checkUsersSavedTracks(ids: Ids): SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/tracks/contains"
         val response =
@@ -142,6 +186,12 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets audio features for a Spotify track.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/audio-features/{id} as deprecated.",
     )
@@ -159,6 +209,12 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets audio features for multiple Spotify tracks.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/audio-features as deprecated.",
     )
@@ -176,6 +232,12 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets full audio analysis for a Spotify track.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/audio-analysis/{id} as deprecated.",
     )
@@ -193,6 +255,15 @@ class TracksApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets track recommendations from Spotify based on seeds and tuning parameters.
+     *
+     * @param seeds Recommendation seed values (`seed_artists`, `seed_tracks`, `seed_genres`) used by Spotify.
+     * @param market Market (country) code used to localize and filter content.
+     * @param limit Maximum number of items to return in one page.
+     * @param tunable Optional recommendation tuning attributes (`min_*`, `max_*`, `target_*` audio features).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getRecommendations(
         seeds: RecommendationSeeds,
         market: CountryCode? = null,

@@ -7,6 +7,11 @@ object TokenHolder {
     var token: String = ""
 
     // for debug
+    /**
+     * Retrieves data for getTokenFromProvider.
+     *
+     * @return The resulting string value.
+     */
     @Volatile
     var tokenProvider: (() -> String?)? = null
 

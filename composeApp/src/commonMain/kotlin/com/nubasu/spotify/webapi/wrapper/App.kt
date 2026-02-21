@@ -36,6 +36,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Executes App.
+ *
+ * @param callbackUriFromIntent The callbackUriFromIntent parameter.
+ * @param desktopCallbackCoordinator The desktopCallbackCoordinator parameter.
+ */
 @Composable
 @Preview
 fun App(

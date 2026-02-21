@@ -20,6 +20,12 @@ import kotlinx.serialization.json.jsonPrimitive
 
 object PlaybackItemSerializer :
     JsonContentPolymorphicSerializer<PlaybackItem>(PlaybackItem::class) {
+    /**
+     * Executes selectDeserializer.
+     *
+     * @param element The element parameter.
+     * @return The resulting DeserializationStrategy<PlaybackItem> value.
+     */
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<PlaybackItem> {
         val obj = element.jsonObject
         val type = obj["type"]?.jsonPrimitive?.contentOrNull
@@ -43,6 +49,12 @@ object UnknownPlaybackItemSerializer : KSerializer<UnknownPlaybackItem> {
             element("raw", JsonObject.serializer().descriptor)
         }
 
+    /**
+     * Executes deserialize.
+     *
+     * @param decoder The decoder parameter.
+     * @return The resulting UnknownPlaybackItem value.
+     */
     override fun deserialize(decoder: Decoder): UnknownPlaybackItem {
         val jsonDecoder =
             decoder as? JsonDecoder
@@ -50,6 +62,12 @@ object UnknownPlaybackItemSerializer : KSerializer<UnknownPlaybackItem> {
         return UnknownPlaybackItem(jsonDecoder.decodeJsonElement().jsonObject)
     }
 
+    /**
+     * Executes serialize.
+     *
+     * @param encoder The encoder parameter.
+     * @param value The value parameter.
+     */
     override fun serialize(
         encoder: Encoder,
         value: UnknownPlaybackItem,

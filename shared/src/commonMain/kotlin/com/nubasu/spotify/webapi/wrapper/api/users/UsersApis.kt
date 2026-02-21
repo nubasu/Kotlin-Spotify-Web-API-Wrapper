@@ -26,12 +26,22 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * User profile and follow domain API for Spotify Web API.
+ *
+ * Covers current user profile, top items, follows, and public user profiles.
+ */
 class UsersApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Gets the Spotify profile of the current user.
+     *
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getCurrentUsersProfile(): SpotifyApiResponse<User> {
         val endpoint = "https://api.spotify.com/v1/me"
         val response =
@@ -42,6 +52,15 @@ class UsersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's top artists or tracks.
+     *
+     * @param type Spotify API type parameter required by the endpoint.
+     * @param timeRange Spotify ranking window (`short_term`, `medium_term`, `long_term`) for top items.
+     * @param limit Maximum number of items to return in one page.
+     * @param offset Index of the first item to return for paging.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/me/top/{type} as deprecated.",
     )
@@ -66,6 +85,12 @@ class UsersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the public Spotify profile for a user.
+     *
+     * @param userId Spotify user ID.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersProfile(userId: String): SpotifyApiResponse<UsersProfile> {
         val endpoint = "https://api.spotify.com/v1/users/$userId"
         val response =
@@ -76,6 +101,13 @@ class UsersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Follows a Spotify playlist for the current user.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param public Whether the playlist follow should be publicly visible on the user profile.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/playlists/{playlist_id}/followers as deprecated.",
     )
@@ -94,6 +126,12 @@ class UsersApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Unfollows a Spotify playlist for the current user.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/playlists/{playlist_id}/followers as deprecated.",
     )
@@ -107,6 +145,14 @@ class UsersApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Gets artists followed by the current user.
+     *
+     * @param type Spotify API type parameter required by the endpoint.
+     * @param limit Maximum number of items to return in one page.
+     * @param after Cursor ID of the last artist from the previous page (`after` parameter for follow pagination).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/me/following as deprecated.",
     )
@@ -133,6 +179,13 @@ class UsersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Follows artists or users for the current user.
+     *
+     * @param type Spotify API type parameter required by the endpoint.
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/me/following as deprecated.",
     )
@@ -154,6 +207,13 @@ class UsersApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Unfollows artists or users for the current user.
+     *
+     * @param type Spotify API type parameter required by the endpoint.
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/me/following as deprecated.",
     )
@@ -175,6 +235,13 @@ class UsersApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether the current user follows the specified artists or users.
+     *
+     * @param type Spotify API type parameter required by the endpoint.
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     @Deprecated(
         "Spotify marks GET /v1/me/following/contains as deprecated.",
     )
@@ -196,6 +263,13 @@ class UsersApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Checks whether specific users follow a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     @Deprecated(
         "Spotify marks GET /v1/playlists/{playlist_id}/followers/contains as deprecated.",
     )

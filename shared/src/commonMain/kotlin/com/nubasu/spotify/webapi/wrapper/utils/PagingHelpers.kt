@@ -6,6 +6,12 @@ import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
 import io.ktor.http.Url
 
 object PagingHelpers {
+    /**
+     * Executes nextPagingOptions.
+     *
+     * @param nextUrl The nextUrl parameter.
+     * @return The resulting PagingOptions? value.
+     */
     fun nextPagingOptions(nextUrl: String?): PagingOptions? {
         val raw = nextUrl?.trim()?.takeIf { it.isNotEmpty() } ?: return null
         val normalized = if (raw.startsWith("?")) "https://dummy.local$raw" else raw
@@ -16,6 +22,16 @@ object PagingHelpers {
         return PagingOptions(limit = limit, offset = offset)
     }
 
+    /**
+     * Executes collectAllItems.
+     *
+     * @param firstPageResponse The firstPageResponse parameter.
+     * @param nextUrlSelector The nextUrlSelector parameter.
+     * @param itemsSelector The itemsSelector parameter.
+     * @param fetchNextPage The fetchNextPage parameter.
+     * @param maxPages The maxPages parameter.
+     * @return The API response including status code and parsed Spotify payload.
+     */
     suspend fun <TPage, TItem> collectAllItems(
         firstPageResponse: SpotifyApiResponse<TPage>,
         nextUrlSelector: (TPage) -> String?,
@@ -65,6 +81,17 @@ object PagingHelpers {
         }
     }
 
+    /**
+     * Executes collectAllItems.
+     *
+     * @param initialPagingOptions The initialPagingOptions parameter.
+     * @param fetchFirstPage The fetchFirstPage parameter.
+     * @param nextUrlSelector The nextUrlSelector parameter.
+     * @param itemsSelector The itemsSelector parameter.
+     * @param fetchNextPage The fetchNextPage parameter.
+     * @param maxPages The maxPages parameter.
+     * @return The API response including status code and parsed Spotify payload.
+     */
     suspend fun <TPage, TItem> collectAllItems(
         initialPagingOptions: PagingOptions = PagingOptions(),
         fetchFirstPage: suspend (PagingOptions) -> SpotifyApiResponse<TPage>,

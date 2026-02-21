@@ -22,8 +22,20 @@ data class RetryPolicy(
         require(jitterMillis >= 0) { "jitterMillis must be >= 0" }
     }
 
+    /**
+     * Executes shouldRetry.
+     *
+     * @param statusCode The statusCode parameter.
+     * @return True when the operation succeeds; otherwise false.
+     */
     fun shouldRetry(statusCode: Int): Boolean = statusCode in retryStatusCodes
 
+    /**
+     * Executes backoffDelayMillis.
+     *
+     * @param retryAttempt The retryAttempt parameter.
+     * @return The resulting Long value.
+     */
     fun backoffDelayMillis(retryAttempt: Int): Long {
         require(retryAttempt >= 1) { "retryAttempt must be >= 1" }
         val exp = baseDelayMillis.toDouble() * backoffMultiplier.pow((retryAttempt - 1).toDouble())
@@ -37,6 +49,12 @@ class SpotifyRetryExecutor(
     private val delayFn: suspend (Long) -> Unit = { delay(it) },
     private val jitterFn: (Long) -> Long = { max -> if (max <= 0L) 0L else Random.nextLong(0L, max + 1) },
 ) {
+    /**
+     * Executes execute.
+     *
+     * @param request The request payload.
+     * @return The API response including status code and parsed Spotify payload.
+     */
     suspend fun <T> execute(request: suspend () -> SpotifyApiResponse<T>): SpotifyApiResponse<T> {
         var retries = 0
         var response = request()

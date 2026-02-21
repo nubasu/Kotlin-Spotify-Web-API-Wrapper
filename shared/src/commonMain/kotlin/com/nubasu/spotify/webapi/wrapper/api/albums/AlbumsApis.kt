@@ -25,6 +25,11 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Album domain API for Spotify Web API.
+ *
+ * Covers album lookup, album tracks, and the current user's saved albums in Your Library.
+ */
 class AlbumsApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -33,6 +38,13 @@ class AlbumsApis(
             }
         },
 ) {
+    /**
+     * Gets a Spotify album by album ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getAlbum(
         id: String,
         market: CountryCode? = null,
@@ -51,6 +63,13 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify albums by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/albums as deprecated.",
     )
@@ -72,6 +91,14 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets tracks from a Spotify album.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getAlbumTracks(
         id: String,
         market: CountryCode? = null,
@@ -95,6 +122,13 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's saved albums from Your Library.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersSavedAlbums(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
@@ -116,6 +150,12 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Saves albums to the current user's Your Library.
+     *
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/me/albums as deprecated.",
     )
@@ -132,6 +172,12 @@ class AlbumsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Removes albums from the current user's Your Library.
+     *
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/me/albums as deprecated.",
     )
@@ -148,6 +194,12 @@ class AlbumsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether albums are saved in the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     suspend fun checkUsersSavedAlbums(ids: Ids): SpotifyApiResponse<List<Boolean>> {
         val endpoint = "https://api.spotify.com/v1/me/albums/contains"
         val response =
@@ -162,6 +214,13 @@ class AlbumsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets Spotify new-release albums.
+     *
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param country Country code used for market-specific filtering.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getNewReleases(
         pagingOptions: PagingOptions = PagingOptions(),
         country: CountryCode? = null,

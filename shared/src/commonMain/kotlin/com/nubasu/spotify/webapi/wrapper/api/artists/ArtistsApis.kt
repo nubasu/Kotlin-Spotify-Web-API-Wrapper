@@ -22,6 +22,11 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Artist domain API for Spotify Web API.
+ *
+ * Covers artist profile retrieval, albums, top tracks, and related artists.
+ */
 class ArtistsApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -30,6 +35,12 @@ class ArtistsApis(
             }
         },
 ) {
+    /**
+     * Gets a Spotify artist by artist ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getArtist(id: String): SpotifyApiResponse<Artist> {
         val endpoint = "https://api.spotify.com/v1/artists/"
         val response =
@@ -44,6 +55,12 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify artists by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/artists as deprecated.",
     )
@@ -61,6 +78,15 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets albums released by a Spotify artist.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param includeGroups Album groups to include (`album`, `single`, `appears_on`, `compilation`).
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getArtistsAlbums(
         id: String,
         includeGroups: List<IncludeGroup> = emptyList(),
@@ -87,6 +113,13 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets top tracks for a Spotify artist.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/artists/{id}/top-tracks as deprecated.",
     )
@@ -108,6 +141,12 @@ class ArtistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets artists related to a Spotify artist.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/artists/{id}/related-artists as deprecated.",
     )

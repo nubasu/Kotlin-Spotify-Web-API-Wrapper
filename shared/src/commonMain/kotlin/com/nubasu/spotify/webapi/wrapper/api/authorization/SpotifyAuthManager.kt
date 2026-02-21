@@ -13,6 +13,11 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.time.Clock
 
+/**
+ * Result object for PKCE authorization start.
+ *
+ * Contains the Spotify Accounts authorization URL and the generated `state` value.
+ */
 data class PkceAuthorizationRequest(
     val authorizationUri: String,
     val state: String,
@@ -23,6 +28,11 @@ private data class PendingPkce(
     val state: String,
 )
 
+/**
+ * High-level authorization manager for Spotify Accounts flows.
+ *
+ * Handles PKCE state/verifier lifecycle, code exchange, token refresh, and token caching.
+ */
 class SpotifyAuthManager(
     private val clientId: String,
     private val clientSecret: String? = null,
@@ -35,6 +45,13 @@ class SpotifyAuthManager(
     private var accessTokenExpiresAtMs: Long? = null
     private var pendingPkce: PendingPkce? = null
 
+    /**
+     * Starts Authorization Code with PKCE flow and returns authorization request data.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return PKCE authorization request containing the authorization URL and `state`.
+     */
     @OptIn(ExperimentalEncodingApi::class)
     fun startPkceAuthorization(
         scope: List<String> = emptyList(),
@@ -50,6 +67,13 @@ class SpotifyAuthManager(
         )
     }
 
+    /**
+     * Starts Authorization Code with PKCE flow and launches the authorization URL.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return PKCE authorization request containing the authorization URL and `state`.
+     */
     @OptIn(ExperimentalEncodingApi::class)
     fun startPkceAuthorizationAndLaunch(
         scope: List<String> = emptyList(),
@@ -64,6 +88,13 @@ class SpotifyAuthManager(
         return request
     }
 
+    /**
+     * Starts Authorization Code with PKCE flow asynchronously.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return PKCE authorization request containing the authorization URL and `state`.
+     */
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun startPkceAuthorizationAsync(
         scope: List<String> = emptyList(),
@@ -79,6 +110,13 @@ class SpotifyAuthManager(
         )
     }
 
+    /**
+     * Starts Authorization Code with PKCE flow asynchronously and launches the authorization URL.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return PKCE authorization request containing the authorization URL and `state`.
+     */
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun startPkceAuthorizationAsyncAndLaunch(
         scope: List<String> = emptyList(),
@@ -124,6 +162,12 @@ class SpotifyAuthManager(
         )
     }
 
+    /**
+     * Completes PKCE authorization by parsing the Spotify callback URI and exchanging the code.
+     *
+     * @param redirectedUri Callback URI returned by Spotify after user authorization.
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun completePkceAuthorizationFromRedirectUri(redirectedUri: String): TokenResponse =
         mutex.withLock {
             val url = Url(redirectedUri)
@@ -142,6 +186,13 @@ class SpotifyAuthManager(
             )
         }
 
+    /**
+     * Completes PKCE authorization by exchanging the authorization code.
+     *
+     * @param code Authorization code issued by Spotify Accounts service.
+     * @param returnedState State value returned by Spotify callback URI.
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun completePkceAuthorization(
         code: String,
         returnedState: String,
@@ -173,6 +224,16 @@ class SpotifyAuthManager(
         return installToken(token)
     }
 
+    /**
+     * Builds the Spotify authorization URL for Authorization Code with PKCE flow.
+     *
+     * @param codeChallenge PKCE code challenge derived from the code verifier.
+     * @param codeChallengeMethod PKCE challenge method, typically `S256`.
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeWithPkceUri(
         codeChallenge: String,
         codeChallengeMethod: String = "S256",
@@ -190,6 +251,16 @@ class SpotifyAuthManager(
             showDialog = showDialog,
         )
 
+    /**
+     * Builds and launches the Spotify authorization URL for PKCE flow.
+     *
+     * @param codeChallenge PKCE code challenge derived from the code verifier.
+     * @param codeChallengeMethod PKCE challenge method, typically `S256`.
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeWithPkceUriAndLaunch(
         codeChallenge: String,
         codeChallengeMethod: String = "S256",
@@ -209,6 +280,14 @@ class SpotifyAuthManager(
         return authorizationUri
     }
 
+    /**
+     * Builds the Spotify authorization URL for Authorization Code flow.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeUri(
         scope: List<String> = emptyList(),
         state: String? = null,
@@ -222,6 +301,14 @@ class SpotifyAuthManager(
             showDialog = showDialog,
         )
 
+    /**
+     * Builds and launches the Spotify authorization URL for Authorization Code flow.
+     *
+     * @param scope Spotify OAuth scopes requested for this flow.
+     * @param state Opaque state value used for CSRF protection during authorization.
+     * @param showDialog Whether to force Spotify consent dialog display.
+     * @return Spotify authorization URL.
+     */
     fun buildAuthorizationCodeUriAndLaunch(
         scope: List<String> = emptyList(),
         state: String? = null,
@@ -237,10 +324,23 @@ class SpotifyAuthManager(
         return authorizationUri
     }
 
+    /**
+     * Launches the Spotify authorization URL using in-app auth UI or browser.
+     *
+     * @param authorizationUri Spotify Accounts authorization URL to open.
+     * @return True when the operation succeeds.
+     */
     fun launchAuthorizationInAppOrBrowser(authorizationUri: String): Boolean =
         runCatching { authorizationUriLauncher(authorizationUri) }
             .getOrElse { false }
 
+    /**
+     * Exchanges an authorization code for tokens using PKCE and stores the token set.
+     *
+     * @param code Authorization code issued by Spotify Accounts service.
+     * @param codeVerifier PKCE code verifier used when exchanging authorization code.
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun exchangeAuthorizationCodeWithPkce(
         code: String,
         codeVerifier: String,
@@ -257,6 +357,12 @@ class SpotifyAuthManager(
             installToken(token)
         }
 
+    /**
+     * Exchanges an authorization code for tokens and stores the token set.
+     *
+     * @param code Authorization code issued by Spotify Accounts service.
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun exchangeAuthorizationCode(code: String): TokenResponse =
         mutex.withLock {
             val token =
@@ -270,6 +376,11 @@ class SpotifyAuthManager(
             installToken(token)
         }
 
+    /**
+     * Requests a client-credentials token and stores the token set.
+     *
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun requestClientCredentialsToken(): TokenResponse =
         mutex.withLock {
             val token =
@@ -281,6 +392,11 @@ class SpotifyAuthManager(
             installToken(token)
         }
 
+    /**
+     * Refreshes the current access token using the stored refresh token.
+     *
+     * @return Token response returned by Spotify Accounts service.
+     */
     suspend fun refreshAccessToken(): TokenResponse =
         mutex.withLock {
             val current = tokenResponse ?: error("Token is missing. Acquire token first.")
@@ -306,6 +422,13 @@ class SpotifyAuthManager(
             )
         }
 
+    /**
+     * Returns a valid access token, refreshing it when necessary.
+     *
+     * @param leewaySeconds Safety window in seconds before actual expiration when the token is treated as expired.
+     * @param autoRefresh Whether to automatically execute Refresh Token flow when the current token is missing or expired.
+     * @return Bearer access token to use in Spotify Web API requests.
+     */
     suspend fun getValidAccessToken(
         leewaySeconds: Int = 60,
         autoRefresh: Boolean = true,
@@ -342,8 +465,18 @@ class SpotifyAuthManager(
             refreshed.accessToken
         }
 
+    /**
+     * Returns the currently stored token response.
+     *
+     * @return Currently cached token response, or `null` if no token is stored.
+     */
     fun getCurrentToken(): TokenResponse? = tokenResponse
 
+    /**
+     * Clears the currently stored token and expiration state.
+     *
+     * @return No return value.
+     */
     fun clearToken() {
         tokenResponse = null
         accessTokenExpiresAtMs = null

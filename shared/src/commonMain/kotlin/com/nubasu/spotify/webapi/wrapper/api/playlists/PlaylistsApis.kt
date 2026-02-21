@@ -38,12 +38,26 @@ import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Playlist domain API for Spotify Web API.
+ *
+ * Covers playlist metadata, items, creation, cover images, and browse playlist endpoints.
+ */
 class PlaylistsApis(
     private val client: HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) { json() }
         },
 ) {
+    /**
+     * Gets a Spotify playlist by playlist ID.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param market Market (country) code used to localize and filter content.
+     * @param fields Spotify `fields` filter expression to limit nested properties in the playlist response.
+     * @param additionalTypes Additional playable item types (for example `episode`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getPlaylist(
         playlistId: String,
         market: CountryCode? = null,
@@ -66,6 +80,13 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Changes metadata for a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun changePlaylistDetails(
         playlistId: String,
         body: ChangePlaylistDetailsRequest,
@@ -85,6 +106,16 @@ class PlaylistsApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Gets items in a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param fields Spotify `fields` filter expression to limit nested properties in each playlist item.
+     * @param additionalTypes Additional playable item types (for example `episode`).
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getPlaylistItems(
         playlistId: String,
         market: CountryCode? = null,
@@ -110,6 +141,14 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Reorders or replaces items in a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param body Request payload object serialized for this endpoint.
+     * @param uris Spotify URIs of target resources.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun updatePlaylistItems(
         playlistId: String,
         body: UpdatePlaylistItemsRequest? = null,
@@ -131,6 +170,15 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Adds items to a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param body Request payload object serialized for this endpoint.
+     * @param uris Spotify URIs of target resources.
+     * @param position Zero-based insertion index in the target playlist.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun addItemsToPlaylist(
         playlistId: String,
         body: AddItemsToPlaylistRequest? = null,
@@ -154,6 +202,13 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Removes items from a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun removePlaylistItems(
         playlistId: String,
         body: RemovePlaylistItemsRequest,
@@ -173,6 +228,12 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets playlists owned or followed by the current user.
+     *
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()): SpotifyApiResponse<CurrentUsersPlaylists> {
         val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response =
@@ -188,6 +249,13 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets public playlists for a Spotify user.
+     *
+     * @param userId Spotify user ID.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/users/{user_id}/playlists as deprecated. Prefer getCurrentUsersPlaylists() when possible.",
         ReplaceWith("getCurrentUsersPlaylists(pagingOptions)"),
@@ -211,6 +279,12 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Creates a Spotify playlist for the current user.
+     *
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun createPlaylist(body: CreatePlaylistRequest): SpotifyApiResponse<SimplifiedPlaylistObject> {
         val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response =
@@ -224,6 +298,13 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Creates a Spotify playlist for the current user.
+     *
+     * @param userId Spotify user ID.
+     * @param body Request payload object serialized for this endpoint.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify recommends POST /v1/me/playlists. Use createPlaylist(body).",
         ReplaceWith("createPlaylist(body)"),
@@ -233,6 +314,15 @@ class PlaylistsApis(
         body: CreatePlaylistRequest,
     ): SpotifyApiResponse<SimplifiedPlaylistObject> = createPlaylist(body)
 
+    /**
+     * Gets Spotify featured playlists.
+     *
+     * @param locale Locale used for localized strings (for example `en_US`).
+     * @param timestamp Optional date-time used by Spotify to select the featured message set (ISO 8601, UTC offset supported).
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param country Country code used for market-specific filtering.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/browse/featured-playlists as deprecated.",
     )
@@ -259,6 +349,14 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets playlists for a Spotify browse category.
+     *
+     * @param categoryId Spotify category ID from the Browse API.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param country Country code used for market-specific filtering.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/browse/categories/{category_id}/playlists as deprecated.",
     )
@@ -283,6 +381,12 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets custom cover images for a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getPlaylistCoverImage(playlistId: String): SpotifyApiResponse<List<ImageObject>> {
         val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
@@ -297,6 +401,13 @@ class PlaylistsApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Uploads a custom cover image for a Spotify playlist.
+     *
+     * @param playlistId Spotify playlist ID.
+     * @param imageBase64Jpeg Base64-encoded JPEG image data for the playlist cover upload.
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     suspend fun addCustomPlaylistCoverImage(
         playlistId: String,
         imageBase64Jpeg: String,

@@ -23,6 +23,11 @@ import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
+/**
+ * Episode domain API for Spotify Web API.
+ *
+ * Covers episode metadata and the current user's saved podcast episodes.
+ */
 class EpisodesApis(
     private val client: HttpClient =
         HttpClient(CIO) {
@@ -31,6 +36,13 @@ class EpisodesApis(
             }
         },
 ) {
+    /**
+     * Gets a Spotify episode by episode ID.
+     *
+     * @param id Spotify ID of the target resource for this endpoint.
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getEpisode(
         id: String,
         market: CountryCode? = null,
@@ -49,6 +61,13 @@ class EpisodesApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets multiple Spotify episodes by their IDs.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @param market Market (country) code used to localize and filter content.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     @Deprecated(
         "Spotify marks GET /v1/episodes as deprecated.",
     )
@@ -70,6 +89,13 @@ class EpisodesApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Gets the current user's saved episodes from Your Library.
+     *
+     * @param market Market (country) code used to localize and filter content.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
+     */
     suspend fun getUsersSavedEpisodes(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
@@ -91,6 +117,12 @@ class EpisodesApis(
         return response.toSpotifyApiResponse()
     }
 
+    /**
+     * Saves episodes to the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks PUT /v1/me/episodes as deprecated.",
     )
@@ -107,6 +139,12 @@ class EpisodesApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Removes episodes from the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
+     */
     @Deprecated(
         "Spotify marks DELETE /v1/me/episodes as deprecated.",
     )
@@ -123,6 +161,12 @@ class EpisodesApis(
         return response.toSpotifyBooleanApiResponse()
     }
 
+    /**
+     * Checks whether episodes are saved in the current user's Your Library.
+     *
+     * @param ids Spotify IDs of target resources (comma-separated at request time).
+     * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
+     */
     @Deprecated(
         "Spotify marks GET /v1/me/episodes/contains as deprecated.",
     )
