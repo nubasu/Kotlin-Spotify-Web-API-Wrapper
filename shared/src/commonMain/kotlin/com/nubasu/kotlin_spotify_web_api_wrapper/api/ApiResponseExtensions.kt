@@ -14,20 +14,22 @@ import kotlinx.serialization.json.Json
 private val spotifyResponseJson = Json { ignoreUnknownKeys = true }
 
 internal suspend inline fun <reified T> HttpResponse.toSpotifyApiResponse(): SpotifyApiResponse<T> {
+    val responseHeaders = headersMap()
     return if (status.isSuccess()) {
-        SpotifyApiResponse(status.value, SpotifyResponseData.Success(body()))
+        SpotifyApiResponse(status.value, SpotifyResponseData.Success(body()), responseHeaders)
     } else {
         val raw = bodyAsText()
-        SpotifyApiResponse(status.value, SpotifyResponseData.Error(raw.toSpotifyErrorResponse(status.value)))
+        SpotifyApiResponse(status.value, SpotifyResponseData.Error(raw.toSpotifyErrorResponse(status.value)), responseHeaders)
     }
 }
 
 internal suspend fun HttpResponse.toSpotifyBooleanApiResponse(): SpotifyApiResponse<Boolean> {
+    val responseHeaders = headersMap()
     return if (status.isSuccess()) {
-        SpotifyApiResponse(status.value, SpotifyResponseData.Success(true))
+        SpotifyApiResponse(status.value, SpotifyResponseData.Success(true), responseHeaders)
     } else {
         val raw = bodyAsText()
-        SpotifyApiResponse(status.value, SpotifyResponseData.Error(raw.toSpotifyErrorResponse(status.value)))
+        SpotifyApiResponse(status.value, SpotifyResponseData.Error(raw.toSpotifyErrorResponse(status.value)), responseHeaders)
     }
 }
 
@@ -42,5 +44,11 @@ internal fun String.toSpotifyErrorResponse(statusCode: Int): SpotifyErrorRespons
                 message = fallback,
             )
         )
+    }
+}
+
+private fun HttpResponse.headersMap(): Map<String, String> {
+    return headers.names().associateWith { key ->
+        headers[key].orEmpty()
     }
 }
