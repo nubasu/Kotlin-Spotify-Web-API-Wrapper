@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.tracks
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.SaveTracksForCurrentUserRequest
@@ -11,7 +13,6 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.tracks.UsersSavedTrack
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
@@ -20,11 +21,9 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -45,8 +44,7 @@ class TracksApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getSeveralTracks(ids: List<String>, market: CountryCode? = null) : SpotifyApiResponse<Tracks> {
@@ -60,8 +58,7 @@ class TracksApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getUsersSavedTracks(market: CountryCode? = null, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<UsersSavedTrack> {
@@ -76,8 +73,7 @@ class TracksApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun saveTracksForCurrentUser(body: SaveTracksForCurrentUserRequest) : SpotifyApiResponse<Boolean> {
@@ -88,8 +84,7 @@ class TracksApis(
             contentType(ContentType.Application.Json)
             setBody(body)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun removeUsersSavedTracks(ids: Ids) : SpotifyApiResponse<Boolean> {
@@ -102,8 +97,7 @@ class TracksApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun checkUsersSavedTracks(ids: Ids) : SpotifyApiResponse<List<Boolean>> {
@@ -116,7 +110,6 @@ class TracksApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 }

@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.artists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.IncludeGroup
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.Artist
@@ -12,16 +14,13 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.artists.ArtistsRelated
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -45,10 +44,7 @@ class ArtistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getSeveralArtists(
@@ -63,10 +59,7 @@ class ArtistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getArtistsAlbums(
@@ -91,10 +84,7 @@ class ArtistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getArtistsTopTracks(
@@ -111,10 +101,7 @@ class ArtistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     @Deprecated("")
@@ -130,9 +117,6 @@ class ArtistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 }

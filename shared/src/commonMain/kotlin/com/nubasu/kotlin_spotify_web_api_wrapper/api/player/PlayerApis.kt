@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.player
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Uris
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.Offset
@@ -17,7 +19,6 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.player.UsersQueue
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
@@ -26,10 +27,8 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -55,10 +54,7 @@ class PlayerApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun transferPlayback(
@@ -77,11 +73,7 @@ class PlayerApis(
                 )
             )
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun getAvailableDevices() : SpotifyApiResponse<AvailableDevices> {
@@ -93,10 +85,7 @@ class PlayerApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getCurrentlyPlayingTrack(
@@ -113,10 +102,7 @@ class PlayerApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun startResumePlayback(
@@ -143,11 +129,7 @@ class PlayerApis(
             }
             setBody(body)
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun pausePlayback(
@@ -162,11 +144,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun skipToNext(
@@ -181,11 +159,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun skipToPrevious(
@@ -200,11 +174,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun seekToPosition(
@@ -220,11 +190,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun setRepeatMode(
@@ -241,11 +207,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun setPlaybackVolume(
@@ -262,11 +224,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun togglePlaybackShuffle(
@@ -283,11 +241,7 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun getRecentlyPlayedTracks(
@@ -306,10 +260,7 @@ class PlayerApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getTheUsersQueue() : SpotifyApiResponse<UsersQueue> {
@@ -321,10 +272,7 @@ class PlayerApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun addItemToPlaybackQueue(
@@ -341,10 +289,6 @@ class PlayerApis(
                 deviceId?.let { parameters.append("device_id", it) }
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 }

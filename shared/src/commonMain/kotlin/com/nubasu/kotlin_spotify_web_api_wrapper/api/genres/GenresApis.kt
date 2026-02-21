@@ -1,19 +1,18 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.genres
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.genres.AvailableGenreSeeds
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -35,9 +34,6 @@ class GenresApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 }

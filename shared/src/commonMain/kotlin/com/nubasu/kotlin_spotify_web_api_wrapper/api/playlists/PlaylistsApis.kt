@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.AddItemsToPlaylistRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.ChangePlaylistDetailsRequest
@@ -20,7 +22,6 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.playlists.UsersPlaylis
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
@@ -31,12 +32,10 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -64,8 +63,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun changePlaylistDetails(playlistId: String, body: ChangePlaylistDetailsRequest) : SpotifyApiResponse<Boolean> {
@@ -80,8 +78,7 @@ class PlaylistsApis(
             contentType(ContentType.Application.Json)
             setBody(body)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun getPlaylistItems(
@@ -105,8 +102,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun updatePlaylistItems(
@@ -126,8 +122,7 @@ class PlaylistsApis(
             contentType(ContentType.Application.Json)
             body?.let { setBody(it) }
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun addItemsToPlaylist(
@@ -149,8 +144,7 @@ class PlaylistsApis(
             contentType(ContentType.Application.Json)
             body?.let { setBody(it) }
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun removePlaylistItems(playlistId: String, body: RemovePlaylistItemsRequest) : SpotifyApiResponse<SnapshotIdResponse> {
@@ -165,8 +159,7 @@ class PlaylistsApis(
             contentType(ContentType.Application.Json)
             setBody(body)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CurrentUsersPlaylists> {
@@ -180,8 +173,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getUsersPlaylists(userId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<UsersPlaylist> {
@@ -196,8 +188,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun createPlaylist(body: CreatePlaylistRequest) : SpotifyApiResponse<SimplifiedPlaylistObject> {
@@ -209,8 +200,7 @@ class PlaylistsApis(
             contentType(ContentType.Application.Json)
             setBody(body)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     @Deprecated(
@@ -236,8 +226,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CategorysPlaylists> {
@@ -252,8 +241,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getPlaylistCoverImage(playlistId: String) : SpotifyApiResponse<List<ImageObject>> {
@@ -266,8 +254,7 @@ class PlaylistsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun addCustomPlaylistCoverImage(playlistId: String, imageBase64Jpeg: String) : SpotifyApiResponse<Boolean> {
@@ -281,7 +268,6 @@ class PlaylistsApis(
             header(HttpHeaders.ContentType, "image/jpeg")
             setBody(imageBase64Jpeg)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 }

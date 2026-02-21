@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.albums
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.PagingOptions
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.albums.Album
@@ -12,7 +14,6 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.albums.UsersSavedAlbum
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.CountryCode
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
@@ -20,10 +21,8 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -49,10 +48,7 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getSeveralAlbums(
@@ -69,10 +65,7 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getAlbumTracks(
@@ -94,10 +87,7 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getUsersSavedAlbums(
@@ -117,10 +107,7 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun saveAlbumsForCurrentUser(
@@ -134,11 +121,7 @@ class AlbumsApis(
                 parameters.append("ids", body.ids.joinToString(","))
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun removeUsersSavedAlbums(
@@ -152,11 +135,7 @@ class AlbumsApis(
                 parameters.append("ids", body.ids.joinToString(","))
             }
         }
-
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.status.isSuccess())
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun checkUsersSavedAlbums(
@@ -172,10 +151,7 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 
     suspend fun getNewReleases(
@@ -193,9 +169,6 @@ class AlbumsApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) {
-            throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        }
-        return SpotifyApiResponse(response.status.value, response.body())
+        return response.toSpotifyApiResponse()
     }
 }

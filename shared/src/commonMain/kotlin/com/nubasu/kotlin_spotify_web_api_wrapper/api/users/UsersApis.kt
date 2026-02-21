@@ -1,7 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.users
 
-import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyApiResponse
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowPlaylistRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.FollowType
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.users.TimeRange
@@ -12,7 +14,6 @@ import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.UsersProfile
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.users.UsersTopItems
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
@@ -21,10 +22,8 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 
@@ -40,8 +39,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getUsersTopItems(
@@ -61,8 +59,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun getUsersProfile(userId: String) : SpotifyApiResponse<UsersProfile> {
@@ -71,8 +68,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun followPlaylist(playlistId: String, public: Boolean = true) : SpotifyApiResponse<Boolean> {
@@ -83,8 +79,7 @@ class UsersApis(
             contentType(ContentType.Application.Json)
             setBody(FollowPlaylistRequest(public = public))
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun unfollowPlaylist(playlistId: String) : SpotifyApiResponse<Boolean> {
@@ -93,8 +88,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun getFollowedArtists(type: FollowType = FollowType.ARTIST, limit: Int? = null, after: String? = null) : SpotifyApiResponse<FollowedArtists> {
@@ -112,8 +106,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun followArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
@@ -127,8 +120,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun unfollowArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<Boolean> {
@@ -142,8 +134,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, true)
+        return response.toSpotifyBooleanApiResponse()
     }
 
     suspend fun checkIfUserFollowsArtistsOrUsers(type: FollowType, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
@@ -157,8 +148,7 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 
     suspend fun checkIfCurrentUserFollowsPlaylist(playlistId: String, ids: List<String>) : SpotifyApiResponse<List<Boolean>> {
@@ -171,7 +161,6 @@ class UsersApis(
             bearerAuth(TokenHolder.token)
             accept(ContentType.Application.Json)
         }
-        if (!response.status.isSuccess()) throw RuntimeException("Spotify error ${response.status}: ${response.bodyAsText()}")
-        return SpotifyApiResponse(response.status.value, response.body())
+return response.toSpotifyApiResponse()
     }
 }

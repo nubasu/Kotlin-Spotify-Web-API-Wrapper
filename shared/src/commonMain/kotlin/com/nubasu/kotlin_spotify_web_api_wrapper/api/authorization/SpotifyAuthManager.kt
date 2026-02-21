@@ -1,6 +1,8 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.response.authorization.TokenResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.Sha256
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.TokenHolder
 import com.nubasu.kotlin_spotify_web_api_wrapper.utils.secureRandomBytes
@@ -104,7 +106,7 @@ class SpotifyAuthManager(
             code = code,
             redirectUri = requireRedirectUri(),
             codeVerifier = pending.codeVerifier,
-        )
+        ).requireSuccessToken("Failed to complete PKCE authorization.")
         pendingPkce = null
         return installToken(token)
     }
@@ -150,7 +152,7 @@ class SpotifyAuthManager(
             code = code,
             redirectUri = requireRedirectUri(),
             codeVerifier = codeVerifier,
-        )
+        ).requireSuccessToken("Failed to exchange authorization code with PKCE.")
         installToken(token)
     }
 
@@ -162,7 +164,7 @@ class SpotifyAuthManager(
             clientSecret = requireClientSecret(),
             code = code,
             redirectUri = requireRedirectUri(),
-        )
+        ).requireSuccessToken("Failed to exchange authorization code.")
         installToken(token)
     }
 
@@ -170,7 +172,7 @@ class SpotifyAuthManager(
         val token = authorizationApis.requestClientCredentialsToken(
             clientId = clientId,
             clientSecret = requireClientSecret(),
-        )
+        ).requireSuccessToken("Failed to request client credentials token.")
         installToken(token)
     }
 
@@ -189,7 +191,7 @@ class SpotifyAuthManager(
                 clientId = clientId,
                 refreshToken = refreshToken,
             )
-        }
+        }.requireSuccessToken("Failed to refresh access token.")
         installToken(
             refreshed.copy(
                 refreshToken = refreshed.refreshToken ?: current.refreshToken
@@ -222,7 +224,7 @@ class SpotifyAuthManager(
                 clientId = clientId,
                 refreshToken = refreshToken,
             )
-        }
+        }.requireSuccessToken("Failed to refresh access token.")
         installToken(
             refreshed.copy(
                 refreshToken = refreshed.refreshToken ?: current.refreshToken
@@ -259,6 +261,15 @@ class SpotifyAuthManager(
 
     private fun requireRedirectUri(): String {
         return redirectUri ?: error("redirectUri is required for this flow.")
+    }
+
+    private fun SpotifyApiResponse<TokenResponse>.requireSuccessToken(context: String): TokenResponse {
+        return when (val body = data) {
+            is SpotifyResponseData.Success -> body.value
+            is SpotifyResponseData.Error -> error(
+                "$context (status=${body.value.error.status}): ${body.value.error.message}"
+            )
+        }
     }
 
     @OptIn(ExperimentalEncodingApi::class)
