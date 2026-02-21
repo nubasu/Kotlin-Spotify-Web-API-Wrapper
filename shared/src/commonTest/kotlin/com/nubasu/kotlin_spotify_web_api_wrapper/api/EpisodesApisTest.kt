@@ -1,5 +1,6 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.episodes.EpisodesApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.test.runTest
@@ -33,7 +34,7 @@ class EpisodesApisTest {
         val api = EpisodesApis(ApiTestClientFactory.successClient())
         val res = api.saveEpisodesForCurrentUser(Ids(listOf("e1")))
         assertEquals(201, res.statusCode)
-        assertEquals(true, res.data)
+        assertEquals(true, (res.data as SpotifyResponseData.Success).value)
     }
     @Test
     fun getEpisode_nonSuccess_throws_status201_created() = runTest {

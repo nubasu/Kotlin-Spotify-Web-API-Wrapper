@@ -1,11 +1,12 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.markets.MarketsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class MarketsApisTest {
     @Test
@@ -33,7 +34,8 @@ class MarketsApisTest {
         val api = MarketsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.MARKETS_MIN))
         val res = api.getAvailableMarkets()
         assertEquals(201, res.statusCode)
-        assertEquals(listOf("US"), res.data.markets)
+        val data = (res.data as SpotifyResponseData.Success).value
+        assertEquals(listOf("US"), data.markets)
     }
 
 }

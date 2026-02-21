@@ -1,11 +1,12 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.chapters.ChaptersApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class ChaptersApisTest {
     @Test
@@ -33,7 +34,8 @@ class ChaptersApisTest {
         val api = ChaptersApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.CHAPTERS_MIN))
         val res = api.getSeveralChapters(listOf("c1"))
         assertEquals(201, res.statusCode)
-        assertEquals(0, res.data.chapters.size)
+        val data = (res.data as SpotifyResponseData.Success).value
+        assertEquals(0, data.chapters.size)
     }
     @Test
     fun getAChapter_nonSuccess_throws_status201_created() = runTest {

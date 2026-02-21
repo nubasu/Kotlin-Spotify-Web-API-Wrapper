@@ -1,6 +1,8 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.albums.AlbumsApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -33,7 +35,7 @@ class AlbumsApisTest {
         val api = AlbumsApis(ApiTestClientFactory.successClient())
         val res = api.saveAlbumsForCurrentUser(Ids(listOf("a", "b")))
         assertEquals(201, res.statusCode)
-        assertEquals(true, res.data)
+        assertEquals(true, (res.data as SpotifyResponseData.Success).value)
     }
     @Test
     fun getAlbum_nonSuccess_throws_status201_created() = runTest {
@@ -94,7 +96,11 @@ class AlbumsApisTest {
     }
     @Test
     fun getUsersSavedAlbums_nonSuccess_throws_status201_created() = runTest {
-        ApiStatusCaseAsserts.assertStatus201Created { client -> AlbumsApis(client).getUsersSavedAlbums() }
+        ApiStatusCaseAsserts.assertStatus201Created(
+            successBody = SpotifyApiFixtures.USERS_SAVED_ALBUMS_MIN
+        ) { client ->
+            AlbumsApis(client).getUsersSavedAlbums()
+        }
     }
 
     @Test

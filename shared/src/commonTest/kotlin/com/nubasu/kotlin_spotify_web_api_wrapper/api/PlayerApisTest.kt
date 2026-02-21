@@ -1,5 +1,6 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.player.PlayerApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Uris
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.player.DeviceIds
@@ -36,7 +37,7 @@ class PlayerApisTest {
         val api = PlayerApis(ApiTestClientFactory.successClient())
         val res = api.pausePlayback()
         assertEquals(201, res.statusCode)
-        assertEquals(true, res.data)
+        assertEquals(true, (res.data as SpotifyResponseData.Success).value)
     }
     @Test
     fun getPlaybackState_nonSuccess_throws_status201_created() = runTest {

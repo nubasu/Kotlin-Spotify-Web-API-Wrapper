@@ -1,12 +1,13 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.search.SearchApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.search.SearchType
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class SearchApisTest {
     @Test
@@ -34,7 +35,8 @@ class SearchApisTest {
         val api = SearchApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.SEARCH_MIN))
         val res = api.searchForItem("test", setOf(SearchType.TRACK))
         assertEquals(201, res.statusCode)
-        assertEquals(null, res.data.tracks)
+        val data = (res.data as SpotifyResponseData.Success).value
+        assertEquals(null, data.tracks)
     }
 
 }

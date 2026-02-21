@@ -2,6 +2,7 @@
 
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.playlists.PlaylistsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.AddItemsToPlaylistRequest
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.playlists.ChangePlaylistDetailsRequest
@@ -40,7 +41,7 @@ class PlaylistsApisTest {
         val api = PlaylistsApis(ApiTestClientFactory.successClient())
         val res = api.changePlaylistDetails("playlist-id", ChangePlaylistDetailsRequest(name = "n"))
         assertEquals(201, res.statusCode)
-        assertEquals(true, res.data)
+        assertEquals(true, (res.data as SpotifyResponseData.Success).value)
     }
 
     @Suppress("DEPRECATION")

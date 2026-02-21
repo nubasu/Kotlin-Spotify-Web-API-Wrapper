@@ -1,5 +1,6 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.tracks.TracksApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.Ids
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.tracks.SaveTracksForCurrentUserRequest
@@ -34,7 +35,7 @@ class TracksApisTest {
         val api = TracksApis(ApiTestClientFactory.successClient())
         val res = api.saveTracksForCurrentUser(SaveTracksForCurrentUserRequest(ids = listOf("t1")))
         assertEquals(201, res.statusCode)
-        assertEquals(true, res.data)
+        assertEquals(true, (res.data as SpotifyResponseData.Success).value)
     }
     @Test
     fun getTrack_nonSuccess_throws_status201_created() = runTest {

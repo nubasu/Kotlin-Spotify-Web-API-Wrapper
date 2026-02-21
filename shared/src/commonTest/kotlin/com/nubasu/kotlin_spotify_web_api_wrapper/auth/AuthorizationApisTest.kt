@@ -1,6 +1,9 @@
 package com.nubasu.kotlin_spotify_web_api_wrapper.auth
 
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.authorization.AuthorizationApis
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.authorization.TokenResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyApiResponse
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -15,7 +18,6 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -94,13 +96,15 @@ class AuthorizationApisTest {
             clientId = "client-id",
             clientSecret = "client-secret",
         )
+        assertEquals(201, token.statusCode)
+        val data = token.data as SpotifyResponseData.Success
 
         val expected = "Basic " + Base64.encode("client-id:client-secret".encodeToByteArray())
         assertEquals(expected, authHeader)
-        assertEquals("access-token", token.accessToken)
-        assertEquals("Bearer", token.tokenType)
-        assertEquals(3600, token.expiresIn)
-        assertNull(token.refreshToken)
+        assertEquals("access-token", data.value.accessToken)
+        assertEquals("Bearer", data.value.tokenType)
+        assertEquals(3600, data.value.expiresIn)
+        assertNull(data.value.refreshToken)
     }
     @Test
     fun requestClientCredentialsToken_status201_created() = runTest {
@@ -149,11 +153,13 @@ class AuthorizationApisTest {
             redirectUri = "app://callback",
             codeVerifier = "verifier",
         )
+        assertEquals(201, token.statusCode)
+        val data = token.data as SpotifyResponseData.Success
 
         assertNull(authHeader)
-        assertEquals("pkce-access", token.accessToken)
-        assertEquals("pkce-refresh", token.refreshToken)
-        assertEquals("user-read-email", token.scope)
+        assertEquals("pkce-access", data.value.accessToken)
+        assertEquals("pkce-refresh", data.value.refreshToken)
+        assertEquals("user-read-email", data.value.scope)
     }
     @Test
     fun requestAuthorizationCodeWithPkceToken_status201_created() = runTest {
@@ -220,8 +226,10 @@ class AuthorizationApisTest {
             code = "code",
             redirectUri = "app://callback",
         )
-        assertEquals("access", token.accessToken)
-        assertEquals("refresh", token.refreshToken)
+        assertEquals(201, token.statusCode)
+        val data = token.data as SpotifyResponseData.Success
+        assertEquals("access", data.value.accessToken)
+        assertEquals("refresh", data.value.refreshToken)
     }
     @Test
     fun requestAuthorizationCodeToken_status201_created() = runTest {
@@ -286,10 +294,12 @@ class AuthorizationApisTest {
             clientId = "client-id",
             refreshToken = "refresh-token",
         )
+        assertEquals(201, token.statusCode)
+        val data = token.data as SpotifyResponseData.Success
 
-        assertEquals("new-access", token.accessToken)
-        assertNotNull(token.tokenType)
-        assertTrue(token.expiresIn > 0)
+        assertEquals("new-access", data.value.accessToken)
+        assertNotNull(data.value.tokenType)
+        assertTrue(data.value.expiresIn > 0)
     }
     @Test
     fun refreshTokenWithPkce_status201_created() = runTest {
@@ -347,7 +357,9 @@ class AuthorizationApisTest {
             clientSecret = "secret",
             refreshToken = "refresh-token",
         )
-        assertEquals("new-access", token.accessToken)
+        assertEquals(201, token.statusCode)
+        val data = token.data as SpotifyResponseData.Success
+        assertEquals("new-access", data.value.accessToken)
     }
     @Test
     fun refreshToken_status201_created() = runTest {
@@ -394,38 +406,56 @@ class AuthorizationApisTest {
     }
 
     private suspend fun assertStatus201Created(
-        call: suspend (AuthorizationApis) -> Unit,
+        call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>,
     ) {
         val success = AuthorizationApis(client = testHttpClient(statusEngine(HttpStatusCode.Created)))
-        call(success)
+        val response = call(success)
+        assertEquals(201, response.statusCode)
+        val data = response.data as SpotifyResponseData.Success
+        assertEquals("t", data.value.accessToken)
+        assertEquals("Bearer", data.value.tokenType)
+        assertEquals(3600, data.value.expiresIn)
+        assertEquals("r", data.value.refreshToken)
     }
 
     private suspend fun assertStatus401Unauthorized(
-        call: suspend (AuthorizationApis) -> Unit,
+        call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>,
     ) {
         val unauthorized = AuthorizationApis(client = testHttpClient(statusEngine(HttpStatusCode.Unauthorized)))
-        assertFailsWith<RuntimeException> { call(unauthorized) }
+        val response = call(unauthorized)
+        assertEquals(401, response.statusCode)
+        val error = response.data as SpotifyResponseData.Error
+        assertEquals(401, error.value.error.status)
+        assertEquals("x", error.value.error.message)
     }
 
     private suspend fun assertStatus403Forbidden(
-        call: suspend (AuthorizationApis) -> Unit,
+        call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>,
     ) {
         val forbidden = AuthorizationApis(client = testHttpClient(statusEngine(HttpStatusCode.Forbidden)))
-        assertFailsWith<RuntimeException> { call(forbidden) }
+        val response = call(forbidden)
+        assertEquals(403, response.statusCode)
+        val error = response.data as SpotifyResponseData.Error
+        assertEquals(403, error.value.error.status)
+        assertEquals("x", error.value.error.message)
     }
 
     private suspend fun assertStatus429TooManyRequests(
-        call: suspend (AuthorizationApis) -> Unit,
+        call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>,
     ) {
         val tooMany = AuthorizationApis(client = testHttpClient(statusEngine(HttpStatusCode.TooManyRequests)))
-        assertFailsWith<RuntimeException> { call(tooMany) }
+        val response = call(tooMany)
+        assertEquals(429, response.statusCode)
+        val error = response.data as SpotifyResponseData.Error
+        assertEquals(429, error.value.error.status)
+        assertEquals("x", error.value.error.message)
     }
 
     private fun statusEngine(status: HttpStatusCode): MockEngine {
         val body = if (status == HttpStatusCode.Created) {
             """{"access_token":"t","token_type":"Bearer","expires_in":3600,"refresh_token":"r"}"""
         } else {
-            """{"error":"x"}"""
+            """{"error":{"status":${status.value},"message":"x"}}"""
         }
         return MockEngine {
             respond(

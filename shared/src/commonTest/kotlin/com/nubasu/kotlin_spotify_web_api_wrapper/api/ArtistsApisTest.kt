@@ -2,6 +2,7 @@
 
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.artists.ArtistsApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import com.nubasu.kotlin_spotify_web_api_wrapper.request.common.IncludeGroup
@@ -37,7 +38,7 @@ class ArtistsApisTest {
         val api = ArtistsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.ARTIST_MIN))
         val res = api.getArtist("id")
         assertEquals(201, res.statusCode)
-        assertNotNull(res.data)
+        val data = (res.data as SpotifyResponseData.Success).value
     }
 
     @Suppress("DEPRECATION")

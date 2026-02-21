@@ -2,12 +2,13 @@
 
 package com.nubasu.kotlin_spotify_web_api_wrapper.api
 
+import com.nubasu.kotlin_spotify_web_api_wrapper.response.common.SpotifyResponseData
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.genres.GenresApis
 import com.nubasu.kotlin_spotify_web_api_wrapper.api.fixtures.SpotifyApiFixtures
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class GenresApisTest {
     @Suppress("DEPRECATION")
@@ -37,7 +38,8 @@ class GenresApisTest {
         val api = GenresApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.GENRES_MIN))
         val res = api.getAvailableGenreSeeds()
         assertEquals(201, res.statusCode)
-        assertEquals(listOf("pop"), res.data.genres)
+        val data = (res.data as SpotifyResponseData.Success).value
+        assertEquals(listOf("pop"), data.genres)
     }
 
 }

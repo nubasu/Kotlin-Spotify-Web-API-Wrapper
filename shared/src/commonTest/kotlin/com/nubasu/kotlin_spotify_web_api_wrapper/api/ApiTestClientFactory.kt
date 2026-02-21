@@ -14,7 +14,7 @@ internal object ApiTestClientFactory {
     fun errorClient(status: HttpStatusCode = HttpStatusCode.InternalServerError): HttpClient {
         val engine = MockEngine {
             respond(
-                content = """{"error":"test-error"}""",
+                content = """{"error":{"status":${status.value},"message":"test-error"}}""",
                 status = status,
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
