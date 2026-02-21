@@ -18,7 +18,7 @@ data class SimplifiedPlaylistObject(
     val owner: Owner,
     @SerialName("primary_color")
     val primaryColor: String? = null,
-    val public: Boolean,
+    val public: Boolean?,
     @SerialName("snapshot_id")
     val snapshotId: String,
     val tracks: Tracks = Tracks(href = "", total = 0),

@@ -16,7 +16,7 @@ api.changePlaylistDetails("playlist-id", ChangePlaylistDetailsRequest(name = "ne
 api.getPlaylistItems("playlist-id")
 api.updatePlaylistItems("playlist-id", UpdatePlaylistItemsRequest(uris = listOf("spotify:track:...")))
 api.addItemsToPlaylist("playlist-id", AddItemsToPlaylistRequest(uris = listOf("spotify:track:...")))
-api.removePlaylistItems("playlist-id", RemovePlaylistItemsRequest(tracks = listOf(TrackUri("spotify:track:..."))))
+api.removePlaylistItems("playlist-id", RemovePlaylistItemsRequest(items = listOf(TrackUri("spotify:track:..."))))
 api.getCurrentUsersPlaylists()
 api.getUsersPlaylists("user-id")
 api.createPlaylist(CreatePlaylistRequest(name = "My Playlist"))

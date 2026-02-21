@@ -176,6 +176,10 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/users/{user_id}/playlists as deprecated. Prefer getCurrentUsersPlaylists() when possible.",
+        ReplaceWith("getCurrentUsersPlaylists(pagingOptions)")
+    )
     suspend fun getUsersPlaylists(userId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<UsersPlaylist> {
         val endpoint = "https://api.spotify.com/v1/users"
         val response = client.get {
@@ -211,8 +215,12 @@ return response.toSpotifyApiResponse()
         return createPlaylist(body)
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/browse/featured-playlists as deprecated.",
+    )
     suspend fun getFeaturedPlaylists(
         locale: String? = null,
+        timestamp: String? = null,
         pagingOptions: PagingOptions = PagingOptions(),
     ) : SpotifyApiResponse<FeaturedPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/featured-playlists"
@@ -220,6 +228,7 @@ return response.toSpotifyApiResponse()
             url {
                 takeFrom(endpoint)
                 locale?.let { parameters.append("locale", it) }
+                timestamp?.let { parameters.append("timestamp", it) }
                 pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
                 pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
             }
@@ -229,6 +238,9 @@ return response.toSpotifyApiResponse()
 return response.toSpotifyApiResponse()
     }
 
+    @Deprecated(
+        "Spotify marks GET /v1/browse/categories/{category_id}/playlists as deprecated.",
+    )
     suspend fun getCategorysPlaylists(categoryId: String, pagingOptions: PagingOptions = PagingOptions()) : SpotifyApiResponse<CategorysPlaylists> {
         val endpoint = "https://api.spotify.com/v1/browse/categories"
         val response = client.get {

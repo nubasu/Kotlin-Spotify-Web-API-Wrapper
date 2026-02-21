@@ -11,6 +11,7 @@ data class Playlist(
     val description: String?,
     @SerialName("external_urls")
     val externalUrls: ExternalUrls,
+    val followers: Followers? = null,
     val href: String,
     val id: String,
     val images: List<ImageObject>?,
@@ -18,7 +19,7 @@ data class Playlist(
     val owner: Owner,
     @SerialName("primary_color")
     val primaryColor: String? = null,
-    val public: Boolean,
+    val public: Boolean?,
     @SerialName("snapshot_id")
     val snapshotId: String,
     val tracks: Tracks = Tracks(href = "", total = 0),

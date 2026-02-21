@@ -32,7 +32,8 @@ data class AddItemsToPlaylistRequest(
 
 @Serializable
 data class RemovePlaylistItemsRequest(
-    val tracks: List<TrackUri>,
+    @SerialName("items")
+    val items: List<TrackUri>,
     @SerialName("snapshot_id")
     val snapshotId: String? = null,
 )
