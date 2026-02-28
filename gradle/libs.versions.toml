@@ -20,6 +20,7 @@ ktor = "3.3.3"
 logback = "1.5.22"
 vanniktech-maven-publish = "0.35.0"
 dokka = "2.0.0"
+kotlinSpotifyWebApiWrapper = "0.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,6 +43,7 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlin-spotify-web-api-wrapper = { module = "io.github.nubasu:kotlin-spotify-web-api-wrapper", version.ref = "kotlinSpotifyWebApiWrapper" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
