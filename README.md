@@ -45,31 +45,7 @@ Dependency coordinates:
 - Group: `io.github.nubasu`
 - Artifact: `kotlin-spotify-web-api-wrapper`
 
-### `build.gradle.kts` (Kotlin DSL)
-
-```kotlin
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0")
-}
-```
-
-### `build.gradle` (Groovy DSL)
-
-```groovy
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0'
-}
-```
-
-### `libs.versions.toml` (Version Catalog)
+### *Recommendation :* `libs.versions.toml` (Version Catalog)
 
 `gradle/libs.versions.toml`:
 
@@ -88,8 +64,33 @@ repositories {
     mavenCentral()
 }
 
+commonMain.dependencies {
+  implementation(libs.kotlin.spotify.web.api.wrapper)
+}
+```
+
+### `build.gradle.kts` (Kotlin DSL)
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+commonMain.dependencies {
+    implementation("io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0")
+   
+}
+```
+
+### `build.gradle` (Groovy DSL)
+
+```groovy
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation(libs.kotlin.spotify.web.api.wrapper)
+    implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0'
 }
 ```
 
