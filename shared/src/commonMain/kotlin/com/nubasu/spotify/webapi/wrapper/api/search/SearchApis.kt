@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.search
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
 import com.nubasu.spotify.webapi.wrapper.request.search.SearchType
@@ -7,15 +10,11 @@ import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.response.search.SearchResponse
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
+import com.nubasu.spotify.webapi.wrapper.utils.applyLimitOffsetPaging
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
-import io.ktor.http.ContentType
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Search domain API for Spotify Web API.
@@ -23,11 +22,9 @@ import io.ktor.serialization.kotlinx.json.json
  * Provides catalog search across albums, artists, tracks, playlists, and other resource types.
  */
 class SearchApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) { json() }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Searches the Spotify catalog for albums, artists, tracks, playlists, and other item types.
      *
@@ -46,22 +43,19 @@ class SearchApis(
         includeExternalAudio: Boolean = false,
     ): SpotifyApiResponse<SearchResponse> {
         require(types.isNotEmpty()) { "types must not be empty" }
-        val endpoint = "https://api.spotify.com/v1/search"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.SEARCH)
                     parameters.append("q", q)
                     parameters.append("type", types.joinToString(",") { it.value })
                     market?.let { parameters.append("market", it.code) }
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                     if (includeExternalAudio) {
                         parameters.append("include_external", "audio")
                     }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }

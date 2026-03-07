@@ -11,31 +11,32 @@ class ChaptersApisTest {
     @Test
     fun nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
     fun nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
     fun nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
     fun nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = ChaptersApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.CHAPTERS_MIN))
+            val api =
+                ChaptersApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.CHAPTERS_MIN), tokenProvider = { "test-token" })
             val res = api.getSeveralChapters(listOf("c1"))
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value
@@ -43,27 +44,27 @@ class ChaptersApisTest {
         }
 
     @Test
-    fun getAChapter_nonSuccess_throws_status201_created() =
+    fun getChapter_nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
-    fun getAChapter_nonSuccess_throws_status401_unauthorized() =
+    fun getChapter_nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
-    fun getAChapter_nonSuccess_throws_status403_forbidden() =
+    fun getChapter_nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test
-    fun getAChapter_nonSuccess_throws_status429_tooManyRequests() =
+    fun getChapter_nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> ChaptersApis(client).getAChapter("id") }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> ChaptersApis(client).getChapter("id") }
         }
 
     @Test

@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.artists
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.IncludeGroup
 import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
@@ -11,16 +14,12 @@ import com.nubasu.spotify.webapi.wrapper.response.artists.ArtistsTopTracks
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
+import com.nubasu.spotify.webapi.wrapper.utils.applyLimitOffsetPaging
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
-import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Artist domain API for Spotify Web API.
@@ -28,13 +27,9 @@ import io.ktor.serialization.kotlinx.json.json
  * Covers artist profile retrieval, albums, top tracks, and related artists.
  */
 class ArtistsApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json()
-            }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Gets a Spotify artist by artist ID.
      *
@@ -42,15 +37,13 @@ class ArtistsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getArtist(id: String): SpotifyApiResponse<Artist> {
-        val endpoint = "https://api.spotify.com/v1/artists/"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ARTISTS)
                     appendPathSegments(id)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -65,15 +58,13 @@ class ArtistsApis(
         "Spotify marks GET /v1/artists as deprecated.",
     )
     suspend fun getSeveralArtists(ids: List<String>): SpotifyApiResponse<Artists> {
-        val endpoint = "https://api.spotify.com/v1/artists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ARTISTS)
                     parameters.append("ids", ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -93,22 +84,18 @@ class ArtistsApis(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
     ): SpotifyApiResponse<ArtistsAlbums> {
-        val endpoint = "https://api.spotify.com/v1/artists"
-        val limit = pagingOptions.limit
-        val offset = pagingOptions.offset
-        val includeGroupsStr = includeGroups.map { it.value }
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ARTISTS)
                     appendPathSegments(id, "albums")
-                    if (includeGroups.isNotEmpty()) parameters.append("include_groups", includeGroupsStr.joinToString(","))
+                    if (includeGroups.isNotEmpty()) {
+                        parameters.append("include_groups", includeGroups.joinToString(",") { it.value })
+                    }
                     market?.let { parameters.append("market", it.code) }
-                    limit?.let { parameters.append("limit", it.toString()) }
-                    offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -127,16 +114,14 @@ class ArtistsApis(
         id: String,
         market: CountryCode? = null,
     ): SpotifyApiResponse<ArtistsTopTracks> {
-        val endpoint = "https://api.spotify.com/v1/artists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ARTISTS)
                     appendPathSegments(id, "top-tracks")
                     market?.let { parameters.append("market", it.code) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -151,15 +136,13 @@ class ArtistsApis(
         "Spotify marks GET /v1/artists/{id}/related-artists as deprecated.",
     )
     suspend fun getArtistsRelatedArtists(id: String): SpotifyApiResponse<ArtistsRelatedArtists> {
-        val endpoint = "https://api.spotify.com/v1/artists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ARTISTS)
                     appendPathSegments(id, "related-artists")
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }

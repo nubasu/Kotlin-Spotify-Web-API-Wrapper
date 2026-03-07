@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.shows
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.Ids
@@ -11,18 +14,14 @@ import com.nubasu.spotify.webapi.wrapper.response.show.Shows
 import com.nubasu.spotify.webapi.wrapper.response.show.UsersSavedShows
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
+import com.nubasu.spotify.webapi.wrapper.utils.applyLimitOffsetPaging
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
-import io.ktor.http.ContentType
 import io.ktor.http.appendPathSegments
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Show domain API for Spotify Web API.
@@ -30,11 +29,9 @@ import io.ktor.serialization.kotlinx.json.json
  * Covers podcast show metadata, show episodes, and saved shows for the current user.
  */
 class ShowsApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) { json() }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Gets a Spotify show by show ID.
      *
@@ -46,16 +43,14 @@ class ShowsApis(
         id: String,
         market: CountryCode? = null,
     ): SpotifyApiResponse<Show> {
-        val endpoint = "https://api.spotify.com/v1/shows"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.SHOWS)
                     appendPathSegments(id)
                     market?.let { parameters.append("market", it.code) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -74,16 +69,14 @@ class ShowsApis(
         ids: List<String>,
         market: CountryCode? = null,
     ): SpotifyApiResponse<Shows> {
-        val endpoint = "https://api.spotify.com/v1/shows"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.SHOWS)
                     parameters.append("ids", ids.joinToString(","))
                     market?.let { parameters.append("market", it.code) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -101,18 +94,15 @@ class ShowsApis(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
     ): SpotifyApiResponse<ShowEpisodes> {
-        val endpoint = "https://api.spotify.com/v1/shows"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.SHOWS)
                     appendPathSegments(id, "episodes")
                     market?.let { parameters.append("market", it.code) }
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -124,16 +114,13 @@ class ShowsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getUsersSavedShows(pagingOptions: PagingOptions = PagingOptions()): SpotifyApiResponse<UsersSavedShows> {
-        val endpoint = "https://api.spotify.com/v1/me/shows"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    takeFrom(SpotifyEndpoints.ME_SHOWS)
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -148,15 +135,13 @@ class ShowsApis(
         "Spotify marks PUT /v1/me/shows as deprecated.",
     )
     suspend fun saveShowsForCurrentUser(ids: Ids): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/shows"
         val response =
             client.put {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_SHOWS)
                     parameters.append("ids", ids.ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyBooleanApiResponse()
     }
@@ -175,16 +160,14 @@ class ShowsApis(
         ids: Ids,
         market: CountryCode? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/shows"
         val response =
             client.delete {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_SHOWS)
                     parameters.append("ids", ids.ids.joinToString(","))
                     market?.let { parameters.append("market", it.code) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyBooleanApiResponse()
     }
@@ -199,15 +182,13 @@ class ShowsApis(
         "Spotify marks GET /v1/me/shows/contains as deprecated.",
     )
     suspend fun checkUsersSavedShows(ids: Ids): SpotifyApiResponse<List<Boolean>> {
-        val endpoint = "https://api.spotify.com/v1/me/shows/contains"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_SHOWS_CONTAINS)
                     parameters.append("ids", ids.ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }

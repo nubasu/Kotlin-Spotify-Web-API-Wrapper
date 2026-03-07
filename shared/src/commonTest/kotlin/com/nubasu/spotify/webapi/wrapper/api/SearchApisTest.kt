@@ -38,7 +38,7 @@ class SearchApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = SearchApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.SEARCH_MIN))
+            val api = SearchApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.SEARCH_MIN), tokenProvider = { "test-token" })
             val res = api.searchForItem("test", setOf(SearchType.TRACK))
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value

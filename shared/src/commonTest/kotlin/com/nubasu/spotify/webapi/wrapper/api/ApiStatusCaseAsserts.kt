@@ -2,6 +2,7 @@ package com.nubasu.spotify.webapi.wrapper.api
 
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.client.HttpClient
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.decodeFromString
@@ -23,13 +24,23 @@ import kotlin.test.fail
 internal object ApiStatusCaseAsserts {
     private val json = Json { ignoreUnknownKeys = true }
 
+    private suspend inline fun <R> withTestToken(crossinline block: suspend () -> R): R {
+        val previous = TokenHolder.token
+        TokenHolder.token = "test-token"
+        try {
+            return block()
+        } finally {
+            TokenHolder.token = previous
+        }
+    }
+
     suspend inline fun <reified T> assertStatus201Created(
         successBody: String? = null,
         crossinline assertData: (T) -> Unit = {},
-        invoke: suspend (HttpClient) -> SpotifyApiResponse<T>,
+        crossinline invoke: suspend (HttpClient) -> SpotifyApiResponse<T>,
     ) {
         val body = successBody ?: defaultSuccessBody<T>()
-        val response = invoke(ApiTestClientFactory.successClient(HttpStatusCode.Created, body))
+        val response = withTestToken { invoke(ApiTestClientFactory.successClient(HttpStatusCode.Created, body)) }
         assertEquals(201, response.statusCode)
 
         val data = response.data
@@ -122,26 +133,26 @@ internal object ApiStatusCaseAsserts {
     }
 
     suspend fun <T> assertStatus401Unauthorized(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
-        val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Unauthorized))
+        val response = withTestToken { invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Unauthorized)) }
         assertEquals(401, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(401, error.value.error.status)
-        assertEquals("test-error", error.value.error.message)
+        assertEquals(401, error.error.error.status)
+        assertEquals("test-error", error.error.error.message)
     }
 
     suspend fun <T> assertStatus403Forbidden(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
-        val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Forbidden))
+        val response = withTestToken { invoke(ApiTestClientFactory.errorClient(HttpStatusCode.Forbidden)) }
         assertEquals(403, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(403, error.value.error.status)
-        assertEquals("test-error", error.value.error.message)
+        assertEquals(403, error.error.error.status)
+        assertEquals("test-error", error.error.error.message)
     }
 
     suspend fun <T> assertStatus429TooManyRequests(invoke: suspend (HttpClient) -> SpotifyApiResponse<T>) {
-        val response = invoke(ApiTestClientFactory.errorClient(HttpStatusCode.TooManyRequests))
+        val response = withTestToken { invoke(ApiTestClientFactory.errorClient(HttpStatusCode.TooManyRequests)) }
         assertEquals(429, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(429, error.value.error.status)
-        assertEquals("test-error", error.value.error.message)
+        assertEquals(429, error.error.error.status)
+        assertEquals("test-error", error.error.error.message)
     }
 }

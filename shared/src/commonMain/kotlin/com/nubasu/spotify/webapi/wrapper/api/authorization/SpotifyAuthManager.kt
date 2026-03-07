@@ -95,20 +95,15 @@ class SpotifyAuthManager(
      * @param showDialog Whether to force Spotify consent dialog display.
      * @return PKCE authorization request containing the authorization URL and `state`.
      */
+    @Deprecated(
+        "Use startPkceAuthorization() instead. The async variant is identical to the non-suspend version.",
+        ReplaceWith("startPkceAuthorization(scope, showDialog)"),
+    )
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun startPkceAuthorizationAsync(
         scope: List<String> = emptyList(),
         showDialog: Boolean? = null,
-    ): PkceAuthorizationRequest {
-        val verifier = generateCodeVerifier()
-        val challenge = toBase64Url(Sha256.digest(verifier.encodeToByteArray()))
-        return buildPkceAuthorizationRequest(
-            verifier = verifier,
-            challenge = challenge,
-            scope = scope,
-            showDialog = showDialog,
-        )
-    }
+    ): PkceAuthorizationRequest = startPkceAuthorization(scope = scope, showDialog = showDialog)
 
     /**
      * Starts Authorization Code with PKCE flow asynchronously and launches the authorization URL.
@@ -117,19 +112,15 @@ class SpotifyAuthManager(
      * @param showDialog Whether to force Spotify consent dialog display.
      * @return PKCE authorization request containing the authorization URL and `state`.
      */
+    @Deprecated(
+        "Use startPkceAuthorizationAndLaunch() instead. The async variant is identical to the non-suspend version.",
+        ReplaceWith("startPkceAuthorizationAndLaunch(scope, showDialog)"),
+    )
     @OptIn(ExperimentalEncodingApi::class)
     suspend fun startPkceAuthorizationAsyncAndLaunch(
         scope: List<String> = emptyList(),
         showDialog: Boolean? = null,
-    ): PkceAuthorizationRequest {
-        val request =
-            startPkceAuthorizationAsync(
-                scope = scope,
-                showDialog = showDialog,
-            )
-        launchAuthorizationInAppOrBrowser(request.authorizationUri)
-        return request
-    }
+    ): PkceAuthorizationRequest = startPkceAuthorizationAndLaunch(scope = scope, showDialog = showDialog)
 
     private fun buildPkceAuthorizationRequest(
         verifier: String,
@@ -470,19 +461,20 @@ class SpotifyAuthManager(
      *
      * @return Currently cached token response, or `null` if no token is stored.
      */
-    fun getCurrentToken(): TokenResponse? = tokenResponse
+    suspend fun getCurrentToken(): TokenResponse? = mutex.withLock { tokenResponse }
 
     /**
      * Clears the currently stored token and expiration state.
      *
      * @return No return value.
      */
-    fun clearToken() {
-        tokenResponse = null
-        accessTokenExpiresAtMs = null
-        pendingPkce = null
-        TokenHolder.token = ""
-    }
+    suspend fun clearToken() =
+        mutex.withLock {
+            tokenResponse = null
+            accessTokenExpiresAtMs = null
+            pendingPkce = null
+            TokenHolder.token = ""
+        }
 
     private fun installToken(token: TokenResponse): TokenResponse {
         tokenResponse = token
@@ -506,7 +498,7 @@ class SpotifyAuthManager(
             is SpotifyResponseData.Success -> body.value
             is SpotifyResponseData.Error ->
                 error(
-                    "$context (status=${body.value.error.status}): ${body.value.error.message}",
+                    "$context (status=${body.error.error.status}): ${body.error.error.message}",
                 )
         }
 

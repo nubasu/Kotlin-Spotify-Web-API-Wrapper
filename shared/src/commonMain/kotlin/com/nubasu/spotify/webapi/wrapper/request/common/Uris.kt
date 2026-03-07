@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Uris(
-    val ids: List<String>,
+    val uris: List<String>,
 )

@@ -20,8 +20,8 @@ data class Show(
     val href: String,
     val id: String,
     val images: List<ImageObject>,
-    @SerialName("is_external_hosted")
-    val isExternalHosted: Boolean,
+    @SerialName("is_externally_hosted")
+    val isExternallyHosted: Boolean,
     val languages: List<String>,
     @SerialName("media_type")
     val mediaType: String,

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data class Artists(
     val href: String,
     val limit: Int,
-    val next: String,
+    val next: String?,
     val cursors: Cursors,
     val total: Int,
     val items: List<ArtistObject>,

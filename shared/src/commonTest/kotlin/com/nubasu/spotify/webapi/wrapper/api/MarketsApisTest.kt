@@ -35,7 +35,8 @@ class MarketsApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = MarketsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.MARKETS_MIN))
+            val api =
+                MarketsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.MARKETS_MIN), tokenProvider = { "test-token" })
             val res = api.getAvailableMarkets()
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value

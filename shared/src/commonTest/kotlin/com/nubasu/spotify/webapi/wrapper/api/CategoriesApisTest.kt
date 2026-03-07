@@ -35,7 +35,11 @@ class CategoriesApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = CategoriesApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.BROWSE_CATEGORIES_MIN))
+            val api =
+                CategoriesApis(
+                    ApiTestClientFactory.successClient(body = SpotifyApiFixtures.BROWSE_CATEGORIES_MIN),
+                    tokenProvider = { "test-token" },
+                )
             val res = api.getSeveralBrowseCategories()
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value
