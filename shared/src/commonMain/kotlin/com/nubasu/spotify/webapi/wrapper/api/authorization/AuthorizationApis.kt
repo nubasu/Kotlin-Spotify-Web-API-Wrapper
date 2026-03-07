@@ -1,11 +1,10 @@
 package com.nubasu.spotify.webapi.wrapper.api.authorization
 
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.response.authorization.TokenResponse
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -14,7 +13,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
 import io.ktor.http.parameters
-import io.ktor.serialization.kotlinx.json.json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -24,12 +22,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * Provides Authorization Code, PKCE, Client Credentials, and Refresh Token requests.
  */
 class AuthorizationApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json()
-            }
-        },
+    private val client: HttpClient = SpotifyHttpClientFactory.createAccountsClient(),
     private val authorizeEndpoint: String = "https://accounts.spotify.com/authorize",
     private val tokenEndpoint: String = "https://accounts.spotify.com/api/token",
 ) {

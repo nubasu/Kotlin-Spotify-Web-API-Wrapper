@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.users
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.users.FollowPlaylistRequest
@@ -12,19 +15,16 @@ import com.nubasu.spotify.webapi.wrapper.response.users.User
 import com.nubasu.spotify.webapi.wrapper.response.users.UsersProfile
 import com.nubasu.spotify.webapi.wrapper.response.users.UsersTopItems
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * User profile and follow domain API for Spotify Web API.
@@ -32,22 +32,18 @@ import io.ktor.serialization.kotlinx.json.json
  * Covers current user profile, top items, follows, and public user profiles.
  */
 class UsersApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) { json() }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Gets the Spotify profile of the current user.
      *
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getCurrentUsersProfile(): SpotifyApiResponse<User> {
-        val endpoint = "https://api.spotify.com/v1/me"
         val response =
-            client.get(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.get(SpotifyEndpoints.ME) {
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -70,17 +66,15 @@ class UsersApis(
         limit: Int? = null,
         offset: Int? = null,
     ): SpotifyApiResponse<UsersTopItems> {
-        val endpoint = "https://api.spotify.com/v1/me/top/${type.value}"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom("${SpotifyEndpoints.ME_TOP}/${type.value}")
                     timeRange?.let { parameters.append("time_range", it.value) }
                     limit?.let { parameters.append("limit", it.toString()) }
                     offset?.let { parameters.append("offset", it.toString()) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -92,11 +86,13 @@ class UsersApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getUsersProfile(userId: String): SpotifyApiResponse<UsersProfile> {
-        val endpoint = "https://api.spotify.com/v1/users/$userId"
         val response =
-            client.get(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.get {
+                url {
+                    takeFrom(SpotifyEndpoints.USERS)
+                    appendPathSegments(userId)
+                }
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -115,11 +111,13 @@ class UsersApis(
         playlistId: String,
         public: Boolean = true,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put {
+                url {
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
+                    appendPathSegments(playlistId, "followers")
+                }
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 setBody(FollowPlaylistRequest(public = public))
             }
@@ -136,11 +134,13 @@ class UsersApis(
         "Spotify marks DELETE /v1/playlists/{playlist_id}/followers as deprecated.",
     )
     suspend fun unfollowPlaylist(playlistId: String): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers"
         val response =
-            client.delete(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.delete {
+                url {
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
+                    appendPathSegments(playlistId, "followers")
+                }
+                spotifyAuth()
             }
         return response.toSpotifyBooleanApiResponse()
     }
@@ -164,17 +164,15 @@ class UsersApis(
         require(type == FollowType.ARTIST) {
             "Spotify Get Followed Artists supports only type=artist."
         }
-        val endpoint = "https://api.spotify.com/v1/me/following"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_FOLLOWING)
                     parameters.append("type", type.value)
                     limit?.let { parameters.append("limit", it.toString()) }
                     after?.let { parameters.append("after", it) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -193,16 +191,14 @@ class UsersApis(
         type: FollowType,
         ids: List<String>,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/following"
         val response =
             client.put {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_FOLLOWING)
                     parameters.append("type", type.value)
                     parameters.append("ids", ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyBooleanApiResponse()
     }
@@ -221,16 +217,14 @@ class UsersApis(
         type: FollowType,
         ids: List<String>,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/following"
         val response =
             client.delete {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_FOLLOWING)
                     parameters.append("type", type.value)
                     parameters.append("ids", ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyBooleanApiResponse()
     }
@@ -249,16 +243,14 @@ class UsersApis(
         type: FollowType,
         ids: List<String>,
     ): SpotifyApiResponse<List<Boolean>> {
-        val endpoint = "https://api.spotify.com/v1/me/following/contains"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_FOLLOWING_CONTAINS)
                     parameters.append("type", type.value)
                     parameters.append("ids", ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -277,15 +269,14 @@ class UsersApis(
         playlistId: String,
         ids: List<String>,
     ): SpotifyApiResponse<List<Boolean>> {
-        val endpoint = "https://api.spotify.com/v1/playlists/$playlistId/followers/contains"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
+                    appendPathSegments(playlistId, "followers", "contains")
                     parameters.append("ids", ids.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }

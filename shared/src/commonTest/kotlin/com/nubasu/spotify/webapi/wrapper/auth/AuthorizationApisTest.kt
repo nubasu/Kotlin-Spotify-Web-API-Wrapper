@@ -469,8 +469,8 @@ class AuthorizationApisTest {
         val response = call(unauthorized)
         assertEquals(401, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(401, error.value.error.status)
-        assertEquals("x", error.value.error.message)
+        assertEquals(401, error.error.error.status)
+        assertEquals("x", error.error.error.message)
     }
 
     private suspend fun assertStatus403Forbidden(call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>) {
@@ -478,8 +478,8 @@ class AuthorizationApisTest {
         val response = call(forbidden)
         assertEquals(403, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(403, error.value.error.status)
-        assertEquals("x", error.value.error.message)
+        assertEquals(403, error.error.error.status)
+        assertEquals("x", error.error.error.message)
     }
 
     private suspend fun assertStatus429TooManyRequests(call: suspend (AuthorizationApis) -> SpotifyApiResponse<TokenResponse>) {
@@ -487,8 +487,8 @@ class AuthorizationApisTest {
         val response = call(tooMany)
         assertEquals(429, response.statusCode)
         val error = response.data as SpotifyResponseData.Error
-        assertEquals(429, error.value.error.status)
-        assertEquals("x", error.value.error.message)
+        assertEquals(429, error.error.error.status)
+        assertEquals("x", error.error.error.message)
     }
 
     private fun statusEngine(status: HttpStatusCode): MockEngine {

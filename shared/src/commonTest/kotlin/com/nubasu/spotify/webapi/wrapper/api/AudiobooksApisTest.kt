@@ -11,58 +11,58 @@ class AudiobooksApisTest {
     @Test
     fun nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
     fun nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
     fun nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
     fun nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = AudiobooksApis(ApiTestClientFactory.successClient())
+            val api = AudiobooksApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.saveAudiobooksForCurrentUser(Ids(listOf("a")))
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)
         }
 
     @Test
-    fun getAnAudiobook_nonSuccess_throws_status201_created() =
+    fun getAudiobook_nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
-    fun getAnAudiobook_nonSuccess_throws_status401_unauthorized() =
+    fun getAudiobook_nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
-    fun getAnAudiobook_nonSuccess_throws_status403_forbidden() =
+    fun getAudiobook_nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test
-    fun getAnAudiobook_nonSuccess_throws_status429_tooManyRequests() =
+    fun getAudiobook_nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> AudiobooksApis(client).getAnAudiobook("id") }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> AudiobooksApis(client).getAudiobook("id") }
         }
 
     @Test

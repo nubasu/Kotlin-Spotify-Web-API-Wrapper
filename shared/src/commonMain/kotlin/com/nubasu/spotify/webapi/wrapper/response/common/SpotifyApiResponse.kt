@@ -23,8 +23,14 @@ sealed class SpotifyResponseData<out T> {
     ) : SpotifyResponseData<T>()
 
     data class Error(
-        val value: SpotifyErrorResponse,
-    ) : SpotifyResponseData<Nothing>()
+        val error: SpotifyErrorResponse,
+    ) : SpotifyResponseData<Nothing>() {
+        @Deprecated(
+            "Use `error` instead.",
+            ReplaceWith("error"),
+        )
+        val value: SpotifyErrorResponse get() = error
+    }
 }
 
 data class SpotifyApiResponse<T>(

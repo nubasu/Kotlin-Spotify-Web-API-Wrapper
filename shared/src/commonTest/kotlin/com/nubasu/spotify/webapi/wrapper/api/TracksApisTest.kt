@@ -39,7 +39,7 @@ class TracksApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = TracksApis(ApiTestClientFactory.successClient())
+            val api = TracksApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.saveTracksForCurrentUser(SaveTracksForCurrentUserRequest(ids = listOf("t1")))
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)

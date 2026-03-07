@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.playlists
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
@@ -11,7 +14,7 @@ import com.nubasu.spotify.webapi.wrapper.request.playlists.UpdatePlaylistItemsRe
 import com.nubasu.spotify.webapi.wrapper.response.common.ImageObject
 import com.nubasu.spotify.webapi.wrapper.response.common.SnapshotIdResponse
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyApiResponse
-import com.nubasu.spotify.webapi.wrapper.response.playlists.CategorysPlaylists
+import com.nubasu.spotify.webapi.wrapper.response.playlists.CategoryPlaylists
 import com.nubasu.spotify.webapi.wrapper.response.playlists.CurrentUsersPlaylists
 import com.nubasu.spotify.webapi.wrapper.response.playlists.FeaturedPlaylists
 import com.nubasu.spotify.webapi.wrapper.response.playlists.Playlist
@@ -20,11 +23,9 @@ import com.nubasu.spotify.webapi.wrapper.response.playlists.SimplifiedPlaylistOb
 import com.nubasu.spotify.webapi.wrapper.response.playlists.UsersPlaylist
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
+import com.nubasu.spotify.webapi.wrapper.utils.applyLimitOffsetPaging
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
@@ -36,7 +37,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Playlist domain API for Spotify Web API.
@@ -44,11 +44,9 @@ import io.ktor.serialization.kotlinx.json.json
  * Covers playlist metadata, items, creation, cover images, and browse playlist endpoints.
  */
 class PlaylistsApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) { json() }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Gets a Spotify playlist by playlist ID.
      *
@@ -64,18 +62,16 @@ class PlaylistsApis(
         fields: String? = null,
         additionalTypes: List<String> = listOf("track", "episode"),
     ): SpotifyApiResponse<Playlist> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId)
                     market?.let { parameters.append("market", it.code) }
                     fields?.let { parameters.append("fields", it) }
                     parameters.append("additional_types", additionalTypes.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -91,15 +87,13 @@ class PlaylistsApis(
         playlistId: String,
         body: ChangePlaylistDetailsRequest,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.put {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }
@@ -123,20 +117,17 @@ class PlaylistsApis(
         fields: String? = null,
         additionalTypes: List<String> = listOf("track", "episode"),
     ): SpotifyApiResponse<PlaylistItem> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "items")
                     market?.let { parameters.append("market", it.code) }
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                     fields?.let { parameters.append("fields", it) }
                     parameters.append("additional_types", additionalTypes.joinToString(","))
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -154,16 +145,14 @@ class PlaylistsApis(
         body: UpdatePlaylistItemsRequest? = null,
         uris: List<String>? = null,
     ): SpotifyApiResponse<SnapshotIdResponse> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.put {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "items")
                     uris?.let { parameters.append("uris", it.joinToString(",")) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 body?.let { setBody(it) }
             }
@@ -185,17 +174,15 @@ class PlaylistsApis(
         uris: List<String>? = null,
         position: Int? = null,
     ): SpotifyApiResponse<SnapshotIdResponse> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.post {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "items")
                     uris?.let { parameters.append("uris", it.joinToString(",")) }
                     position?.let { parameters.append("position", it.toString()) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 body?.let { setBody(it) }
             }
@@ -213,15 +200,13 @@ class PlaylistsApis(
         playlistId: String,
         body: RemovePlaylistItemsRequest,
     ): SpotifyApiResponse<SnapshotIdResponse> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.delete {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "items")
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }
@@ -235,16 +220,13 @@ class PlaylistsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getCurrentUsersPlaylists(pagingOptions: PagingOptions = PagingOptions()): SpotifyApiResponse<CurrentUsersPlaylists> {
-        val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    takeFrom(SpotifyEndpoints.ME_PLAYLISTS)
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -257,24 +239,21 @@ class PlaylistsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     @Deprecated(
-        "Spotify marks GET /v1/users/{user_id}/playlists as deprecated. Prefer getCurrentUsersPlaylists() when possible.",
+        "Spotify recommends POST /v1/me/playlists. Use createPlaylist(body).",
         ReplaceWith("getCurrentUsersPlaylists(pagingOptions)"),
     )
     suspend fun getUsersPlaylists(
         userId: String,
         pagingOptions: PagingOptions = PagingOptions(),
     ): SpotifyApiResponse<UsersPlaylist> {
-        val endpoint = "https://api.spotify.com/v1/users"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.USERS)
                     appendPathSegments(userId, "playlists")
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -286,12 +265,10 @@ class PlaylistsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun createPlaylist(body: CreatePlaylistRequest): SpotifyApiResponse<SimplifiedPlaylistObject> {
-        val endpoint = "https://api.spotify.com/v1/me/playlists"
         val response =
             client.post {
-                url { takeFrom(endpoint) }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                url { takeFrom(SpotifyEndpoints.ME_PLAYLISTS) }
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }
@@ -332,19 +309,16 @@ class PlaylistsApis(
         pagingOptions: PagingOptions = PagingOptions(),
         country: CountryCode? = null,
     ): SpotifyApiResponse<FeaturedPlaylists> {
-        val endpoint = "https://api.spotify.com/v1/browse/featured-playlists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom("${SpotifyEndpoints.BASE}/browse/featured-playlists")
                     country?.let { parameters.append("country", it.code) }
                     locale?.let { parameters.append("locale", it) }
                     timestamp?.let { parameters.append("timestamp", it) }
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -360,23 +334,20 @@ class PlaylistsApis(
     @Deprecated(
         "Spotify marks GET /v1/browse/categories/{category_id}/playlists as deprecated.",
     )
-    suspend fun getCategorysPlaylists(
+    suspend fun getCategoryPlaylists(
         categoryId: String,
         pagingOptions: PagingOptions = PagingOptions(),
         country: CountryCode? = null,
-    ): SpotifyApiResponse<CategorysPlaylists> {
-        val endpoint = "https://api.spotify.com/v1/browse/categories"
+    ): SpotifyApiResponse<CategoryPlaylists> {
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.CATEGORIES)
                     appendPathSegments(categoryId, "playlists")
                     country?.let { parameters.append("country", it.code) }
-                    pagingOptions.limit?.let { parameters.append("limit", it.toString()) }
-                    pagingOptions.offset?.let { parameters.append("offset", it.toString()) }
+                    applyLimitOffsetPaging(pagingOptions)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -388,15 +359,13 @@ class PlaylistsApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getPlaylistCoverImage(playlistId: String): SpotifyApiResponse<List<ImageObject>> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "images")
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -412,14 +381,13 @@ class PlaylistsApis(
         playlistId: String,
         imageBase64Jpeg: String,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/playlists"
         val response =
             client.put {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.PLAYLISTS)
                     appendPathSegments(playlistId, "images")
                 }
-                bearerAuth(TokenHolder.token)
+                spotifyAuth()
                 header(HttpHeaders.ContentType, "image/jpeg")
                 setBody(imageBase64Jpeg)
             }

@@ -10,12 +10,25 @@ import com.nubasu.spotify.webapi.wrapper.request.playlists.RemovePlaylistItemsRe
 import com.nubasu.spotify.webapi.wrapper.request.playlists.TrackUri
 import com.nubasu.spotify.webapi.wrapper.request.playlists.UpdatePlaylistItemsRequest
 import com.nubasu.spotify.webapi.wrapper.response.common.SpotifyResponseData
+import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PlaylistsApisTest {
+    @BeforeTest
+    fun setUp() {
+        TokenHolder.token = "test-token"
+    }
+
+    @AfterTest
+    fun tearDown() {
+        TokenHolder.token = ""
+    }
+
     @Test
     fun nonSuccess_throws_status201_created() =
         runTest {
@@ -43,7 +56,7 @@ class PlaylistsApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = PlaylistsApis(ApiTestClientFactory.successClient())
+            val api = PlaylistsApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.changePlaylistDetails("playlist-id", ChangePlaylistDetailsRequest(name = "n"))
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)
@@ -372,27 +385,27 @@ class PlaylistsApisTest {
         }
 
     @Test
-    fun getCategorysPlaylists_nonSuccess_throws_status201_created() =
+    fun getCategoryPlaylists_nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> PlaylistsApis(client).getCategorysPlaylists("party") }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> PlaylistsApis(client).getCategoryPlaylists("party") }
         }
 
     @Test
-    fun getCategorysPlaylists_nonSuccess_throws_status401_unauthorized() =
+    fun getCategoryPlaylists_nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> PlaylistsApis(client).getCategorysPlaylists("party") }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> PlaylistsApis(client).getCategoryPlaylists("party") }
         }
 
     @Test
-    fun getCategorysPlaylists_nonSuccess_throws_status403_forbidden() =
+    fun getCategoryPlaylists_nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> PlaylistsApis(client).getCategorysPlaylists("party") }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> PlaylistsApis(client).getCategoryPlaylists("party") }
         }
 
     @Test
-    fun getCategorysPlaylists_nonSuccess_throws_status429_tooManyRequests() =
+    fun getCategoryPlaylists_nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> PlaylistsApis(client).getCategorysPlaylists("party") }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> PlaylistsApis(client).getCategoryPlaylists("party") }
         }
 
     @Test

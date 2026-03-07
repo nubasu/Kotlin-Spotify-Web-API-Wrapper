@@ -38,7 +38,8 @@ class ArtistsApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = ArtistsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.ARTIST_MIN))
+            val api =
+                ArtistsApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.ARTIST_MIN), tokenProvider = { "test-token" })
             val res = api.getArtist("id")
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value

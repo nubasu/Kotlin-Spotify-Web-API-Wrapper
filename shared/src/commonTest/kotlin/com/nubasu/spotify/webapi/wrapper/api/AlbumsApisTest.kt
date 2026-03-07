@@ -36,7 +36,7 @@ class AlbumsApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = AlbumsApis(ApiTestClientFactory.successClient())
+            val api = AlbumsApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.saveAlbumsForCurrentUser(Ids(listOf("a", "b")))
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)

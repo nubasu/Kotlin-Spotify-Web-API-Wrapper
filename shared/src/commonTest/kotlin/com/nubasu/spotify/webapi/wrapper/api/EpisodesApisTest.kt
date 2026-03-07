@@ -35,7 +35,7 @@ class EpisodesApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = EpisodesApis(ApiTestClientFactory.successClient())
+            val api = EpisodesApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.saveEpisodesForCurrentUser(Ids(listOf("e1")))
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)

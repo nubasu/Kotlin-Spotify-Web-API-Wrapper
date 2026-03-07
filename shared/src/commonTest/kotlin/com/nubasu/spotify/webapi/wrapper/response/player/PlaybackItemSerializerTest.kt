@@ -46,7 +46,7 @@ class PlaybackItemSerializerTest {
                     "href": "h",
                     "id": "s1",
                     "images": [{"url":"u","height":1,"width":1}],
-                    "is_external_hosted": false,
+                    "is_externally_hosted": false,
                     "languages": ["en"],
                     "media_type": "audio",
                     "name": "show",

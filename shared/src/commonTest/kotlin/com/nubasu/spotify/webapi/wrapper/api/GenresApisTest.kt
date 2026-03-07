@@ -39,7 +39,7 @@ class GenresApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = GenresApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.GENRES_MIN))
+            val api = GenresApis(ApiTestClientFactory.successClient(body = SpotifyApiFixtures.GENRES_MIN), tokenProvider = { "test-token" })
             val res = api.getAvailableGenreSeeds()
             assertEquals(201, res.statusCode)
             val data = (res.data as SpotifyResponseData.Success).value

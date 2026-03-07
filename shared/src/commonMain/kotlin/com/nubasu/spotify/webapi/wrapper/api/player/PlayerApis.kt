@@ -1,5 +1,8 @@
 package com.nubasu.spotify.webapi.wrapper.api.player
 
+import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
+import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
 import com.nubasu.spotify.webapi.wrapper.request.common.Uris
@@ -16,11 +19,8 @@ import com.nubasu.spotify.webapi.wrapper.response.player.RecentlyPlayedTracks
 import com.nubasu.spotify.webapi.wrapper.response.player.UsersQueue
 import com.nubasu.spotify.webapi.wrapper.utils.CountryCode
 import com.nubasu.spotify.webapi.wrapper.utils.TokenHolder
+import com.nubasu.spotify.webapi.wrapper.utils.TokenProvider
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -28,7 +28,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
 
 /**
  * Player domain API for Spotify Web API.
@@ -36,13 +35,9 @@ import io.ktor.serialization.kotlinx.json.json
  * Covers playback state, queue, device transfer, and playback control commands.
  */
 class PlayerApis(
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json()
-            }
-        },
-) {
+    client: HttpClient = SpotifyHttpClientFactory.create(),
+    tokenProvider: TokenProvider = TokenHolder,
+) : BaseSpotifyApi(client, tokenProvider) {
     /**
      * Gets the current playback state for the current user.
      *
@@ -54,16 +49,14 @@ class PlayerApis(
         market: CountryCode? = null,
         additionalTypes: String? = null,
     ): SpotifyApiResponse<PlaybackState> {
-        val endpoint = "https://api.spotify.com/v1/me/player"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_PLAYER)
                     market?.let { parameters.append("market", it.code) }
                     additionalTypes?.let { parameters.append("additional_types", it) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -79,11 +72,9 @@ class PlayerApis(
         deviceIds: DeviceIds,
         play: Boolean = false,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 setBody(
                     TransferPlaybackRequest(
@@ -101,14 +92,12 @@ class PlayerApis(
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
     suspend fun getAvailableDevices(): SpotifyApiResponse<AvailableDevices> {
-        val endpoint = "https://api.spotify.com/v1/me/player/devices"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_PLAYER_DEVICES)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -124,16 +113,14 @@ class PlayerApis(
         market: CountryCode? = null,
         additionalTypes: String? = null,
     ): SpotifyApiResponse<CurrentlyPlayingTrack> {
-        val endpoint = "https://api.spotify.com/v1/me/player/currently-playing"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_PLAYER_CURRENTLY_PLAYING)
                     market?.let { parameters.append("market", it.code) }
                     additionalTypes?.let { parameters.append("additional_types", it) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -155,19 +142,16 @@ class PlayerApis(
         offset: Offset? = null,
         positionMs: Int? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/play"
         val body =
             StartResumePlaybackRequest(
                 contextUri = contextUri,
-                uris = uris?.ids,
+                uris = uris?.uris,
                 offset = offset,
                 positionMs = positionMs,
             )
-
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_PLAY) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     deviceId?.let { parameters.append("device_id", it) }
@@ -184,11 +168,9 @@ class PlayerApis(
      * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
      */
     suspend fun pausePlayback(deviceId: String? = null): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/pause"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_PAUSE) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     deviceId?.let { parameters.append("device_id", it) }
@@ -204,11 +186,9 @@ class PlayerApis(
      * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
      */
     suspend fun skipToNext(deviceId: String? = null): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/next"
         val response =
-            client.post(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.post(SpotifyEndpoints.ME_PLAYER_NEXT) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     deviceId?.let { parameters.append("device_id", it) }
@@ -224,11 +204,9 @@ class PlayerApis(
      * @return Wrapped Spotify API response. `data` is `true` when Spotify accepted the operation.
      */
     suspend fun skipToPrevious(deviceId: String? = null): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/previous"
         val response =
-            client.post(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.post(SpotifyEndpoints.ME_PLAYER_PREVIOUS) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     deviceId?.let { parameters.append("device_id", it) }
@@ -248,11 +226,9 @@ class PlayerApis(
         positionMs: Int,
         deviceId: String? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/seek"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_SEEK) {
+                spotifyAuth()
                 url {
                     parameters.append("position_ms", positionMs.toString())
                     deviceId?.let { parameters.append("device_id", it) }
@@ -272,11 +248,9 @@ class PlayerApis(
         state: State,
         deviceId: String? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/repeat"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_REPEAT) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     parameters.append("state", state.repeatMode.value)
@@ -297,11 +271,9 @@ class PlayerApis(
         volumePercent: Int,
         deviceId: String? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/volume"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_VOLUME) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     parameters.append("volume_percent", volumePercent.toString())
@@ -322,11 +294,9 @@ class PlayerApis(
         state: Boolean,
         deviceId: String? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/shuffle"
         val response =
-            client.put(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.put(SpotifyEndpoints.ME_PLAYER_SHUFFLE) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     parameters.append("state", state.toString())
@@ -349,17 +319,15 @@ class PlayerApis(
         after: Long? = null,
         before: Long? = null,
     ): SpotifyApiResponse<RecentlyPlayedTracks> {
-        val endpoint = "https://api.spotify.com/v1/me/player/recently-played"
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
-                    limit?.let { parameters.append("limit", limit.toString()) }
-                    after?.let { parameters.append("after", after.toString()) }
-                    before?.let { parameters.append("before", before.toString()) }
+                    takeFrom(SpotifyEndpoints.ME_PLAYER_RECENTLY_PLAYED)
+                    limit?.let { parameters.append("limit", it.toString()) }
+                    after?.let { parameters.append("after", it.toString()) }
+                    before?.let { parameters.append("before", it.toString()) }
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -392,15 +360,13 @@ class PlayerApis(
      *
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
-    suspend fun getTheUsersQueue(): SpotifyApiResponse<UsersQueue> {
-        val endpoint = "https://api.spotify.com/v1/me/player/queue"
+    suspend fun getUsersQueue(): SpotifyApiResponse<UsersQueue> {
         val response =
             client.get {
                 url {
-                    takeFrom(endpoint)
+                    takeFrom(SpotifyEndpoints.ME_PLAYER_QUEUE)
                 }
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+                spotifyAuth()
             }
         return response.toSpotifyApiResponse()
     }
@@ -416,11 +382,9 @@ class PlayerApis(
         uri: String,
         deviceId: String? = null,
     ): SpotifyApiResponse<Boolean> {
-        val endpoint = "https://api.spotify.com/v1/me/player/queue"
         val response =
-            client.post(endpoint) {
-                bearerAuth(TokenHolder.token)
-                accept(ContentType.Application.Json)
+            client.post(SpotifyEndpoints.ME_PLAYER_QUEUE) {
+                spotifyAuth()
                 contentType(ContentType.Application.Json)
                 url {
                     parameters.append("uri", uri)

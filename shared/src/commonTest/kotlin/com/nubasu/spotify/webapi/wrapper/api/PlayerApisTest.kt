@@ -38,7 +38,7 @@ class PlayerApisTest {
     @Test
     fun created201_returnsStatusAndBody() =
         runTest {
-            val api = PlayerApis(ApiTestClientFactory.successClient())
+            val api = PlayerApis(ApiTestClientFactory.successClient(), tokenProvider = { "test-token" })
             val res = api.pausePlayback()
             assertEquals(201, res.statusCode)
             assertEquals(true, (res.data as SpotifyResponseData.Success).value)
@@ -365,27 +365,27 @@ class PlayerApisTest {
         }
 
     @Test
-    fun getTheUsersQueue_nonSuccess_throws_status201_created() =
+    fun getUsersQueue_nonSuccess_throws_status201_created() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus201Created { client -> PlayerApis(client).getTheUsersQueue() }
+            ApiStatusCaseAsserts.assertStatus201Created { client -> PlayerApis(client).getUsersQueue() }
         }
 
     @Test
-    fun getTheUsersQueue_nonSuccess_throws_status401_unauthorized() =
+    fun getUsersQueue_nonSuccess_throws_status401_unauthorized() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> PlayerApis(client).getTheUsersQueue() }
+            ApiStatusCaseAsserts.assertStatus401Unauthorized { client -> PlayerApis(client).getUsersQueue() }
         }
 
     @Test
-    fun getTheUsersQueue_nonSuccess_throws_status403_forbidden() =
+    fun getUsersQueue_nonSuccess_throws_status403_forbidden() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> PlayerApis(client).getTheUsersQueue() }
+            ApiStatusCaseAsserts.assertStatus403Forbidden { client -> PlayerApis(client).getUsersQueue() }
         }
 
     @Test
-    fun getTheUsersQueue_nonSuccess_throws_status429_tooManyRequests() =
+    fun getUsersQueue_nonSuccess_throws_status429_tooManyRequests() =
         runTest {
-            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> PlayerApis(client).getTheUsersQueue() }
+            ApiStatusCaseAsserts.assertStatus429TooManyRequests { client -> PlayerApis(client).getUsersQueue() }
         }
 
     @Test
