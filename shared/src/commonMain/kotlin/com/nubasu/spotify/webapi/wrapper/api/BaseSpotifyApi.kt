@@ -26,7 +26,7 @@ abstract class BaseSpotifyApi(
      * Call this inside every `client.get/put/post/delete { }` block.
      */
     protected fun HttpRequestBuilder.spotifyAuth() {
-        bearerAuth(tokenProvider.getToken())
+        bearerAuth(tokenProvider.provideToken())
         accept(ContentType.Application.Json)
     }
 }

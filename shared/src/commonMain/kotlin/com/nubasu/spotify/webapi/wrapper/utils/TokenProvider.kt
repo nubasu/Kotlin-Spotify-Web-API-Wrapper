@@ -7,5 +7,5 @@ package com.nubasu.spotify.webapi.wrapper.utils
  * The default implementation is [TokenHolder].
  */
 fun interface TokenProvider {
-    fun getToken(): String
+    fun provideToken(): String
 }
