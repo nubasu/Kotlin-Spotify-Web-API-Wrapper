@@ -41,7 +41,7 @@ internal object ApiTestClientFactory {
     private fun client(engine: MockEngine): HttpClient =
         HttpClient(engine) {
             install(ContentNegotiation) {
-                json()
+                json(SpotifyJson)
             }
         }
 }

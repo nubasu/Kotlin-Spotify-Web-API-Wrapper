@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UsersQueue(
     @SerialName("currently_playing")
-    val currentlyPlaying: PlaybackItem,
-    val queue: List<PlaybackItem>,
+    val currentlyPlaying: PlaybackItem? = null,
+    val queue: List<PlaybackItem> = emptyList(),
 )

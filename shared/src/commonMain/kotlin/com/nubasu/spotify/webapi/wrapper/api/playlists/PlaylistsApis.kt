@@ -5,6 +5,7 @@ import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
 import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.common.AdditionalType
 import com.nubasu.spotify.webapi.wrapper.request.common.PagingOptions
 import com.nubasu.spotify.webapi.wrapper.request.playlists.AddItemsToPlaylistRequest
 import com.nubasu.spotify.webapi.wrapper.request.playlists.ChangePlaylistDetailsRequest
@@ -60,7 +61,7 @@ class PlaylistsApis(
         playlistId: String,
         market: CountryCode? = null,
         fields: String? = null,
-        additionalTypes: List<String> = listOf("track", "episode"),
+        additionalTypes: List<AdditionalType> = listOf(AdditionalType.TRACK, AdditionalType.EPISODE),
     ): SpotifyApiResponse<Playlist> {
         val response =
             client.get {
@@ -69,7 +70,9 @@ class PlaylistsApis(
                     appendPathSegments(playlistId)
                     market?.let { parameters.append("market", it.code) }
                     fields?.let { parameters.append("fields", it) }
-                    parameters.append("additional_types", additionalTypes.joinToString(","))
+                    if (additionalTypes.isNotEmpty()) {
+                        parameters.append("additional_types", additionalTypes.joinToString(",") { it.value })
+                    }
                 }
                 spotifyAuth()
             }
@@ -115,7 +118,7 @@ class PlaylistsApis(
         market: CountryCode? = null,
         pagingOptions: PagingOptions = PagingOptions(),
         fields: String? = null,
-        additionalTypes: List<String> = listOf("track", "episode"),
+        additionalTypes: List<AdditionalType> = listOf(AdditionalType.TRACK, AdditionalType.EPISODE),
     ): SpotifyApiResponse<PlaylistItem> {
         val response =
             client.get {
@@ -125,7 +128,9 @@ class PlaylistsApis(
                     market?.let { parameters.append("market", it.code) }
                     applyLimitOffsetPaging(pagingOptions)
                     fields?.let { parameters.append("fields", it) }
-                    parameters.append("additional_types", additionalTypes.joinToString(","))
+                    if (additionalTypes.isNotEmpty()) {
+                        parameters.append("additional_types", additionalTypes.joinToString(",") { it.value })
+                    }
                 }
                 spotifyAuth()
             }
