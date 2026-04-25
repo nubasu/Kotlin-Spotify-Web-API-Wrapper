@@ -6,7 +6,7 @@ import com.nubasu.spotify.webapi.wrapper.request.common.Ids
 
 val api = AudiobooksApis()
 
-api.getAnAudiobook("audiobook-id")
+api.getAudiobook("audiobook-id")
 api.getSeveralAudiobooks(listOf("audiobook-1", "audiobook-2"))
 api.getAudiobookChapters("audiobook-id")
 api.getUsersSavedAudiobooks()

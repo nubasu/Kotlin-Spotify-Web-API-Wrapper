@@ -22,7 +22,7 @@ api.getUsersPlaylists("user-id")
 api.createPlaylist(CreatePlaylistRequest(name = "My Playlist"))
 api.createPlaylist("user-id", CreatePlaylistRequest(name = "My Playlist"))
 api.getFeaturedPlaylists()
-api.getCategorysPlaylists("party")
+api.getCategoryPlaylists("party")
 api.getPlaylistCoverImage("playlist-id")
 api.addCustomPlaylistCoverImage("playlist-id", "base64-jpeg")
 ```

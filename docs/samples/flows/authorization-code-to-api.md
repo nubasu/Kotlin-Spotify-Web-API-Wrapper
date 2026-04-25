@@ -33,7 +33,7 @@ suspend fun authorizationCodeFlow(redirectedUri: String) {
     val me = usersApis.getCurrentUsersProfile()
     when (val data = me.data) {
         is SpotifyResponseData.Success -> println("displayName=${data.value.displayName}")
-        is SpotifyResponseData.Error -> println("error=${data.value.error.message}")
+        is SpotifyResponseData.Error -> println("error=${data.error.error.message}")
     }
 }
 ```

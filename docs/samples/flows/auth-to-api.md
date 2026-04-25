@@ -32,7 +32,7 @@ suspend fun authThenCallApi(redirectedUri: String) {
 
     when (val data = response.data) {
         is SpotifyResponseData.Success -> println("Album: ${data.value.name}")
-        is SpotifyResponseData.Error -> println("Error: ${data.value.error.message}")
+        is SpotifyResponseData.Error -> println("Error: ${data.error.error.message}")
     }
 }
 ```
