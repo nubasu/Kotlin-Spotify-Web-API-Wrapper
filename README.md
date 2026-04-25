@@ -51,7 +51,7 @@ Dependency coordinates:
 
 ```toml
 [versions]
-kotlinSpotifyWebApiWrapper = "0.1.0"
+kotlinSpotifyWebApiWrapper = "1.0.0"
 
 [libraries]
 kotlin-spotify-web-api-wrapper = { module = "io.github.nubasu:kotlin-spotify-web-api-wrapper", version.ref = "kotlinSpotifyWebApiWrapper" }
@@ -77,7 +77,7 @@ repositories {
 }
 
 commonMain.dependencies {
-    implementation("io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0")
+    implementation("io.github.nubasu:kotlin-spotify-web-api-wrapper:1.0.0")
    
 }
 ```
@@ -90,7 +90,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:0.1.0'
+    implementation 'io.github.nubasu:kotlin-spotify-web-api-wrapper:1.0.0'
 }
 ```
 
