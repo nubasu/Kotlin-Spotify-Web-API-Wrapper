@@ -31,7 +31,9 @@ class SearchApis(
      * @param q Search query text sent to Spotify catalog search.
      * @param types Resource types to include in the Spotify search (`album`, `artist`, `track`, `playlist`, etc.).
      * @param market Market (country) code used to localize and filter content.
-     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
+     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints. As of February 2026, Spotify
+     *   lowered the search `limit` maximum from 50 to 10 and the default from 20 to 5. Values above 10 will be rejected
+     *   by Spotify with a 400 error.
      * @param includeExternalAudio Whether to include externally hosted audio in search results (`include_external=audio`).
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */

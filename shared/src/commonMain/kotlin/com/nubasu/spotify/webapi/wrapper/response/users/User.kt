@@ -7,19 +7,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    val country: String,
+    val country: String? = null,
     @SerialName("display_name")
-    val displayName: String,
-    val email: String,
+    val displayName: String? = null,
+    val email: String? = null,
     @SerialName("explicit_content")
-    val explicitContent: ExplicitContent,
+    val explicitContent: ExplicitContent? = null,
     @SerialName("external_urls")
     val externalUrls: ExternalUrls,
-    val followers: Followers,
+    val followers: Followers? = null,
     val href: String,
     val id: String,
-    val images: List<ImageObject>,
-    val product: String,
+    val images: List<ImageObject> = emptyList(),
+    val product: String? = null,
     val type: String,
     val uri: String,
 )
