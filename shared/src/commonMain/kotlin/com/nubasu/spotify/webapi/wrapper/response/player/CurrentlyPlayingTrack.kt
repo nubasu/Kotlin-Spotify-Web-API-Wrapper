@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class CurrentlyPlayingTrack(
     val device: Device? = null,
     @SerialName("repeat_state")
-    val repeatState: String? = null,
+    val repeatState: RepeatState? = null,
     @SerialName("shuffle_state")
     val shuffleState: Boolean? = null,
     val context: Context? = null,
@@ -18,6 +18,6 @@ data class CurrentlyPlayingTrack(
     val isPlaying: Boolean? = null,
     val item: PlaybackItem? = null,
     @SerialName("currently_playing_type")
-    val currentlyPlayingType: String? = null,
+    val currentlyPlayingType: CurrentlyPlayingType? = null,
     val actions: Actions? = null,
 )
