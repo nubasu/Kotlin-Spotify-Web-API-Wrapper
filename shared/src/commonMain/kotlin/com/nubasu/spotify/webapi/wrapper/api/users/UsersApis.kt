@@ -57,9 +57,6 @@ class UsersApis(
      * @param offset Index of the first item to return for paging.
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
-    @Deprecated(
-        "Spotify marks GET /v1/me/top/{type} as deprecated.",
-    )
     suspend fun getUsersTopItems(
         type: TopItemType,
         timeRange: TimeRange? = null,
@@ -85,6 +82,9 @@ class UsersApis(
      * @param userId Spotify user ID.
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
+    @Deprecated(
+        "Spotify marks GET /v1/users/{user_id} as deprecated (removed in February 2026 changelog).",
+    )
     suspend fun getUsersProfile(userId: String): SpotifyApiResponse<UsersProfile> {
         val response =
             client.get {
@@ -153,9 +153,6 @@ class UsersApis(
      * @param after Cursor ID of the last artist from the previous page (`after` parameter for follow pagination).
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
-    @Deprecated(
-        "Spotify marks GET /v1/me/following as deprecated.",
-    )
     suspend fun getFollowedArtists(
         type: FollowType = FollowType.ARTIST,
         limit: Int? = null,

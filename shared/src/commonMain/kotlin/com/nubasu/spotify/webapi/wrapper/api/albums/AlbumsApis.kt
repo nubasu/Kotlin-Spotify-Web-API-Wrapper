@@ -177,6 +177,9 @@ class AlbumsApis(
      * @param ids Spotify IDs of target resources (comma-separated at request time).
      * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
      */
+    @Deprecated(
+        "Spotify marks GET /v1/me/albums/contains as deprecated. Use checkUsersSavedItems in LibraryApis.",
+    )
     suspend fun checkUsersSavedAlbums(ids: Ids): SpotifyApiResponse<List<Boolean>> {
         val response =
             client.get {
@@ -196,6 +199,9 @@ class AlbumsApis(
      * @param country Country code used for market-specific filtering.
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
+    @Deprecated(
+        "Spotify marks GET /v1/browse/new-releases as deprecated.",
+    )
     suspend fun getNewReleases(
         pagingOptions: PagingOptions = PagingOptions(),
         country: CountryCode? = null,

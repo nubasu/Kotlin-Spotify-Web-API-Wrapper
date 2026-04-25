@@ -28,29 +28,6 @@ class LibraryApis(
     tokenProvider: TokenProvider = TokenHolder,
 ) : BaseSpotifyApi(client, tokenProvider) {
     /**
-     * Gets the current user's saved library entries.
-     *
-     * @param market Market (country) code used to localize and filter content.
-     * @param pagingOptions Paging options (`limit`, `offset`) used for paged endpoints.
-     * @return Wrapped Spotify API response with status code and parsed Spotify payload.
-     */
-    suspend fun getUsersSavedLibrary(
-        market: CountryCode? = null,
-        pagingOptions: PagingOptions = PagingOptions(),
-    ): SpotifyApiResponse<UsersSavedLibrary> {
-        val response =
-            client.get {
-                url {
-                    takeFrom(SpotifyEndpoints.ME_LIBRARY)
-                    market?.let { parameters.append("market", it.code) }
-                    applyLimitOffsetPaging(pagingOptions)
-                }
-                spotifyAuth()
-            }
-        return response.toSpotifyApiResponse()
-    }
-
-    /**
      * Saves items to the current user's library by URI.
      *
      * @param uris Spotify URIs of target resources.

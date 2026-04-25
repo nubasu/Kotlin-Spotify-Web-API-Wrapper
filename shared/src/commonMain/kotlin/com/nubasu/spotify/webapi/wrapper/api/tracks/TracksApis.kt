@@ -160,6 +160,9 @@ class TracksApis(
      * @param ids Spotify IDs of target resources (comma-separated at request time).
      * @return Wrapped Spotify API response. `data` contains per-item boolean flags from Spotify.
      */
+    @Deprecated(
+        "Spotify marks GET /v1/me/tracks/contains as deprecated. Use checkUsersSavedItems in LibraryApis.",
+    )
     suspend fun checkUsersSavedTracks(ids: Ids): SpotifyApiResponse<List<Boolean>> {
         val response =
             client.get {
@@ -244,6 +247,9 @@ class TracksApis(
      * @param tunable Optional recommendation tuning attributes (`min_*`, `max_*`, `target_*` audio features).
      * @return Wrapped Spotify API response with status code and parsed Spotify payload.
      */
+    @Deprecated(
+        "Spotify marks GET /v1/recommendations as deprecated.",
+    )
     suspend fun getRecommendations(
         seeds: RecommendationSeeds,
         market: CountryCode? = null,
