@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class PlaybackState(
     val device: Device? = null,
     @SerialName("repeat_state")
-    val repeatState: String? = null,
+    val repeatState: RepeatState? = null,
     @SerialName("shuffle_state")
     val shuffleState: Boolean? = null,
     @SerialName("smart_shuffle")
@@ -20,6 +20,6 @@ data class PlaybackState(
     val isPlaying: Boolean? = null,
     val item: PlaybackItem? = null,
     @SerialName("currently_playing_type")
-    val currentlyPlayingType: String? = null,
+    val currentlyPlayingType: CurrentlyPlayingType? = null,
     val actions: Actions? = null,
 )
