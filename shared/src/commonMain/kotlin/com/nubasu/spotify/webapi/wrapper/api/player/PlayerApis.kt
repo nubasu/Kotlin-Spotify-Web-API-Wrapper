@@ -3,8 +3,10 @@ package com.nubasu.spotify.webapi.wrapper.api.player
 import com.nubasu.spotify.webapi.wrapper.api.BaseSpotifyApi
 import com.nubasu.spotify.webapi.wrapper.api.SpotifyEndpoints
 import com.nubasu.spotify.webapi.wrapper.api.SpotifyHttpClientFactory
+import com.nubasu.spotify.webapi.wrapper.api.toNullableSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyApiResponse
 import com.nubasu.spotify.webapi.wrapper.api.toSpotifyBooleanApiResponse
+import com.nubasu.spotify.webapi.wrapper.request.common.AdditionalType
 import com.nubasu.spotify.webapi.wrapper.request.common.Uris
 import com.nubasu.spotify.webapi.wrapper.request.player.DeviceIds
 import com.nubasu.spotify.webapi.wrapper.request.player.Offset
@@ -47,18 +49,20 @@ class PlayerApis(
      */
     suspend fun getPlaybackState(
         market: CountryCode? = null,
-        additionalTypes: String? = null,
-    ): SpotifyApiResponse<PlaybackState> {
+        additionalTypes: List<AdditionalType> = emptyList(),
+    ): SpotifyApiResponse<PlaybackState?> {
         val response =
             client.get {
                 url {
                     takeFrom(SpotifyEndpoints.ME_PLAYER)
                     market?.let { parameters.append("market", it.code) }
-                    additionalTypes?.let { parameters.append("additional_types", it) }
+                    if (additionalTypes.isNotEmpty()) {
+                        parameters.append("additional_types", additionalTypes.joinToString(",") { it.value })
+                    }
                 }
                 spotifyAuth()
             }
-        return response.toSpotifyApiResponse()
+        return response.toNullableSpotifyApiResponse()
     }
 
     /**
@@ -111,18 +115,20 @@ class PlayerApis(
      */
     suspend fun getCurrentlyPlayingTrack(
         market: CountryCode? = null,
-        additionalTypes: String? = null,
-    ): SpotifyApiResponse<CurrentlyPlayingTrack> {
+        additionalTypes: List<AdditionalType> = emptyList(),
+    ): SpotifyApiResponse<CurrentlyPlayingTrack?> {
         val response =
             client.get {
                 url {
                     takeFrom(SpotifyEndpoints.ME_PLAYER_CURRENTLY_PLAYING)
                     market?.let { parameters.append("market", it.code) }
-                    additionalTypes?.let { parameters.append("additional_types", it) }
+                    if (additionalTypes.isNotEmpty()) {
+                        parameters.append("additional_types", additionalTypes.joinToString(",") { it.value })
+                    }
                 }
                 spotifyAuth()
             }
-        return response.toSpotifyApiResponse()
+        return response.toNullableSpotifyApiResponse()
     }
 
     /**

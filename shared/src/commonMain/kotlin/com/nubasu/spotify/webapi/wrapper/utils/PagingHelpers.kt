@@ -19,7 +19,7 @@ object PagingHelpers {
         val limit = parsed.parameters["limit"]?.toIntOrNull()
         val offset = parsed.parameters["offset"]?.toIntOrNull()
         if (limit == null && offset == null) return null
-        return PagingOptions(limit = limit, offset = offset)
+        return runCatching { PagingOptions(limit = limit, offset = offset) }.getOrNull()
     }
 
     /**

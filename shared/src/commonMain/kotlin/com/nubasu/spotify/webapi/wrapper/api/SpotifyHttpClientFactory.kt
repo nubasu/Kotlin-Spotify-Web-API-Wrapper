@@ -16,7 +16,7 @@ internal object SpotifyHttpClientFactory {
     fun create(): HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) {
-                json()
+                json(SpotifyJson)
             }
         }
 
@@ -24,7 +24,7 @@ internal object SpotifyHttpClientFactory {
     fun createAccountsClient(): HttpClient =
         HttpClient(CIO) {
             install(ContentNegotiation) {
-                json()
+                json(SpotifyJson)
             }
         }
 }

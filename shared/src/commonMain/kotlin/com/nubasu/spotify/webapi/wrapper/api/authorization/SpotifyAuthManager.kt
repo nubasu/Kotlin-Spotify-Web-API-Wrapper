@@ -43,6 +43,10 @@ class SpotifyAuthManager(
     private val mutex = Mutex()
     private var tokenResponse: TokenResponse? = null
     private var accessTokenExpiresAtMs: Long? = null
+
+    // @Volatile ensures cross-thread write visibility. startPkceAuthorization() is non-suspend so
+    // mutex.withLock cannot be used; callers must not invoke it concurrently.
+    @Volatile
     private var pendingPkce: PendingPkce? = null
 
     /**
