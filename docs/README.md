@@ -12,6 +12,7 @@ This directory contains the library documentation and samples.
 - [Chapters](samples/apis/chapters.md)
 - [Episodes](samples/apis/episodes.md)
 - [Genres](samples/apis/genres.md)
+- [Library](samples/apis/library.md)
 - [Markets](samples/apis/markets.md)
 - [Player](samples/apis/player.md)
 - [Playlists](samples/apis/playlists.md)

@@ -35,7 +35,7 @@ suspend fun fetchAlbum() {
 
     when (val data = response.data) {
         is SpotifyResponseData.Success -> println("album=${data.value.name}")
-        is SpotifyResponseData.Error -> println("error=${data.value.error.message}")
+        is SpotifyResponseData.Error -> println("error=${data.error.error.message}")
     }
 }
 ```

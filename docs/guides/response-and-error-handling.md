@@ -27,8 +27,8 @@ suspend fun handleResponse() {
         }
         is SpotifyResponseData.Error -> {
             println("status=${response.statusCode}")
-            println("spotifyStatus=${data.value.error.status}")
-            println("message=${data.value.error.message}")
+            println("spotifyStatus=${data.error.error.status}")
+            println("message=${data.error.error.message}")
         }
     }
 }

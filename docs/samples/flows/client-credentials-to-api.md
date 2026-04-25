@@ -28,7 +28,7 @@ suspend fun clientCredentialsFlow() {
             val first = data.value.artists?.items?.firstOrNull()
             println("artist=${first?.name}")
         }
-        is SpotifyResponseData.Error -> println("error=${data.value.error.message}")
+        is SpotifyResponseData.Error -> println("error=${data.error.error.message}")
     }
 }
 ```

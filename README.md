@@ -21,7 +21,7 @@ This repository provides a type-safe, coroutine-friendly Spotify API client for 
   - [x] Chapters
   - [x] Episodes
   - [x] Genres
-  - [x] Libraries 
+  - [x] Library
   - [x] Markets
   - [x] Player
   - [x] Playlists
