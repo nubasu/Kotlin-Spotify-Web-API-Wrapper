@@ -50,7 +50,6 @@ object ApiTest {
      */
     fun audiobookApisTest() = runBlocking {
         val api = AudiobooksApis()
-        println(api.getAnAudiobook("7iHfbu1YPACw6oZPAFJtqe"))
         println(api.getSeveralAudiobooks(listOf("18yVqkdbdRvS24c0Ilj2ci","1HGw3J3NxZO1TP1BTtVhpZ","7iHfbu1YPACw6oZPAFJtqe")))
         println(api.getAudiobookChapters("7iHfbu1YPACw6oZPAFJtqe"))
         println(api.getUsersSavedAudiobooks())
@@ -74,7 +73,6 @@ object ApiTest {
      */
     fun chaptersApisTest() = runBlocking {
         val api = ChaptersApis()
-        println(api.getAChapter("0D5wENdkdwbqlrHoaJ9g29"))
         println(api.getSeveralChapters(listOf("0IsXVP0JmcB2adSE338GkK","3ZXb8FKZGU0EHALYX6uCzU","0D5wENdkdwbqlrHoaJ9g29")))
     }
 
@@ -144,8 +142,6 @@ object ApiTest {
         println(api.togglePlaybackShuffle(false))
         println("getRecentlyPlayedTracks")
         println(api.getRecentlyPlayedTracks())
-        println("getTheUsersQueue")
-        println(api.getTheUsersQueue())
         println("addItemToPlaybackQueue")
         println(api.addItemToPlaybackQueue("spotify:track:4iV5W9uYEdYUVa79Axb7Rh"))
         println("")
